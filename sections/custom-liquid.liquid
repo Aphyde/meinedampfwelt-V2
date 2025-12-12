@@ -1,0 +1,137 @@
+<section id="custom-liquid-{{ section.id }}" class="cl-section"
+  style="
+    --cl-pad-top: {{ section.settings.pad_top }}px;
+    --cl-pad-bottom: {{ section.settings.pad_bottom }}px;
+    --cl-bg: {{ section.settings.bg_color }};
+  ">
+  <div class="{% if section.settings.full_width %}cl-wrap-full{% else %}cl-wrap{% endif %}">
+    {{ section.settings.custom_liquid }}
+
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        <div class="cl-block" {{ block.shopify_attributes }}>
+          {{ block.settings.block_liquid }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% if section.settings.custom_css != blank %}
+    <style>
+      #custom-liquid-{{ section.id }} {
+        padding-top: var(--cl-pad-top);
+        padding-bottom: var(--cl-pad-bottom);
+        background: var(--cl-bg);
+      }
+      #custom-liquid-{{ section.id }} { {{ section.settings.custom_css }} }
+    </style>
+  {% else %}
+    <style>
+      #custom-liquid-{{ section.id }} {
+        padding-top: var(--cl-pad-top);
+        padding-bottom: var(--cl-pad-bottom);
+        background: var(--cl-bg);
+      }
+    </style>
+  {% endif %}
+
+  {% if section.settings.custom_js != blank %}
+    <script>
+      (function(){
+        var root = document.getElementById('custom-liquid-{{ section.id }}');
+        if(!root) return;
+        {{ section.settings.custom_js }}
+      })();
+    </script>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Custom Liquid Pro",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Custom Liquid / HTML",
+      "default": "<div><p>Dein Inhalt hier …</p></div>"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Optionales CSS (scoped)",
+      "default": "/* Eigene CSS-Regeln hier einfügen */"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_js",
+      "label": "Optionales JavaScript",
+      "default": "// Eigene JS-Skripte hier einfügen"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Volle Breite (ohne Container)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Innenabstand oben (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Innenabstand unten (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Hintergrundfarbe",
+      "default": "transparent"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "liquid_block",
+      "name": "Liquid-Block",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "block_liquid",
+          "label": "Liquid / HTML",
+          "default": "<div>Block-Inhalt …</div>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Liquid Pro"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  #custom-liquid-{{ section.id }} .cl-wrap {
+    max-width: var(--page-width, 1200px);
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  #custom-liquid-{{ section.id }} .cl-wrap-full {
+    width: 100%;
+  }
+  #custom-liquid-{{ section.id }} .cl-block + .cl-block {
+    margin-top: 16px;
+  }
+</style>

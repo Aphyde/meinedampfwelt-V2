@@ -1,0 +1,260 @@
+<section id="knowledge-safe-{{ section.id }}" class="knowledge-safe-wrap" aria-labelledby="wb-title-{{ section.id }}">
+  <style>
+    /* === Farben (mit Defaults) === */
+    #knowledge-safe-{{ section.id }}{
+      --bg: {{ section.settings.bg_color | default: '#1E1E20' }};
+      --brand: {{ section.settings.brand_color | default: '#ABCA20' }};
+      --accent: {{ section.settings.accent_color | default: '#D7EE7A' }};
+      --text: #E8EEF9;
+      --muted: #A6B1C2;
+
+      position: relative;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+
+      /* Dezenter AI-Glow – großflächig, ohne harte Kanten */
+      background-image:
+        radial-gradient(60vw 40vh at -10% -10%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 65%),
+        radial-gradient(50vw 35vh at 110% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 65%);
+      background-repeat: no-repeat;
+      background-size: 140% 120%, 140% 120%;
+      background-position: left top, right top;
+    }
+
+    /* === Inhalt === */
+    #knowledge-safe-{{ section.id }} .inner{
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+      padding: 28px 20px {{ section.settings.content_bottom_px | default: 0 }}px;
+      box-sizing: border-box;
+    }
+
+    #knowledge-safe-{{ section.id }} .eyebrow{
+      font-weight: 600; letter-spacing:.14em; text-transform: uppercase;
+      color: var(--accent); font-size: 12px; display:block; margin: 0 0 8px;
+    }
+    #knowledge-safe-{{ section.id }} h1{
+      font-size: clamp(28px, 4vw, 44px); line-height: 1.1; margin: 0 0 6px; font-weight: 750; color: #fff;
+    }
+    #knowledge-safe-{{ section.id }} .sub{
+      color: var(--muted); max-width: 70ch; margin: 0 0 16px; font-size: 16px; line-height: 1.5;
+    }
+
+    #knowledge-safe-{{ section.id }} .grid{
+      display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-top: 22px;
+    }
+    #knowledge-safe-{{ section.id }} .card{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: 0 4px 12px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.06);
+      overflow: hidden; transition: transform .2s ease, box-shadow .2s ease;
+    }
+    #knowledge-safe-{{ section.id }} .card:hover{
+      transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,.3);
+    }
+    #knowledge-safe-{{ section.id }} .card a{
+      display:block; color:inherit; text-decoration:none; padding:20px; outline: none;
+    }
+    #knowledge-safe-{{ section.id }} .card a:focus,
+    #knowledge-safe-{{ section.id }} .card a:focus-visible{
+      outline:2px solid var(--accent); outline-offset:2px;
+    }
+    #knowledge-safe-{{ section.id }} .card h3{
+      margin:0; font-size:18px; line-height:1.2; letter-spacing:.2px; color:#fff; transition: color .2s ease;
+    }
+    #knowledge-safe-{{ section.id }} .card p{
+      margin:6px 0 0; color:var(--muted); font-size:14px;
+    }
+    #knowledge-safe-{{ section.id }} .card:hover h3,
+    #knowledge-safe-{{ section.id }} .card a:focus h3{
+      color: var(--brand);
+    }
+
+    #knowledge-safe-{{ section.id }} .bottom-row{
+      display:grid; gap:18px; grid-template-columns:1.6fr 1fr; margin: 26px 0 0;
+    }
+    @media (max-width: 980px){
+      #knowledge-safe-{{ section.id }} .bottom-row{ grid-template-columns:1fr; }
+    }
+    #knowledge-safe-{{ section.id }} .promo{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      padding: 18px 20px; margin: 0;
+    }
+    #knowledge-safe-{{ section.id }} .promo h4{ margin: 0 0 8px; font-size: 18px; color: #fff; }
+    #knowledge-safe-{{ section.id }} .promo p{ margin: 0 0 8px; color: var(--muted); }
+    #knowledge-safe-{{ section.id }} .list{ display:grid; gap:10px; margin-top:10px; }
+    #knowledge-safe-{{ section.id }} .list a{
+      display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+      padding:12px 14px; border:1px solid rgba(255,255,255,.12); border-radius:14px;
+      text-decoration:none; color: var(--text); background: rgba(255,255,255,.04);
+      transition: border-color .2s ease, background .2s ease;
+    }
+    #knowledge-safe-{{ section.id }} .list a:hover,
+    #knowledge-safe-{{ section.id }} .list a:focus{
+      border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.08); outline: none;
+    }
+  </style>
+
+  <div class="inner">
+    <header>
+      <span class="eyebrow">{{ section.settings.eyebrow | default: 'Wissen & Beratung' }}</span>
+      <h1 id="wb-title-{{ section.id }}">{{ section.settings.heading | default: 'Die Expertenwelt' }}</h1>
+      {% if section.settings.subtext != blank %}
+        <p class="sub">{{ section.settings.subtext }}</p>
+      {% endif %}
+    </header>
+
+    {% if section.blocks.size > 0 %}
+      <section class="grid" aria-label="Wissensthemen">
+        {% for block in section.blocks %}
+          {% if block.type == 'card' %}
+            <article class="card" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.url }}">
+                <h3>{{ block.settings.title | escape }}</h3>
+                {% if block.settings.description != blank %}<p>{{ block.settings.description }}</p>{% endif %}
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <div class="bottom-row">
+      {% if section.settings.show_popular %}
+        <section class="promo" aria-labelledby="popular-title-{{ section.id }}">
+          <h4 id="popular-title-{{ section.id }}">{{ section.settings.popular_heading | default: 'Beliebte Themen' }}</h4>
+          <div class="list" role="list">
+            {% for block in section.blocks %}
+              {% if block.type == 'quick_link' %}
+                <a href="{{ block.settings.url }}" {{ block.shopify_attributes }}>
+                  <span><strong>{{ block.settings.label | escape }}</strong>{% if block.settings.sublabel != blank %} – {{ block.settings.sublabel }}{% endif %}</span>
+                  <span aria-hidden="true">➔</span>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      <section class="promo" aria-labelledby="support-title-{{ section.id }}">
+        <h4 id="support-title-{{ section.id }}">{{ section.settings.support_heading | default: 'Kontakt & Support' }}</h4>
+        {% if section.settings.support_intro != blank %}<p>{{ section.settings.support_intro }}</p>{% endif %}
+        <div class="list" role="list">
+          {% for block in section.blocks %}
+            {% if block.type == 'support_link' %}
+              <a href="{{ block.settings.url }}" {{ block.shopify_attributes }}>
+                <span><strong>{{ block.settings.label | escape }}</strong>{% if block.settings.sublabel != blank %} – {{ block.settings.sublabel }}{% endif %}</span>
+                <span aria-hidden="true">➔</span>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.enable_footer_fix and section.settings.footer_selector != blank -%}
+  <style id="knowledge-safe-footerfix-{{ section.id }}">
+    /* Optional & gezielt: bündig an DEINEN Footer-Wrapper */
+    {{ section.settings.footer_selector }}{
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: 0 !important;
+      background: {{ section.settings.bg_color | default: '#1E1E20' }} !important;
+    }
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Wissen & Beratung",
+  "class": "shopify-section--knowledge-safe",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Wissen & Beratung" },
+    { "type": "text", "id": "heading", "label": "Überschrift (H1)", "default": "Die Expertenwelt" },
+    { "type": "textarea", "id": "subtext", "label": "Einleitungstext", "default": "Fundiertes Wissen, praxisnahe Tipps und klare Erklärungen rund um E-Zigaretten – strukturiert, verlässlich und verständlich aufbereitet." },
+
+    { "type": "checkbox", "id": "show_popular", "label": "Beliebte Themen anzeigen", "default": true },
+    { "type": "text", "id": "popular_heading", "label": "Überschrift – Beliebte Themen", "default": "Beliebte Themen" },
+    { "type": "text", "id": "support_heading", "label": "Überschrift – Kontakt & Support", "default": "Kontakt & Support" },
+    { "type": "textarea", "id": "support_intro", "label": "Intro – Kontakt & Support", "default": "Nicht fündig geworden? Wir helfen dir gern – schnell und fachkundig." },
+
+    { "type": "header", "content": "Farben" },
+    { "type": "color", "id": "bg_color", "label": "Hintergrundfarbe (dunkel)", "default": "#1E1E20" },
+    { "type": "color", "id": "brand_color", "label": "Brand-Grün (Hover, Akzente)", "default": "#ABCA20" },
+    { "type": "color", "id": "accent_color", "label": "Akzent-Grün (Eyebrow, Fokus)", "default": "#D7EE7A" },
+
+    { "type": "header", "content": "Footer-Fix (optional, gezielt)" },
+    { "type": "checkbox", "id": "enable_footer_fix", "label": "Footer bündig setzen (Spalt entfernen)", "default": false },
+    { "type": "text", "id": "footer_selector", "label": "Footer-Selector (z. B. #shopify-section-footer, .site-footer)", "default": "#shopify-section-footer" },
+
+    { "type": "range", "id": "content_bottom_px", "label": "Innenabstand unten (px)", "min": 0, "max": 60, "step": 2, "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Karte – Thema",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Thema" },
+        { "type": "textarea", "id": "description", "label": "Beschreibung", "default": "Kurzer, klarer Nutzen-Text." },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    },
+    {
+      "type": "quick_link",
+      "name": "Beliebter Link",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Nikotinstärke finden" },
+        { "type": "text", "id": "sublabel", "label": "Sub-Label", "default": "Für den perfekten Start" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    },
+    {
+      "type": "support_link",
+      "name": "Kontakt/Support Link",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Nachricht schreiben" },
+        { "type": "text", "id": "sublabel", "label": "Sub-Label", "default": "Kontaktformular" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wissen & Beratung",
+      "category": "Wissen",
+      "blocks": [
+        { "type": "card", "settings": { "title": "Dampfer-Lexikon", "description": "Alle Begriffe von A–Z verständlich erklärt – von Coil bis Zugtechnik.", "url": "/pages/dampfer-lexikon" } },
+        { "type": "card", "settings": { "title": "Geschmacksrichtungen", "description": "Finde dein Aroma-Profil: von fruchtig bis cremig – inklusive Mix-Tipps.", "url": "/pages/geschmacksrichtungen" } },
+        { "type": "card", "settings": { "title": "Einsteiger-Wissen", "description": "Der perfekte Start: Gerätewahl, Nikotinstärke & häufige Fehler vermeiden.", "url": "/pages/tipps-fur-einsteiger" } },
+        { "type": "card", "settings": { "title": "Geräte & Pflege", "description": "So bleibt dein Gerät länger fit: Coils wechseln, reinigen & Akku sicher laden.", "url": "/pages/gerate-pflege" } },
+        { "type": "card", "settings": { "title": "Liquidsteuer verstehen", "description": "Alle Regelungen und Tipps, wie du beim Kauf den Überblick behältst.", "url": "/pages/alle-infos-zur-liquidsteuer" } },
+        { "type": "card", "settings": { "title": "Sicherheit & Verantwortung", "description": "Alles zur sicheren Nutzung und Entsorgung von Batterien & Akkus.", "url": "/pages/batteriegesetzhinweise" } },
+        { "type": "card", "settings": { "title": "Hersteller-Übersicht", "description": "Vergleiche Top-Marken und entdecke die besten Geräte & Liquids.", "url": "/pages/hersteller-ubersicht" } },
+        { "type": "card", "settings": { "title": "Mach meine Dampfwelt zu deiner", "description": "Werde Teil der Community: teile Setups, Erfahrungen und Tipps.", "url": "/pages/mach-meine-dampfwelt-zu-deiner-dampfwelt" } },
+        { "type": "card", "settings": { "title": "FAQ", "description": "Die wichtigsten Fragen auf einen Blick – schnell & verständlich beantwortet.", "url": "/pages/faq" } },
+
+        { "type": "quick_link", "settings": { "label": "Nikotinstärke finden", "sublabel": "Für den perfekten Start", "url": "/pages/tipps-fur-einsteiger" } },
+        { "type": "quick_link", "settings": { "label": "Coil wechseln & einbrennen", "sublabel": "In wenigen Schritten", "url": "/pages/gerate-pflege" } },
+        { "type": "quick_link", "settings": { "label": "Beliebte Geschmacksprofile", "sublabel": "Empfehlungen & Mix", "url": "/pages/geschmacksrichtungen" } },
+        { "type": "quick_link", "settings": { "label": "MTL vs. DL", "sublabel": "Unterschiede & Tipps", "url": "/pages/dampfer-lexikon" } },
+        { "type": "quick_link", "settings": { "label": "Liquidsteuer", "sublabel": "Das Wichtigste im Überblick", "url": "/pages/alle-infos-zur-liquidsteuer" } },
+
+        { "type": "support_link", "settings": { "label": "Nachricht schreiben", "sublabel": "Kontaktformular", "url": "/pages/kontaktformular" } },
+        { "type": "support_link", "settings": { "label": "Kontaktübersicht", "sublabel": "E-Mail, Telefon & Öffnungszeiten", "url": "/pages/kontakt" } },
+        { "type": "support_link", "settings": { "label": "FAQ", "sublabel": "Schnelle Antworten", "url": "/pages/faq" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

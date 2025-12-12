@@ -1,0 +1,7 @@
+{%- liquid
+  assign available = product.variants.first.available
+  assign current_variant = product.selected_or_first_available_variant
+-%}
+<div class="item-product-popup{% if swatchColor == true or product.has_only_default_variant %} hide{% endif %}">
+  {% render 'swatch-variants', product: product, id: id, position: position, section_id: section_id, available: available, current_variant: current_variant %}
+</div>

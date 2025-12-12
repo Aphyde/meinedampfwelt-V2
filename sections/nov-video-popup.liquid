@@ -1,0 +1,251 @@
+{% assign sst = section.settings %}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .block-video {
+    border-radius: {{ sst.radius }}px;
+    overflow: hidden;
+    transform: translateZ(0);
+  }
+  #shopify-section-{{ section.id }} .content-text {
+    color: {{ sst.content_color }};
+  }
+  
+{% endstyle %}
+<div class="distance{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="row align-items-center">
+      <div class="col-xl-3">
+        {% render 'heading-section', sub_position: sst.subheading_position %}
+      </div>
+      <div class="col-xl-4 col-md-6">
+        <div class="block-video position-relative">
+          {% if sst.img_cover != blank %}
+            {% render 'nov-aspect-image', image: sst.img_cover %}
+          {% else %}
+            {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+
+          <div class="icon_play pointer position-absolute center-center d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#ModalVideo" data-src="{% if sst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ sst.video_url.id }}?rel=0&showinfo=0&vq=720{% endif %}{% if sst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ sst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}">
+            <span class="icon-svg d-flex align-items-center justify-content-center position-relative">
+              {% render 'icon-caret-right' %}
+            </span>
+            <svg class="svg-text-cricle" width="125" height="125" viewBox="0 0 125 125" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <path id="circlePath{{ section.id }}" d="M 62.5, 62.5 m -31.25, 0 a 31.25,31.25 0 1,1 62.5,0 a 31.25,31.25 0 1,1 -62.5,0" />
+              </defs>
+              <circle cx="62.5" cy="62.5" r="31.25" fill="none" />
+              <text font-size="6" fill="white">
+                <textPath href="#circlePath{{ section.id }}" textLength="196.3495">
+                  {{ sst.icon_play_text }}&nbsp;
+                </textPath>
+              </text>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+      <div class="content-text col-xl-5 col-md-6 font-500 mt-sm-20">
+        {{ sst.content }}
+      </div>
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Video Popup",
+    "class": "section-video-popup",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Video Popup</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "header",
+        "content": "Video"
+      },
+      {
+        "type": "video_url",
+        "id": "video_url",
+        "label": "Video popup",
+        "accept": ["youtube", "vimeo"],
+        "info": "Only For Youtube And Vimeo"
+      },
+      {
+        "type": "text",
+        "id": "icon_play_text",
+        "label": "Button play label",
+        "default": "Press play and immerse yourself in video!"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_cover",
+        "label": "Background cover"
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius section",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Content text"
+      },
+      {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "content_color",
+        "label": "Content color",
+        "default": "#666666"
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Video Popup",
+        "category": "Video"
+      }
+    ]
+  }
+{% endschema %}

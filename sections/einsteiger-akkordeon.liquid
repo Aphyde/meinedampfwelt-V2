@@ -1,0 +1,581 @@
+{%- assign sst = section.settings -%}
+{% style %}
+  #shopify-section-{{ section.id }} .nov-slick-carousel .item-content { background-color: {{ sst.bg_item }}; }
+  #shopify-section-{{ section.id }} .nov-slick-carousel .item-content:hover { background-color: {{ sst.bg_item_h }}; }
+  #shopify-section-{{ section.id }} .name_link { color: {{ sst.color_link }}; }
+  /* RTE inside answers */
+  #shopify-section-{{ section.id }} .item-content.rte a { text-decoration: underline; text-underline-offset: 2px; }
+  #shopify-section-{{ section.id }} .faq-image { display:block; max-width:100%; height:auto; border-radius:8px; }
+  #shopify-section-{{ section.id }} .faq-figure { margin: 10px 0 16px; }
+  #shopify-section-{{ section.id }} .faq-figure figcaption { font-size: .9em; opacity:.8; margin-top:6px; }
+
+  /* Unter-Akkordeon (optisch passend, leicht eingerückt) */
+  #shopify-section-{{ section.id }} .sub-accordion { margin-top: 10px; }
+  #shopify-section-{{ section.id }} .sub-accordion .panel-group { margin: 0 0 8px; background: rgba(0,0,0,.03); border-radius:8px; }
+  #shopify-section-{{ section.id }} .sub-accordion .panel-header { padding-left: 10px; }
+{% endstyle %}
+
+
+<div class="color-{{ sst.color_section }}" data-section-id="{{ section.id }}" data-section-type="nov-slick">
+  <div class="container">
+    {% if page.content.size > 0 %}
+      <div class="rte">{{ page.content }}</div>
+    {% endif %}
+
+    <!-- Optional: Icon/Link-Leiste wie in der FAQ-Section -->
+    <div class="nov-slick-carousel row mb-60"
+      data-autoplay="false" 
+      data-autoplaytimeout="6000"
+      data-loop="true"
+      data-dots="false"
+      data-nav="{{ sst.nav }}"
+      data-items_xxl="{{ sst.xl }}"
+      data-items="{{ sst.xl }}"
+      data-items_lg="{{ sst.lg }}" 
+      data-items_md="{{ sst.md }}" 
+      data-items_sm="{{ sst.sm }}"
+      data-items_xs="{{ sst.xs }}">
+      {%- for i in (1..5) -%}
+        {%- assign image_id = 'image' | append: i -%}
+        {%- assign link_id  = 'link'  | append: i -%}
+        {%- assign text_id  = 'text'  | append: i -%}
+        {% if sst[image_id] != blank %}
+          <div class="col">
+            <div class="item-content text-center">
+              {% if sst[link_id] != blank %}
+                <a href="{{ sst[link_id] }}" class="item-content--block d-block w-100">
+              {% else %}
+                <div class="item-content--block d-block pt-20 pb-15">
+              {% endif %}
+                <div class="b_img">
+                  <img src="{{ sst[image_id] | image_url: width: 140 }}" alt="{{ sst[image_id].alt | default: 'image' }}" width="140" height="140" class="img-fluid">
+                </div>
+                {% if sst[text_id] != blank %}
+                  <div class="name_link font-700">{{ sst[text_id] }}</div>
+                {% endif %}
+              {% if sst[link_id] != blank %}</a>{% else %}</div>{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+
+    {% if sst.title != blank or sst.text_content != blank %}
+      <div class="faqText">
+        <div class="block_text">
+          {% if sst.title != blank %}
+            <div class="title font-700">{{ sst.title }}</div>
+          {% endif %}
+          {% if sst.text_content != blank %}
+            <div class="block_content rte">
+              {{ sst.text_content }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Einsteiger-Tipps Akkordeon mit Unter-Akkordeons -->
+    <div class="faqWrapper et-accordion">
+      {% if section.blocks.size > 0 %}
+        <div id="AccordionTop-{{ section.id }}" role="tablist">
+          {% for block in section.blocks %}
+            {% if block.type == 'faq' %}
+              {%- assign bst = block.settings -%}
+
+              {%- assign is_open = false -%}
+              {%- if forloop.first -%}{%- assign is_open = true -%}{%- endif -%}
+
+              <div class="faqs-main {{ bst.class }}{% if is_open %} active{% endif %}">
+                <div class="panel-group">
+                  <div class="panel-header {% unless is_open %}collapsed{% endunless %}"
+                       aria-expanded="{{ is_open }}"
+                       data-toggle="collapse"
+                       href="#Item-{{ section.id }}-{{ forloop.index }}"
+                       aria-controls="Item-{{ section.id }}-{{ forloop.index }}">
+                    {{ bst.item_title }}
+                  </div>
+                  <div class="panel-body">
+                    <div id="Item-{{ section.id }}-{{ forloop.index }}" data-parent="#AccordionTop-{{ section.id }}" class="collapse{% if is_open %} show{% endif %}">
+                      {%- comment -%} Optionales Bild oben {%- endcomment -%}
+                      {% if bst.image != blank and bst.image_position == 'top' %}
+                        <figure class="faq-figure">
+                          {% if bst.image_link != blank %}<a href="{{ bst.image_link }}">{% endif %}
+                            <img class="faq-image" src="{{ bst.image | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst.image.alt | default: bst.image_alt }}">
+                          {% if bst.image_link != blank %}</a>{% endif %}
+                          {% if bst.image_caption != blank %}<figcaption>{{ bst.image_caption }}</figcaption>{% endif %}
+                        </figure>
+                      {% endif %}
+
+                      {% if bst.item_content != blank %}
+                        <div class="item-content rte" style="color: {{ bst.color_content }}; font-size: {{ bst.fz_content }};">
+                          {{ bst.item_content }}
+                        </div>
+                      {% endif %}
+
+                      {%- comment -%} Optionales Bild unten {%- endcomment -%}
+                      {% if bst.image != blank and bst.image_position == 'bottom' %}
+                        <figure class="faq-figure">
+                          {% if bst.image_link != blank %}<a href="{{ bst.image_link }}">{% endif %}
+                            <img class="faq-image" src="{{ bst.image | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst.image.alt | default: bst.image_alt }}">
+                          {% if bst.image_link != blank %}</a>{% endif %}
+                          {% if bst.image_caption != blank %}<figcaption>{{ bst.image_caption }}</figcaption>{% endif %}
+                        </figure>
+                      {% endif %}
+
+                      {%- comment -%} Weitere optionale Bilder 2 & 3 {%- endcomment -%}
+                      {% for extra in (2..3) %}
+                        {% assign img_key = 'image' | append: extra %}
+                        {% assign cap_key = 'image' | append: extra | append: '_caption' %}
+                        {% assign alt_key = 'image' | append: extra | append: '_alt' %}
+                        {% assign link_key = 'image' | append: extra | append: '_link' %}
+                        {% if bst[img_key] != blank %}
+                          <figure class="faq-figure">
+                            {% if bst[link_key] != blank %}<a href="{{ bst[link_key] }}">{% endif %}
+                              <img class="faq-image" src="{{ bst[img_key] | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst[alt_key] }}">
+                            {% if bst[link_key] != blank %}</a>{% endif %}
+                            {% if bst[cap_key] != blank %}<figcaption>{{ bst[cap_key] }}</figcaption>{% endif %}
+                          </figure>
+                        {% endif %}
+                      {% endfor %}
+
+                      {%- comment -%} Unter-Akkordeon (Nested) {%- endcomment -%}
+                      <div id="SubAccordion-{{ block.id }}" class="sub-accordion" role="tablist">
+                        {%- for i in (1..8) -%}
+                          {%- assign st = 'sub_title_'   | append: i -%}
+                          {%- assign sc = 'sub_content_' | append: i -%}
+                          {%- assign so = 'sub_open_'    | append: i -%}
+                          {%- if bst[st] != blank or bst[sc] != blank -%}
+                            {%- assign sub_open = bst[so] -%}
+                            <div class="panel-group">
+                              <div class="panel-header {% unless sub_open %}collapsed{% endunless %}"
+                                   aria-expanded="{{ sub_open }}"
+                                   data-toggle="collapse"
+                                   href="#SubItem-{{ block.id }}-{{ i }}"
+                                   aria-controls="SubItem-{{ block.id }}-{{ i }}">
+{{ bst[st] | default: 'Unterpunkt' }}
+                              </div>
+                              <div class="panel-body">
+                                <div id="SubItem-{{ block.id }}-{{ i }}" data-parent="#SubAccordion-{{ block.id }}" class="collapse{% if sub_open %} show{% endif %}">
+                                  <div class="item-content rte">
+                                    {{ bst[sc] }}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if sst.eb_contact %}
+      <div class="faqContact text-center">
+        {% if sst.title_answer != blank or sst.text_content != blank %}
+          <div class="block_text {{ sst.class }}">
+            {% if sst.sub_answer != blank %}<div class="sub_answer font-700">{{ sst.sub_answer }}</div>{% endif %}
+            {% if sst.title_answer != blank %}<div class="title_answer text-uppercase font-800">{{ sst.title_answer }}</div>{% endif %}
+          </div>
+        {% endif %}
+        {% if sst.text_button %}
+          <button class="btn btn-large" type="button" data-toggle="modal" data-target="#popup_contact_faq">
+            {{ sst.text_button }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}{% render block %}{% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Einsteiger Acc",
+  "class": "page-inner page-faqs",
+  "settings": [
+    { "type": "header", "content": "Block List Collection" },
+    { "type": "range", "id": "xl", "min": 1, "max": 5, "step": 1, "label": "Large Laptop", "default": 3, "info": "Breakpoint 1200px ↑" },
+    { "type": "range", "id": "lg", "min": 1, "max": 5, "step": 1, "label": "Laptop", "default": 3, "info": "Breakpoint 992px ↑" },
+    { "type": "range", "id": "md", "min": 1, "max": 5, "step": 1, "label": "Tablet", "default": 2, "info": "Breakpoint 768px ↑" },
+    { "type": "range", "id": "sm", "min": 1, "max": 5, "step": 1, "label": "Large mobile", "default": 1, "info": "Breakpoint 576px ↑" },
+    { "type": "range", "id": "xs", "min": 1, "max": 5, "step": 1, "label": "Mobile", "default": 1 },
+
+    { "type": "image_picker", "id": "image1", "label": "Image 1" },
+    { "type": "text", "id": "text1", "label": "Name Link 1", "default": "Delivery Policy" },
+    { "type": "url", "id": "link1", "label": "Link 1" },
+
+    { "type": "image_picker", "id": "image2", "label": "Image 2" },
+    { "type": "text", "id": "text2", "label": "Name Link 2", "default": "Delivery Policy" },
+    { "type": "url", "id": "link2", "label": "Link 2" },
+
+    { "type": "image_picker", "id": "image3", "label": "Image 3" },
+    { "type": "text", "id": "text3", "label": "Name Link 3", "default": "Delivery Policy" },
+    { "type": "url", "id": "link3", "label": "Link 3" },
+
+    { "type": "image_picker", "id": "image4", "label": "Image 4" },
+    { "type": "text", "id": "text4", "label": "Name Link 4", "default": "Delivery Policy" },
+    { "type": "url", "id": "link4", "label": "Link 4" },
+
+    { "type": "image_picker", "id": "image5", "label": "Image 5" },
+    { "type": "text", "id": "text5", "label": "Name Link 5", "default": "Delivery Policy" },
+    { "type": "url", "id": "link5", "label": "Link 5" },
+
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "color_link", "label": "Label colors", "default": "#666666" },
+    { "type": "color", "id": "bg_item", "label": "Background item", "default": "#f0f0f0" },
+    { "type": "color", "id": "bg_item_h", "label": "Background hover item", "default": "#e2e2e2" },
+
+    { "type": "header", "content": "Intro-Block" },
+    { "type": "text", "id": "title", "label": "Titel" },
+    { "type": "liquid", "id": "text_content", "label": "Content (HTML/Liquid erlaubt)" },
+
+    { "type": "header", "content": "Contact" },
+    { "type": "checkbox", "id": "eb_contact", "label": "Show Contact", "default": true },
+    { "type": "text", "id": "title_answer", "label": "Title", "default": "We're Here to Help!" },
+    { "type": "text", "id": "sub_answer", "label": "Sub Title", "default": "Can't find the answer you are looking for?" },
+    { "type": "text", "id": "text_button", "label": "Text Button", "default": "Contact us now" }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Thema (mit Unterpunkten)",
+      "settings": [
+        { "type": "text", "id": "item_title", "label": "Item title" },
+        { "type": "color", "id": "color_title", "label": "Color Title", "default": "#232630" },
+        { "type": "text", "id": "fz_title", "label": "Font Title", "default": "16px" },
+
+        { "type": "liquid", "id": "item_content", "label": "Item Content (HTML/Liquid erlaubt)" },
+
+        { "type": "color", "id": "color_content", "label": "Color Content", "default": "#232630" },
+        { "type": "text", "id": "fz_content", "label": "Font Content", "default": "14px" },
+        { "type": "text", "id": "class", "label": "Class" },
+
+        { "type": "header", "content": "FAQ Image (optional)" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "url", "id": "image_link", "label": "Image link (optional)" },
+        { "type": "select", "id": "image_position", "label": "Image position", "default": "top",
+          "options": [ { "value": "top", "label": "Above content" }, { "value": "bottom", "label": "Below content" } ] },
+        { "type": "text", "id": "image_width", "label": "Image width (px)", "default": "1200" },
+
+        { "type": "header", "content": "Additional Images" },
+        { "type": "image_picker", "id": "image2", "label": "Image 2" },
+        { "type": "text", "id": "image2_alt", "label": "Image 2 alt" },
+        { "type": "text", "id": "image2_caption", "label": "Image 2 caption" },
+        { "type": "url", "id": "image2_link", "label": "Image 2 link" },
+
+        { "type": "image_picker", "id": "image3", "label": "Image 3" },
+        { "type": "text", "id": "image3_alt", "label": "Image 3 alt" },
+        { "type": "text", "id": "image3_caption", "label": "Image 3 caption" },
+        { "type": "url", "id": "image3_link", "label": "Image 3 link" },
+
+        { "type": "header", "content": "Unterpunkte (Nested Accordion)" },
+        { "type": "text",   "id": "sub_title_1",   "label": "Unterpunkt 1 – Titel" },
+        { "type": "liquid", "id": "sub_content_1", "label": "Unterpunkt 1 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_1", "label": "Unterpunkt 1 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_2",   "label": "Unterpunkt 2 – Titel" },
+        { "type": "liquid", "id": "sub_content_2", "label": "Unterpunkt 2 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_2", "label": "Unterpunkt 2 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_3",   "label": "Unterpunkt 3 – Titel" },
+        { "type": "liquid", "id": "sub_content_3", "label": "Unterpunkt 3 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_3", "label": "Unterpunkt 3 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_4",   "label": "Unterpunkt 4 – Titel" },
+        { "type": "liquid", "id": "sub_content_4", "label": "Unterpunkt 4 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_4", "label": "Unterpunkt 4 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_5",   "label": "Unterpunkt 5 – Titel" },
+        { "type": "liquid", "id": "sub_content_5", "label": "Unterpunkt 5 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_5", "label": "Unterpunkt 5 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_6",   "label": "Unterpunkt 6 – Titel" },
+        { "type": "liquid", "id": "sub_content_6", "label": "Unterpunkt 6 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_6", "label": "Unterpunkt 6 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_7",   "label": "Unterpunkt 7 – Titel" },
+        { "type": "liquid", "id": "sub_content_7", "label": "Unterpunkt 7 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_7", "label": "Unterpunkt 7 initial geöffnet", "default": false },
+
+        { "type": "text",   "id": "sub_title_8",   "label": "Unterpunkt 8 – Titel" },
+        { "type": "liquid", "id": "sub_content_8", "label": "Unterpunkt 8 – Inhalt (HTML/Liquid erlaubt)" },
+        { "type": "checkbox", "id": "sub_open_8", "label": "Unterpunkt 8 initial geöffnet", "default": false }
+      ]
+    },
+    { "type": "@app" }
+  ],
+  "presets": [
+    { "name": "Einsteiger Acc" }
+  ]
+}
+{% endschema %}
+<style>
+#shopify-section-{{ section.id }}{
+  --mdw-brand:#ABCA20;
+  --mdw-bg:#17171A;
+  --mdw-card:#1C1D22;
+  --mdw-border:#2A2D33;
+  --mdw-text:#E9EDF3;
+  --mdw-sub:#A4ADBA;
+  --mdw-glow:0 0 0 1px rgba(171,202,32,.25),
+              0 10px 30px rgba(171,202,32,.22),
+              0 16px 38px rgba(0,0,0,.35);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--mdw-text);
+}
+
+/* Container + Background */
+#shopify-section-{{ section.id }} .container{
+  background: radial-gradient(600px 260px at 90% -60px, rgba(171,202,32,.08), transparent 60%) var(--mdw-bg);
+  border:1px solid var(--mdw-border);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
+  padding: clamp(22px,2.6vw,36px);
+}
+
+/* Carousel Icons / Items */
+#shopify-section-{{ section.id }} .nov-slick-carousel .item-content{
+  background: var(--mdw-card);
+  border:1px solid var(--mdw-border);
+  border-radius:14px;
+  box-shadow:0 8px 22px rgba(0,0,0,.25);
+  transition: all .25s ease;
+}
+#shopify-section-{{ section.id }} .nov-slick-carousel .item-content:hover{
+  border-color: rgba(171,202,32,.45);
+  box-shadow:var(--mdw-glow);
+  transform:translateY(-2px);
+}
+#shopify-section-{{ section.id }} .nov-slick-carousel .name_link{
+  color: var(--mdw-text);
+  font-weight:700;
+  margin-top:8px;
+  letter-spacing:.2px;
+}
+
+/* FAQ Text Headline */
+#shopify-section-{{ section.id }} .faqText .title{
+  color: var(--mdw-brand);
+  font-size: clamp(20px,2.6vw,26px);
+  margin-bottom:6px;
+}
+#shopify-section-{{ section.id }} .faqText .block_content{
+  color: var(--mdw-sub);
+  max-width:800px;
+  margin:0 auto 24px;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* Main Accordion */
+#shopify-section-{{ section.id }} .faqs-main{
+  background: var(--mdw-card);
+  border:1px solid var(--mdw-border);
+  border-radius:14px;
+  margin-bottom:12px;
+  overflow:hidden;
+  transition:border-color .2s ease, box-shadow .25s ease;
+}
+#shopify-section-{{ section.id }} .faqs-main.active,
+#shopify-section-{{ section.id }} .faqs-main:hover{
+  border-color:rgba(171,202,32,.45);
+  box-shadow:var(--mdw-glow);
+}
+
+/* Accordion Header */
+#shopify-section-{{ section.id }} .panel-header{
+  background:rgba(255,255,255,.02);
+  color:var(--mdw-text);
+  font-weight:800;
+  font-size:17px;
+  padding:14px 18px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:background .2s ease,color .2s ease;
+  position:relative;
+}
+#shopify-section-{{ section.id }} .panel-header::after{
+  content:"";
+  width:20px;height:20px;flex:0 0 20px;
+  background:var(--mdw-brand);
+  mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23000" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>') center/contain no-repeat;
+  transition:transform .25s ease;
+  opacity:.85;
+}
+#shopify-section-{{ section.id }} .faqs-main.active .panel-header::after{
+  transform:rotate(180deg);
+}
+#shopify-section-{{ section.id }} .panel-header:hover{
+  background:rgba(171,202,32,.08);
+  color:#fff;
+}
+
+/* Accordion Body */
+#shopify-section-{{ section.id }} .panel-body{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.00));
+  border-top:1px solid var(--mdw-border);
+  padding:14px 18px 18px;
+  animation:mdwFade .22s ease;
+}
+@keyframes mdwFade{from{opacity:0;transform:translateY(2px);}to{opacity:1;transform:none;}}
+
+#shopify-section-{{ section.id }} .item-content.rte{
+  color:var(--mdw-text);
+  line-height:1.65;
+}
+#shopify-section-{{ section.id }} .item-content.rte a{
+  color:var(--mdw-brand);
+  text-decoration:none;
+  font-weight:600;
+}
+#shopify-section-{{ section.id }} .item-content.rte a:hover{
+  text-decoration:underline;
+}
+
+/* Unter-Akkordeon */
+#shopify-section-{{ section.id }} .sub-accordion .panel-group{
+  margin:8px 0;
+  background:rgba(255,255,255,.02);
+  border-radius:12px;
+  border:1px solid var(--mdw-border);
+}
+#shopify-section-{{ section.id }} .sub-accordion .panel-header{
+  padding:10px 14px;
+  font-size:15px;
+  font-weight:700;
+  color:var(--mdw-text);
+}
+#shopify-section-{{ section.id }} .sub-accordion .panel-header:hover{
+  background:rgba(171,202,32,.08);
+}
+#shopify-section-{{ section.id }} .sub-accordion .panel-body{
+  border-top:1px solid var(--mdw-border);
+  background:rgba(255,255,255,.01);
+  padding:10px 14px 14px;
+}
+
+/* Bilder + Captions */
+#shopify-section-{{ section.id }} .faq-image{
+  border-radius:10px;
+  border:1px solid var(--mdw-border);
+  box-shadow:0 8px 20px rgba(0,0,0,.28);
+}
+#shopify-section-{{ section.id }} .faq-figure figcaption{
+  color:var(--mdw-sub);
+}
+
+/* Contact Footer */
+#shopify-section-{{ section.id }} .faqContact{
+  margin-top:40px;
+}
+#shopify-section-{{ section.id }} .title_answer{
+  color:var(--mdw-brand);
+  font-size:22px;
+  margin-bottom:8px;
+}
+#shopify-section-{{ section.id }} .sub_answer{
+  color:var(--mdw-sub);
+  margin-bottom:6px;
+}
+#shopify-section-{{ section.id }} .btn{
+  background:linear-gradient(180deg,var(--mdw-brand),#9EC114);
+  border:none;
+  color:#0E1208;
+  font-weight:800;
+  border-radius:10px;
+  padding:12px 22px;
+  transition:all .2s ease;
+}
+#shopify-section-{{ section.id }} .btn:hover{
+  filter:brightness(.95);
+  box-shadow:0 10px 24px rgba(171,202,32,.35);
+  transform:translateY(-1px);
+}
+/* ==== FIX: nur den grünen Chevron behalten ==== */
+/* manche Themes setzen zusätzliche Icons via ::before, <i>, SVG etc. */
+#shopify-section-{{ section.id }} .panel-header::before { 
+  content: none !important;
+}
+#shopify-section-{{ section.id }} .panel-header i,
+#shopify-section-{{ section.id }} .panel-header svg,
+#shopify-section-{{ section.id }} .panel-header .zmdi,
+#shopify-section-{{ section.id }} .panel-header .icon {
+  display: none !important;
+}
+
+/* Unser grüner Chevron (::after) bleibt – nichts ändern nötig */
+
+/* ==== FIX: grünen „Progress-Bar“-Balken entfernen ==== */
+/* falls ein Theme eine farbige Leiste über ::after/::before oder border-bottom setzt */
+#shopify-section-{{ section.id }} .panel-header {
+  border-bottom: none !important;
+}
+#shopify-section-{{ section.id }} .faqs-main::before,
+#shopify-section-{{ section.id }} .faqs-main::after,
+#shopify-section-{{ section.id }} .panel-header::after.progress,
+#shopify-section-{{ section.id }} .panel-header::before.progress {
+  content: none !important;
+}
+/* Falls ein aktiver Zustand eine farbige Unterstreichung erzwingt: */
+#shopify-section-{{ section.id }} .faqs-main.active .panel-header {
+  box-shadow: none !important;
+}
+
+/* ==== FIX: Text in grünen Infoboxen dunkel ==== */
+/* für deine grünen Info-/Highlight-Boxen (egal ob .mdw-highlight / .mdw-alert--green etc.) */
+#shopify-section-{{ section.id }} .mdw-highlight,
+#shopify-section-{{ section.id }} .mdw-alert--green {
+  background: #e8f7db !important;
+  color: #0E1208 !important;
+  border-left: 4px solid #6aa925; /* optionaler CI-Rand */
+}
+#shopify-section-{{ section.id }} .mdw-highlight p,
+#shopify-section-{{ section.id }} .mdw-highlight strong,
+#shopify-section-{{ section.id }} .mdw-alert--green p,
+#shopify-section-{{ section.id }} .mdw-alert--green strong {
+  color: inherit !important;
+}
+#shopify-section-{{ section.id }} .mdw-highlight a,
+#shopify-section-{{ section.id }} .mdw-alert--green a {
+  color: #0b5c12; /* dunkles Grün für Links auf hellem Grün */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+#shopify-section-{{ section.id }} .mdw-highlight a:hover,
+#shopify-section-{{ section.id }} .mdw-alert--green a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* (optional robust) Sub-Accordion: ebenfalls keine Doppel-Icons/Progress-Leisten */
+#shopify-section-{{ section.id }} .sub-accordion .panel-header::before { 
+  content: none !important; 
+}
+#shopify-section-{{ section.id }} .sub-accordion .panel-header i,
+#shopify-section-{{ section.id }} .sub-accordion .panel-header svg,
+#shopify-section-{{ section.id }} .sub-accordion .panel-header .zmdi {
+  display: none !important;
+}
+#shopify-section-{{ section.id }} .sub-accordion .panel-header {
+  border-bottom: none !important;
+}
+.mdw-tip {
+  color: black;
+}
+.mdw-tabs__btn {
+  color: white;
+}
+</style>

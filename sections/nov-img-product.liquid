@@ -1,0 +1,384 @@
+{%- assign sst = section.settings -%}
+{%- assign limit = sst.limit -%}
+{%- assign collection = collections[sst.collection] -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    border-radius: {{ sst.section_corner }}px;
+    {%- assign bg_image = sst.background_image -%}
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} center;
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .slick-slider .slick-dots button {
+    background-color: {{ sst.c_dot }};
+  }
+  #shopify-section-{{ section.id }} .slick-slider .slick-dots li.slick-active button {
+    background-color: {{ sst.c_dot_a }};
+  }
+{% endstyle %}
+<div class="{% if sst.bg_size == 'full' %}distance position-relative{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}{% if sst.animate %} wow fadeInUp animated{% endif %}" data-section-id="{{ section.id }}" data-section-type="nov-slick">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}distance position-relative{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}">
+      <div class="nov-link-image-product">
+        <div class="row align-items-center spacing-0">
+          <div class="col-lg-6 color-{{ sst.color_nav }}">
+            <div class="nov-slick-navfor-carousel" data-items="1" data-autoplay="{{ sst.autoplay }}" data-autoplaytimeout="{{ sst.autoplay_speed }}" data-dots="false" data-nav="{{ sst.show_nav }}" data-focus="false" data-hover="false" data-row="1" data-navfor="true">
+              {% for block in section.blocks %}
+                {% if block.type == 'item' %}
+                  <div class="item position-relative nov-sh-image-2">
+                    {% if block.settings.img_link != blank %}
+                      <a href="{{ block.settings.img_link }}">
+                    {% endif %}
+                      {% if block.settings.img != blank %}
+                        {%- render 'nov-aspect-image', image: block.settings.img -%}
+                      {% else %}
+                        {%- capture current -%}{% cycle 1, 2, 3 %}{%- endcapture -%}
+                        {{ 'collection-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                    {% if block.settings.img_link != blank %}
+                      </a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-lg-6 pt-md-30 pb-md-30">
+            <div class="block-right">
+              {% render 'heading-section', sub_position: sst.subheading_position %}
+              <div class="nov-slick-carousel row spacing-30 spacing-xs-15"
+                data-loop="false"
+                data-dots="true"
+                data-nav="false"
+                data-row="1"
+                data-items_xxl="1"
+                data-item="1"
+                data-navfor="true">
+                {% for product in collection.products limit: limit %}
+                  <div class="item col-12">
+                    {% render 'product-list-item-style-1', product: product, section_id: section.id %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Image - Products",
+    "class": "nov-image-product",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Image - Products</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Block Image"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Auto-rotate slides",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "autoplay_speed",
+        "label": "Change slides every",
+        "options": [
+          { "value": "1000", "label": "1 seconds" },
+          { "value": "2000", "label": "2 seconds" },
+          { "value": "3000", "label": "3 seconds" },
+          { "value": "4000", "label": "4 seconds" },
+          { "value": "5000", "label": "5 seconds" },
+          { "value": "6000", "label": "6 seconds" },
+          { "value": "7000", "label": "7 seconds" },
+          { "value": "8000", "label": "8 seconds" },
+          { "value": "9000", "label": "9 seconds" },
+          { "value": "10000", "label": "10 seconds" }
+        ],
+        "default": "4000"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_nav",
+        "label": "Show nav",
+        "default": false
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_nav",
+        "label": "Color nav",
+        "default": "background-1"
+      },
+      {
+        "type":  "header",
+        "content": "Block product"
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "range",
+        "id": "limit",
+        "min": 2,
+        "max": 15,
+        "step": 1,
+        "label": "Limit",
+        "default": 10,
+        "info": "Select number limit products"
+      },
+      {
+        "type": "color",
+        "id": "c_dot",
+        "label": "Dots color",
+        "default": "#666666"
+      },
+      {
+        "type": "color",
+        "id": "c_dot_a",
+        "label": "Dots color active",
+        "default": "#000000"
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "section_corner",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Corner radius section",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors",
+        "default": "#fff" 
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "full", "label": "Full" },
+          { "value": "container", "label": "Container"}
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Image",
+            "info": "554 x 874 recommend"
+          },
+          {
+            "type": "url",
+            "id": "img_link",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Image - Products",
+        "settings": {
+          "collection": "frontpage"
+        },
+        "blocks": [
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

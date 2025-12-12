@@ -1,0 +1,327 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "nov-page-about-us",
+      "blocks": {
+        "36565fd9-4086-4fa5-8c15-db85e063a1b1": {
+          "type": "image",
+          "settings": {
+            "corner_radius": 20,
+            "distance_bottom": 50
+          }
+        },
+        "19efe45f-ad63-4c96-96a2-845f284fb3d7": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Lorem ipsum dolor sit am et, consectetur adipiscing elit. Etiam consequat ut ex vel finibus. Nunc eget molestie purus. Fusce imperdiet pulvinar est, eget fermentum nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae</p>",
+            "tb_c": "",
+            "t_s": 16,
+            "t_s_md": 16,
+            "t_c": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-700",
+            "t_tt": "none",
+            "t_lh": "1.5",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom": 30
+          }
+        },
+        "3b132045-2d40-4e4a-beac-9bcf8cda2932": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Maecenas congue metus id turpis iaculis mattis. Sed pellentesque id arcu id scelerisque. Ut ullamcorper rutrum justo, at blandit eros maximus ut. Integer non tincidunt justo, rhoncus Aenean venenatis sed purus ac sollicitudin. Nulla mauris risus, commodo et luctus rutrum, lobortis sed mauris. Integer congue, sem elementum varius tristique, erat nulla rutrum risus, a imperdiet nulla lorem fermentum erat. Pellentesque elementum justo at velit fringilla, eu feugiat erat fermentum. Vivamus libero dolor, porta eget vehicula eu, iaculis id lacus. Sed interdum convallis sapien, eget faucibus sapien. Proin hendrerit lacus turpis.</p>",
+            "tb_c": "",
+            "t_s": 16,
+            "t_s_md": 16,
+            "t_c": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-400",
+            "t_tt": "none",
+            "t_lh": "1.5",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom": 30
+          }
+        },
+        "c6d47373-79c7-499c-a4cf-f289f55c09d7": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Maecenas congue metus id turpis iaculis mattis. Sed pellentesque id arcu id scelerisque. Ut ullamcorper rutrum justo, at blandit eros maximus ut. Integer non tincidunt justo, rhoncus Aenean venenatis sed purus ac sollicitudin. Nulla mauris risus, commodo et luctus rutrum, lobortis sed mauris.</p>",
+            "tb_c": "",
+            "t_s": 16,
+            "t_s_md": 16,
+            "t_c": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-400",
+            "t_tt": "none",
+            "t_lh": "1.5",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom": 5
+          }
+        },
+        "0e2d07ef-c64c-4922-a3af-a8c60a55a04a": {
+          "type": "quote",
+          "settings": {
+            "background_color": "#f1f1f1",
+            "image_quote": "shopify://shop_images/quote.png",
+            "icon_quotes": "shopify://shop_images/icon_quote.png",
+            "text_content": "<p>Best purchase I’ve made this winter! The color and knitting are exquisite and it's so comfy! Went from NYC to Miami without ever taking it off. Super cute!!</p>",
+            "color_content": "#232630",
+            "fz_content": "2rem",
+            "lh_content": "40px",
+            "author": "Kwang Shang. - CEO Vinovathemes",
+            "color_author": "#232630",
+            "fz_author": "13px",
+            "class": "mt-90"
+          }
+        }
+      },
+      "block_order": [
+        "36565fd9-4086-4fa5-8c15-db85e063a1b1",
+        "19efe45f-ad63-4c96-96a2-845f284fb3d7",
+        "3b132045-2d40-4e4a-beac-9bcf8cda2932",
+        "c6d47373-79c7-499c-a4cf-f289f55c09d7",
+        "0e2d07ef-c64c-4922-a3af-a8c60a55a04a"
+      ],
+      "settings": {}
+    },
+    "1660960323abfb3055": {
+      "type": "nov-img-text",
+      "blocks": {
+        "7bdf095c-a57b-4673-bd1c-8a497ea7ad35": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Why choose us ?</strong></p>",
+            "tb_c": "",
+            "t_s": 22,
+            "t_s_lg": 13,
+            "t_s_md": 18,
+            "t_c": "#0d2235",
+            "c_link_h": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-800",
+            "t_tt": "none",
+            "t_lh": "1.5",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom_xl": 30,
+            "distance_bottom_lg": 30,
+            "distance_bottom_md": 30,
+            "distance_bottom_xs": 30
+          }
+        },
+        "22b08cd0-39c0-4d7b-ad29-100877b35ac2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Maecenas congue metus id turpis iaculis mattis. Sed pellentesque id arcu id scelerisque. Ut ullamcorper rutrum justo, at blandit eros maximus ut. Integer non tincidunt justo, rhoncus Aenean venenatis sed purus ac sollicitudin. Nulla mauris risus, commodo et luctus rutrum, lobortis sed mauris. Integer congue, sem elementum varius tristique.</p>",
+            "tb_c": "",
+            "t_s": 16,
+            "t_s_lg": 13,
+            "t_s_md": 14,
+            "t_c": "#505157",
+            "c_link_h": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-400",
+            "t_tt": "none",
+            "t_lh": "1.9",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom_xl": 30,
+            "distance_bottom_lg": 30,
+            "distance_bottom_md": 30,
+            "distance_bottom_xs": 30
+          }
+        }
+      },
+      "block_order": [
+        "7bdf095c-a57b-4673-bd1c-8a497ea7ad35",
+        "22b08cd0-39c0-4d7b-ad29-100877b35ac2"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_color": "#222222",
+        "subheading": "",
+        "subheading_color": "#666666",
+        "descheading": "",
+        "descheading_color": "#666666",
+        "subheading_position": "bottom",
+        "heading_alignment": "text-left",
+        "image1": "shopify://shop_images/71390-shopping-cart-loader.gif",
+        "img_title": "",
+        "img_subtitle": "",
+        "img_text_color": "",
+        "autoplay": true,
+        "show_dots": true,
+        "c_dots": "#dcdcde",
+        "c_dots_a": "#000000",
+        "show_nav": true,
+        "c_nav": "#dcdcde",
+        "c_nav_a": "#000000",
+        "bg_block_img": "#ffffff",
+        "img_radius": 0,
+        "width_img": "col-lg-6",
+        "position_lg": "right",
+        "position": "right",
+        "width_text": "col-lg-6",
+        "alignment": "text-left",
+        "text_position_horizontal": "center",
+        "text_position_vertical": "center",
+        "spacing_horizontal": 0,
+        "bg_color_text": "",
+        "show_boxshadow_text": false,
+        "shadow_corner": 0,
+        "show_btn_learnmore": false,
+        "btn_type": "btn-primary",
+        "animate": true,
+        "spacing": 30,
+        "container": "container",
+        "background_color": "",
+        "gradient": "",
+        "class": "",
+        "px": 0,
+        "distance_top_xl": 30,
+        "distance_top_md": 30,
+        "distance_top_xs": 30,
+        "distance_bottom_xl": 30,
+        "distance_bottom_lg": 30,
+        "distance_bottom_md": 30,
+        "distance_bottom_xs": 30
+      }
+    },
+    "436a868c-889a-4ac7-8958-e6d4b6b6d5cd": {
+      "type": "nov-line",
+      "settings": {
+        "height": 1,
+        "color": "#d9d9d9",
+        "style": "solid",
+        "opacity": 100,
+        "animate": false,
+        "container": "container",
+        "background_color": "#ffffff",
+        "class": "",
+        "distance_top": 30,
+        "distance_bottom": 30
+      }
+    },
+    "e0b5f762-dd19-4e02-bd66-eb1acd452996": {
+      "type": "nov-img-text",
+      "blocks": {
+        "fa6eaa9d-f8dd-4297-bbd9-5fd0bd528ffb": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Trusted online shopping</strong></p>",
+            "tb_c": "",
+            "t_s": 22,
+            "t_s_lg": 13,
+            "t_s_md": 18,
+            "t_c": "#222222",
+            "c_link_h": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-800",
+            "t_tt": "none",
+            "t_lh": "1.5",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom_xl": 30,
+            "distance_bottom_lg": 30,
+            "distance_bottom_md": 30,
+            "distance_bottom_xs": 30
+          }
+        },
+        "46058ecb-b439-43a4-bf10-8e2e8f43bbff": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Maecenas congue metus id turpis iaculis mattis. Sed pellentesque id arcu id scelerisque. Ut ullamcorper rutrum justo, at blandit eros maximus ut. Integer non tincidunt justo, rhoncus Aenean venenatis sed purus ac sollicitudin. Nulla mauris risus, commodo et luctus rutrum, lobortis sed mauris. Integer congue, sem elementum varius tristique.</p>",
+            "tb_c": "",
+            "t_s": 16,
+            "t_s_lg": 13,
+            "t_s_md": 13,
+            "t_c": "#505157",
+            "c_link_h": "#000000",
+            "ff": "f_df",
+            "t_fw": "font-400",
+            "t_tt": "none",
+            "t_lh": "1.9",
+            "t_lt": "0",
+            "t_m": 1320,
+            "distance_bottom_xl": 30,
+            "distance_bottom_lg": 30,
+            "distance_bottom_md": 30,
+            "distance_bottom_xs": 30
+          }
+        }
+      },
+      "block_order": [
+        "fa6eaa9d-f8dd-4297-bbd9-5fd0bd528ffb",
+        "46058ecb-b439-43a4-bf10-8e2e8f43bbff"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_color": "#222222",
+        "subheading": "",
+        "subheading_color": "#666666",
+        "descheading": "",
+        "descheading_color": "#666666",
+        "subheading_position": "bottom",
+        "heading_alignment": "text-left",
+        "image1": "shopify://shop_images/74384-swipe-for-shopping.gif",
+        "img_title": "",
+        "img_subtitle": "",
+        "img_text_color": "",
+        "autoplay": true,
+        "show_dots": true,
+        "c_dots": "#dcdcde",
+        "c_dots_a": "#000000",
+        "show_nav": true,
+        "c_nav": "#dcdcde",
+        "c_nav_a": "#000000",
+        "bg_block_img": "#ffffff",
+        "img_radius": 0,
+        "width_img": "col-lg-6",
+        "position_lg": "left",
+        "position": "left",
+        "width_text": "col-lg-6",
+        "alignment": "text-left",
+        "text_position_horizontal": "center",
+        "text_position_vertical": "center",
+        "spacing_horizontal": 0,
+        "bg_color_text": "",
+        "show_boxshadow_text": false,
+        "shadow_corner": 0,
+        "show_btn_learnmore": false,
+        "btn_type": "btn-primary",
+        "animate": true,
+        "spacing": 30,
+        "container": "container",
+        "background_color": "",
+        "gradient": "",
+        "class": "",
+        "px": 0,
+        "distance_top_xl": 30,
+        "distance_top_md": 30,
+        "distance_top_xs": 30,
+        "distance_bottom_xl": 30,
+        "distance_bottom_lg": 30,
+        "distance_bottom_md": 30,
+        "distance_bottom_xs": 30
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1660960323abfb3055",
+    "436a868c-889a-4ac7-8958-e6d4b6b6d5cd",
+    "e0b5f762-dd19-4e02-bd66-eb1acd452996"
+  ]
+}

@@ -1,0 +1,60 @@
+<input type="hidden" id="fraspyCustomerId" value="{{ customer.id }}">
+
+<div class="alert alert-success" id="verifySuccessAccount">
+  Dein Alter wurde verifiziert. Du hast nun die Möglichkeit alle Artikel in unserem Shop bestellen zu können.
+</div>
+
+<div class="alert alert-danger" id="verifyErrorAccount">
+  <p style="display: inline-block !important;padding-top: 10px !important;margin-bottom:0px;">
+    Dein Kundenkonto wurde noch nicht verifiziert. Du hast an dieser Stelle die Möglichkeit Dein Alter zu verifizieren.
+  </p>
+  <br>
+  <button id="ageverify" class="btn btn--primary">Jetzt Alter verifizieren</button>
+</div>
+
+<div id="modal-background-first"></div>
+<div id="modal-content-first">
+  <div class="fraspyContainerAccount">
+    <h2 class="fraspyTitleAccount">Altersprüfung</h2>
+    <p class="fraspyDescriptionAccount">
+      Bitte gebe Dein Geburtsdatum ein und bestätige die Option für die Online-Verifizierung.
+    </p>
+    <form class="customer addresses fraspyForm" id="create_customer" onsubmit="return false">
+      <input type="hidden" name="useAccount" value="1">
+      <input type="hidden" name="customerId" value="{{ customer.id }}">
+
+      <div class="field" style="text-align:center;width: 150px;margin: 0 auto;background-color: #ffffff;">
+        <label
+          class="form-field-title"
+          style="color: #000000;"
+          for="register_birthday"
+        >
+          Geburtsdatum
+        </label>
+        <input
+          type="date"
+          id="register_birthday"
+          name="birthday"
+          autocapitalize="words"
+          class="input input--{{ settings.input_style }} input--large"
+          required="required"
+        >
+      </div>
+
+      <div class="fraspyContainer"></div>
+      <input
+        type="button"
+        class="button-primary btn fraspyCancelButtonAccount"
+        id="fraspyModalHide"
+        value="Abbrechen"
+      >
+
+      <input
+        type="submit"
+        class="button-primary btn fraspySubmitButtonAccount"
+        value="Alter verifzieren"
+        id="fraspyModalSubmit"
+      >
+    </form>
+  </div>
+</div>

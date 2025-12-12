@@ -1,0 +1,310 @@
+{%- assign sst = section.settings -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    {% if sst.background_color != blank %}
+      background-color: {{ sst.background_color }};
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="{% if sst.bg_size == 'full' %}distance{% if sst.class != blank %} {{ sst.class }}{% endif %} {% endif %}">
+  <div class="{{ sst.container }}">
+    {% render 'heading-section', sub_position: sst.subheading_position %}
+    <div class="{% if sst.bg_size == 'container' %}distance position-relative{% endif %}">
+      <div class="block__parallax {% if sst.reverse %}reverseX_parallax{% else %}itemX_parallax{% endif %}" data-margin="100px 0px">
+        <div class="d-flex" data-section-id="{{ section.id }}" style="--margin: {{ sst.spacing }}px; --corner: {{ sst.bd_radius }}px">
+          {% for block in section.blocks %}
+            {% assign bst = block.settings %}
+            {% if block.type == 'image' %}
+              <div class="gallery-image__item overflow_hidden position-relative{% if sst.style_img_1 %} nov-sh-image-1{% endif %}{% if sst.style_img_2 %} nov-sh-image-2{% endif %}">
+                {% if bst.image != blank %}
+                  <a href="{{ bst.image | image_url: width:1200 }}" class="d-block" data-fancybox="gallery">
+                    {%- render 'nov-aspect-image', image: bst.image, aspect: sst.aspect -%}
+                  </a>
+                {% else %}
+                  {%- capture current -%}{% cycle 1, 2, 3 %}{%- endcapture -%}
+                  {{ 'hero-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Gallery Image Parallax",
+  "class": "section-gallery-image-parallax",
+  "settings":[
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Vinova Gallery Image Parallax</p>"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#222222"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Sub heading",
+      "default": "<p>Subtitle from happy customers</p>"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Sub heading color",
+      "default": "#666666"
+    },
+    {
+      "type": "richtext",
+      "id": "descheading",
+      "label": "Description",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+    },
+    {
+      "type": "color",
+      "id": "descheading_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "subheading_position",
+      "label": "Sub heading position",
+      "default": "bottom",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "text-left",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Item image style"
+    },
+    {
+      "type": "select",
+      "id": "aspect",
+      "label": "Item aspect ratio",
+      "default": "43",
+      "options": [
+        {"value": "auto", "label": "auto"},
+        {"value": "11", "label": "1/1"},
+        {"value": "34", "label": "3/4"},
+        {"value": "43", "label": "4/3"}
+      ]
+    },
+    {
+      "type": "range",
+      "id": "bd_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "label": "Border radius image (px)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "label": "Spacing items",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Scroll reverse"
+    },
+    {
+      "type": "header",
+      "content": "Section Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "animate",
+      "label": "Show animated",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "Container",
+      "default": "container",
+      "options": [
+        { "value": "container", "label": "Container" },
+        { "value": "container-fluid", "label": "Container fluid" },
+        { "value": "container-full", "label": "Container full width" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colors"
+    },
+    {
+      "type": "select",
+      "id": "bg_size",
+      "label": "Background size",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Full" },
+        { "value": "container", "label": "Container"}
+      ]
+    },
+    {
+      "type": "text",
+      "id": "class",
+      "label": "Class"
+    },
+    {
+      "type": "number",
+      "id": "px",
+      "label": "Horizontally spacing section (px)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Spacing Top (px)"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_xl",
+      "label": "Large laptop",
+      "default": 30,
+      "info": "Breakpoint 1200px"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_md",
+      "label": "Tablet",
+      "default": 30,
+      "info": "Breakpoint 768px"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_xs",
+      "label": "Mobile",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Spacing Bottom (px)"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_xl",
+      "label": "Large laptop",
+      "default": 30,
+      "info": "Breakpoint 1200px"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_md",
+      "label": "Tablet",
+      "default": 30,
+      "info": "Breakpoint 768px"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_xs",
+      "label": "Mobile",
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1200px recommend"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vinova Gallery Image Parallax",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

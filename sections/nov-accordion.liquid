@@ -1,0 +1,391 @@
+{%- assign sst = section.settings -%}
+{%- style -%}
+  {%- assign bg_image = section.settings.background_image -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} center;
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .nov-accordion__item {
+    border-color: {{ sst.border_c }};
+    border-radius: {{ sst.br_item }}px;
+  }
+  #shopify-section-{{ section.id }} .nov-accordion__item.act {
+    border-color: {{ sst.border_ca }};
+  }
+  #shopify-section-{{ section.id }} .respone_image {
+    border-radius: {{ sst.br_item }}px;
+  }
+  #shopify-section-{{ section.id }} .nov-accordion__title, #shopify-section-{{ section.id }} .nov-accordion__title:after {
+    color: {{ sst.title_c }};
+    background-color: {{ sst.title_bg }};
+  }
+  #shopify-section-{{ section.id }} .nov-accordion__title.act, #shopify-section-{{ section.id }} .nov-accordion__title.act:after {
+    color: {{ sst.title_ca }};
+    background-color: {{ sst.title_bga }};
+  }
+  #shopify-section-{{ section.id }} .nov-accordion__content {
+    color: {{ sst.content_c }};
+    background-color: {{ sst.item_bg }};
+  }
+{%- endstyle -%}
+{% if sst.video_url != blank %}
+  {% assign mb = 'mb-0' %}
+{% endif %}
+
+<div class="distance color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}">
+  <div class="{{ sst.container }}">
+    {% render 'heading-section', sub_position: sst.subheading_position, class: mb %}
+    {% if sst.video_url != blank %}
+      <div class="text-center mt-30 mb-60">
+        <div class="icon_play d-inline-flex align-items-center pointer c_h hover:c_df" data-toggle="modal" data-target="#ModalVideo" data-src="{% if sst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ sst.video_url.id }}?rel=0&showinfo=0&vq=720{% endif %}{% if sst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ sst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}">
+          {{ 'sections.accordion.watch_video' | t }}
+          <i class="zmdi zmdi-play-circle-outline"></i>
+        </div>
+      </div>
+    {% endif %}
+    {% if sst.banner != blank %}
+      <div class="show-banner row spacing-25">
+        <div class="block-banner col-lg-6 mb-md-30">{% render 'nov-aspect-image', image: sst.banner %}</div>
+    {% endif %}
+      <div class="block_accordion col-lg-6">
+        <div class="nov-accordion">
+          {% for block in section.blocks %}
+            {% if block.type == 'content' %}
+              <div class="nov-accordion__item{% if forloop.last == false %} mb-20{% endif %}{% if sst.animate == true %} wow fadeInUp animated{% endif %}"  data-wow-delay="{{ forloop.index | times: 0.1 }}s">
+                <div class="nov-accordion__title f_pr font-500{% if forloop.first == true %} act{% endif %}">{{ block.settings.title }}</div>
+                <div class="nov-accordion__content">
+                  <div class="block">{{ block.settings.content }}</div>
+                </div>
+              </div>
+            {% endif %}
+            {% if block.type == '@app' %}
+              <div class="nov-accordion__item{% if forloop.last == false %} mb-20{% endif %}{% if sst.animate == true %} wow fadeInUp animated{% endif %}"  data-wow-delay="{{ forloop.index | times: 0.1 }}s">
+                <div class="nov-accordion__title f_pr font-500{% if forloop.first == true %} act{% endif %}">App</div>
+                <div class="nov-accordion__content">
+                  <div class="block">{% render block %}</div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% if sst.banner != blank %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Accordion",
+    "class": "section-accordion",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Accordion</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "video_url",
+        "id": "video_url",
+        "label": "Video link",
+        "accept": ["youtube", "vimeo"],
+        "info": "Only for Youtube and Vimeo"
+      },
+      {
+        "type":  "header",
+        "content": "Banner"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner",
+        "label": "Banner"
+      },
+      {
+        "type":  "header",
+        "content": "Style Item"
+      },
+      {
+        "type": "color",
+        "id": "title_c",
+        "label": "Title color",
+        "default": "#222"
+      },
+      {
+        "type": "color",
+        "id": "title_bg",
+        "label": "Title background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "content_c",
+        "label": "Content color",
+        "default": "#666"
+      },
+      {
+        "type": "color",
+        "id": "border_c",
+        "label": "Border color",
+        "default": "#e5e5e5"
+      },
+      {
+        "type": "color",
+        "id": "item_bg",
+        "label": "Item background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "title_ca",
+        "label": "Active title color",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "title_bga",
+        "label": "Active title background",
+        "default": "#f1f1f1"
+      },
+      {
+        "type": "color",
+        "id": "border_ca",
+        "label": "Border color active",
+        "default": "#e5e5e5"
+      },
+      {
+        "type": "range",
+        "id": "br_item",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Corner radius item",
+        "default": 0
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   false
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "content",
+        "name": "Content",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Title",
+            "default": "Lorem ipsum dolor sit amet"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Accordion",
+        "category": "Text",
+        "blocks": [
+          {
+            "type":"content",
+            "settings":{
+              "title": "Lorem ipsum dolor sit amet",
+              "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet augue sit amet magna vestibulum pharetra. Vivamus ut est orci. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>"
+            }
+          },
+          {
+            "type":"content",
+            "settings":{
+              "title": "Lorem ipsum dolor sit amet",
+              "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet augue sit amet magna vestibulum pharetra. Vivamus ut est orci. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>"
+            }
+          },
+          {
+            "type":"content",
+            "settings":{
+              "title": "Lorem ipsum dolor sit amet",
+              "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet augue sit amet magna vestibulum pharetra. Vivamus ut est orci. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

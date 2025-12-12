@@ -1,0 +1,24 @@
+{% render 'nov-breadcrumb', class_br: 'breadcrumb_inner' %}
+<div class="wishlist-page">
+  <div class="container">
+    <div class="wishlist-content" data-wishlist-container>
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Vinova Page Wishlist",
+  "class": "page-wishlist",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}
+

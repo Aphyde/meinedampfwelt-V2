@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer 6",
+  "type": "footer",
+  "sections": {
+    "nov_newsletter_rb8pD3": {
+      "type": "nov-newsletter",
+      "settings": {
+        "heading": "<p>Subscribe & Get 45% Discount</p>",
+        "heading_color": "#ffffff",
+        "subheading": "<p>Become a Member and Unlock Exclusive Access to Our Best-Selling Products at an Unbeatable 45% Discount!</p>",
+        "subheading_color": "#ffffff",
+        "descheading": "",
+        "descheading_color": "#666666",
+        "subheading_position": "bottom",
+        "heading_alignment": "text-center",
+        "btn_type": "btn-primary",
+        "animate": true,
+        "container": "container",
+        "color_section": "",
+        "background_color": "#17171a",
+        "height_background": 100,
+        "height_background_mobile": 100,
+        "bg_position": "top",
+        "bg_size": "auto",
+        "corner_radius": 0,
+        "class": "",
+        "spacing_horizotal": 0,
+        "distance_top_xl": 80,
+        "distance_top_md": 60,
+        "distance_top_xs": 40,
+        "distance_bottom_xl": 80,
+        "distance_bottom_md": 60,
+        "distance_bottom_xs": 40
+      }
+    },
+    "footer": {
+      "type": "nov-footer-6",
+      "settings": {
+        "animate": true,
+        "border_top": false,
+        "container": "container-fluid",
+        "color_section": "scheme-04393371-483d-4574-816b-1c18b91f3d86",
+        "background_color": "#17171a",
+        "background_image_size": "auto",
+        "bg_size": "full",
+        "btn_type": "btn-primary",
+        "show_footer_copyright": true,
+        "color_copyright": "scheme-04393371-483d-4574-816b-1c18b91f3d86",
+        "bg_copyright": "rgba(0,0,0,0)",
+        "show_copyright_border_top": false,
+        "copyright_border_top_opa": 25,
+        "copyright": "Copyright © 2025 Nova Creative. All Rights Reserved.",
+        "logo_copyright": "shopify://shop_images/Logo_white.png",
+        "logo_copyright_mw": 150,
+        "menu_copy": "footer",
+        "show_payment": false,
+        "payment": "shopify://shop_images/payment.png",
+        "payment_mw": 200,
+        "show_copyright_social": true,
+        "mobile_acc": true
+      }
+    }
+  },
+  "order": [
+    "nov_newsletter_rb8pD3",
+    "footer"
+  ]
+}

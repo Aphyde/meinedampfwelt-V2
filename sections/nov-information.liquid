@@ -1,0 +1,438 @@
+{% liquid 
+  assign sst = section.settings
+%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    background: var(--color-background);
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% if sst.bg_pattern != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      background: url("{{ sst.bg_pattern | image_url: width: 960 }}");
+      background-size: contain;
+      background-repeat: no-repeat;
+      aspect-ratio: 1 / {{ 1 | divided_by: sst.bg_pattern.aspect_ratio }};
+      {{ sst.bg_pattern_position }}
+    }
+  {% endif %}
+  {% if sst.bg_pattern2 != blank %}
+    #shopify-section-{{ section.id }} .distance:after {
+      content: "";
+      position: absolute;
+      background: url("{{ sst.bg_pattern2 | image_url: width: 960 }}");
+      background-size: contain;
+      background-repeat: no-repeat;
+      aspect-ratio: 1 / {{ 1 | divided_by: sst.bg_pattern2.aspect_ratio }};
+      {{ sst.bg_pattern2_position }}
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .item-content {
+    --item-bg: {{ sst.item_bg }};
+    --item-bg-af: {{ sst.item_bg_after }};
+    --item-border: {{ sst.item_border }};
+    --icon-size: {{ sst.icon_size }}px;
+    --icon-bg: {{ sst.icon_bg }};
+    --icon-border: {{ sst.icon_border }};
+    --title-color: {{ sst.title_color }};
+    --desc-color: {{ sst.desc_color }};
+  }
+{% endstyle %}
+<div class="distance position-relative color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}">
+  <div class="{{ sst.container }}">
+    {% render 'heading-section', sub_position: sst.subheading_position, class: 'mb-75' %}
+    <div class="row spacing-{{ sst.spacing }} flex-nowrap">
+      {% for block in section.blocks %}
+        <div class="item {% render 'number-to-col' %} {% if sst.animate %} wow fadeInRight animated{% endif %}" data-wow-delay="{{ forloop.index | times: 0.03 }}s">
+          <div class="item-content">
+            {% if block.type == 'item' %}
+              <div class="item-content-inner position-relative">
+                {% if block.settings.icon != blank %}
+                  <div class="item-icon">
+                    <img src="{{ block.settings.icon | image_url: width: 20 }}" data-src="{{ block.settings.icon | image_url: width: 300 }}" class="lazyload img-fluid" alt="{{ block.settings.icon.alt | default: 'icon' }}" width="300" height="300">
+                  </div>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <div class="item-title">{{ block.settings.title }}</div>
+                {% endif %}
+                {% if block.settings.desc != blank %}
+                  <div class="item-desc">{{ block.settings.desc }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if block.type == '@app' %}
+              {% render block %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Information",
+    "class": "section-information",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Information</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Item Per Row"
+      },
+      {
+        "type": "range",
+        "id": "xxl",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Desktop",
+        "default": 3,
+        "info": "Breakpoint 1440px"
+      },
+      {
+        "type": "range",
+        "id": "xl",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Large laptop",
+        "default": 3,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "range",
+        "id": "lg",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Laptop",
+        "default": 3,
+        "info": "Breakpoint 992px"
+      },
+      {
+        "type": "header",
+        "content": "Spacing"
+      },
+      {
+        "type": "range",
+        "id": "spacing",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "label": "Spacing",
+        "default": 30,
+        "info": "Spacing item",
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "Item style"
+      },
+      {
+        "type": "color",
+        "id": "item_bg",
+        "label": "Item background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "item_bg_after",
+        "label": "Item after background",
+        "default": "#fabe17"
+      },
+      {
+        "type": "color",
+        "id": "item_border",
+        "label": "Item border",
+        "default": "#000"
+      },
+      {
+        "type": "paragraph",
+        "content": "=================="
+      },
+      {
+        "type": "range",
+        "id": "icon_size",
+        "min": 80,
+        "max": 300,
+        "step": 5,
+        "label": "Icon size",
+        "default": 100,
+        "unit": "px"
+      },
+      {
+        "type": "color",
+        "id": "icon_bg",
+        "label": "Icon background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "icon_border",
+        "label": "Icon border",
+        "default": "#ffde84"
+      },
+      {
+        "type": "paragraph",
+        "content": "=================="
+      },
+      {
+        "type": "color",
+        "id": "title_color",
+        "label": "Title color",
+        "default": "#5b2800"
+      },
+      {
+        "type": "color",
+        "id": "desc_color",
+        "label": "Description color",
+        "default": "#434343"
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   false
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_pattern",
+        "label": "Background pattern"
+      },
+      {
+        "type": "html",
+        "id": "bg_pattern_position",
+        "label": "Pattern style",
+        "default": "width: 20%; left: 0; top: 20%",
+        "info": "Example: width: 20%; left: 0; top: 20%"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_pattern2",
+        "label": "Background pattern 2"
+      },
+      {
+        "type": "html",
+        "id": "bg_pattern2_position",
+        "label": "Pattern 2 style",
+        "default": "width: 20%; left: 0; top: 20%",
+        "info": "Example: width: 20%; left: 0; top: 20%"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Info item",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
+          },
+          {
+            "type": "richtext",
+            "id": "title",
+            "label": "Title",
+            "default": "<p>Lorem ipsum asimets</p>"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "desc",
+            "label": "Description",
+            "default": "Maecenas ante velit, consequat ut diam vel, tincidunt aliquam nunc"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Information",
+        "blocks": [
+          {
+            "type":"item",
+            "settings":{
+              "title": "<p>Lorem ipsum asimets</p>",
+              "desc": "Maecenas ante velit, consequat ut diam vel, tincidunt aliquam nunc"
+            }
+          },
+          {
+            "type":"item",
+            "settings":{
+              "title": "<p>Lorem ipsum asimets</p>",
+              "desc": "Maecenas ante velit, consequat ut diam vel, tincidunt aliquam nunc"
+            }
+          },
+          {
+            "type":"item",
+            "settings":{
+              "title": "<p>Lorem ipsum asimets</p>",
+              "desc": "Maecenas ante velit, consequat ut diam vel, tincidunt aliquam nunc"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

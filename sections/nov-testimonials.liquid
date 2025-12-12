@@ -1,0 +1,706 @@
+{%- liquid
+  assign sst = section.settings
+  assign bg_image = sst.background_image
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    margin-bottom: {{ sst.mb_xs }}px;
+  }
+  {% if sst.background_color != blank or bg_image != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      {% if sst.bg_position == 'top' %}
+        top: 0;
+      {% elsif sst.bg_position == 'center' %}
+        top: 50%;
+        transform: translateY(-50%);
+      {% else %}
+        bottom: 0;
+      {% endif %}
+      left: 0;
+      width: 100%;
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} no-repeat {{ sst.bg_img_position }} center;
+      background-size: cover;
+      z-index: -1;
+    }
+  {% endif %}
+  @media(max-width: 575px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_xs }}%;
+    }
+  }
+  @media(min-width: 576px) and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_sm }}%;
+    }
+  }
+  @media(min-width: 768px) and (max-width: 991px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_md }}%;
+    }
+  }
+  @media(min-width: 992px) and (max-width: 1199px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_lg }}%;
+    }
+  }
+  @media(min-width: 1200px) and (max-width: 1440px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_xl }}%;
+    }
+  }
+  @media(min-width: 1441px) {
+    #shopify-section-{{ section.id }} .distance:before {
+      height: {{ sst.height_background_xxl }}%;
+    }
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+      margin-bottom: {{ sst.mb_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+      margin-bottom: {{ sst.mb_xl }}px;
+    }
+  }
+  {% if sst.text_mw != blank %}
+    #shopify-section-{{ section.id }} .testimonial-item__quote p {
+      max-width: {{ sst.text_mw }}px;
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .slick-slider .slick-dots li button {
+    --slider-dot-color: {{ sst.dots_color }};
+  }
+  #shopify-section-{{ section.id }} .slick-slider .slick-dots li.slick-active button {
+    --slider-dot-color-act: {{ sst.dots_color_act }};
+  }
+  {% if sst.show_quote %}
+    #shopify-section-{{ section.id }} .icon-quote {
+      color: {{ sst.color_quote }};
+    }
+  {% endif %}
+  {% if sst.s_star %}
+    #shopify-section-{{ section.id }} .testimonial-rating i.rating {
+      color: {{ sst.color_rating }}
+    }
+  {% endif %}
+  {% if sst.banner != blank %}
+    #shopify-section-{{ section.id }} .banner-content {
+      border-radius: {{ sst.corner_img }}px;
+      overflow: hidden;
+      --bg: {{ sst.background_color | default: '#fff' }};
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .testimonial-item {
+    background: {{ sst.bg_item }};
+    border-radius: {{ sst.corner_item }}px;
+  }
+{% endstyle %}
+
+<div class="color-{{ sst.color_section }}{% if sst.bg_size == 'full' %} distance position-relative{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}" data-section-id="{{ section.id }}" data-section-type="nov-slick">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}position-relative distance{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}">
+      {% if section.blocks.size > 0 %}
+      {% render 'heading-section', sub_position: sst.subheading_position %}
+      {% if sst.banner != blank %}
+        <div class="row spacing-30">
+          <div class="col-xl-8 col-lg-6">
+      {% endif %}
+          <div class="block-testimonial">
+            <div class="nov-slick-carousel row spacing-30{% if sst.show_avatar %} show-avatar{% endif %}"
+              data-autoplay="false" 
+              data-autoplayTimeout="6000"
+              data-loop="false"
+              data-dots="{{ sst.show_dots }}"
+              data-nav="{{ sst.show_nav }}"
+              data-items="1"
+              data-items_lg="1"
+              data-items_md="1"
+              data-items_sm="1"
+              data-items_xs="1"
+              data-row="1">
+                {% for block in section.blocks %}
+                  {% assign bst = block.settings %}
+                  {%- liquid 
+                    case bst.star
+                      when 1
+                      assign ns = '<i class="rating"></i><i></i><i></i><i></i><i></i>'
+                      when 2
+                      assign ns = '<i class="rating"></i><i class="rating"></i><i></i><i></i><i></i>'
+                      when 3
+                      assign ns = '<i class="rating"></i><i class="rating"></i><i class="rating"></i><i></i><i></i>'
+                      when 4
+                      assign ns = '<i class="rating"></i><i class="rating"></i><i class="rating"></i><i class="rating"></i><i></i>'
+                      when 5
+                      assign ns = '<i class="rating"></i><i class="rating"></i><i class="rating"></i><i class="rating"></i><i class="rating"></i>'
+                    endcase
+                  -%}
+                  {% if block.type == 'quote' %}
+                    <div class="sp-item position-relative">
+                      <div class="testimonial-item d-sm-flex align-items-center">
+                        {% if sst.show_avatar %}
+                          <div class="testimonial-avatar overflow_hidden rounded-circle mb-xs-30">
+                            {% if bst.avatar != blank %}
+                              <img class="lazyload img-fluid" data-src="{{ bst.avatar | image_url: width: 400, height: 400 }}" width="400" height="400" alt="{{ bst.avatar.alt }}">
+                            {% else %}
+                              {%- capture current -%}{% cycle 1, 2, 3, 4 %}{%- endcapture -%}
+                              {{ 'collection-apparel-' | append: current | placeholder_svg_tag : 'placeholder-svg' }}
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                        <div>
+                          {% if sst.show_quote %}
+                            <div class="icon-quote mb-30">
+                              {% render 'icon-quote' %}
+                            </div>
+                          {% endif %}
+                          {% if bst.title != blank %}<div class="testimonial-title mb-20">{{ bst.title }}</div>{% endif %}
+                          {% if sst.s_star %}
+                            <div class="testimonial-rating mb-15">{{ ns }}</div>
+                          {% endif %}
+                          {% if bst.quote != blank %}<div class="testimonial-item__quote font-300">{{ bst.quote }}</div>{% endif %}
+                          
+                          {% if bst.name != blank %}<div class="testimonial-name">{{ bst.name }}</div>{% endif %}
+                          {% if bst.info != blank %}<div class="testimonial-info mt-10">{{ bst.info }}</div>{% endif %}
+
+                          {% if sst.verified_purchase %}
+                            <div class="testimonial-verified-purchase d-flex align-items-center justify-content-center mt-30">
+                              <span class="icon-verified d-inline-flex"><i class="rbb-icon-check-4 position-relative"></i></span>
+                              <span>{{ 'sections.testimonial.verified_purchase' | t }}</span>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+            </div>
+          </div>
+      {% if sst.banner != blank %}
+          </div>
+          <div class="col-xl-4 col-lg-6 mb-md-30">
+            <div class="banner-content position-relative">
+              {% render 'nov-aspect-image', image: sst.banner %}
+              {% if sst.banner_pattern %}
+                <div class="pattern1 position-absolute">
+                  {% render 'icon-pattern-testimonial' %}
+                  {% render 'icon-pattern-testimonial' %}
+                </div>
+                <div class="pattern2 position-absolute">
+                  {% render 'icon-pattern-testimonial' %}
+                  {% render 'icon-pattern-testimonial' %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% else %}
+        {% render 'no-blocks' %}
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Vinova Testimonials",
+    "class": "section-testimonials",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Testimonials</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_heading",
+        "label": "Image heading"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Item Per Row"
+      },
+      {
+        "type":  "header",
+        "content": "Slider"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_nav",
+        "label": "Show nav"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_dots",
+        "label": "Show dots"
+      },
+      {
+        "type": "color",
+        "id": "dots_color",
+        "label": "Dots color",
+        "default": "#d2d2d2"
+      },
+      {
+        "type": "color",
+        "id": "dots_color_act",
+        "label": "Dots active color",
+        "default": "#000"
+      },
+      {
+        "type":  "header",
+        "content": "Design Testimonials Item"
+      },
+      {
+        "type": "range",
+        "id": "corner_item",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "label": "Corner radius",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "s_star",
+        "label": "Show rating"
+      },
+      {
+        "type": "color",
+        "id": "color_rating",
+        "label": "Color rating",
+        "default": "#fdad09"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_avatar",
+        "label": "Show avatar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "text_mw",
+        "label": "Text max width (px)"
+      },
+      {
+        "type": "checkbox",
+        "id": "verified_purchase",
+        "label": "Show verified purchase",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quote",
+        "label": "Show quote",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "color_quote",
+        "label": "Color quote",
+        "default": "#d2d2d2"
+      },
+      {
+        "type": "color",
+        "id": "bg_item",
+        "label": "Background item",
+        "default": "#fff"
+      },
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner",
+        "label": "Banner"
+      },
+      {
+        "type": "range",
+        "id": "corner_img",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "label": "Corner radius",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "banner_pattern",
+        "label": "Show banner pattern",
+        "default": true
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container"},
+          { "value": "container-fluid", "label": "Container fluid"},
+          { "value": "container-full", "label": "Container full width"}
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "bg_img_position",
+        "label": "Background image position",
+        "default": "center",
+        "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "bottom", "label": "Bottom" }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "height_background_xxl",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 1441px ↑"
+      },
+      {
+        "type": "range",
+        "id": "height_background_xl",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 1200px ↑"
+      },
+      {
+        "type": "range",
+        "id": "height_background_lg",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 992px ↑"
+      },
+      {
+        "type": "range",
+        "id": "height_background_md",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 768px ↑"
+      },
+      {
+        "type": "range",
+        "id": "height_background_sm",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 576px ↑"
+      },
+      {
+        "type": "range",
+        "id": "height_background_xs",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%",
+        "info": "Breakpoint 575px ↓"
+      },
+      {
+        "type": "select",
+        "id": "bg_position",
+        "label": "Background position",
+        "default": "top",
+        "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "bottom", "label": "Bottom" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "full", "label": "Full" },
+          { "value": "container", "label": "Container"}
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Margin Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "mb_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "mb_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "mb_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "quote",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "avatar",
+            "label": "Avatar"
+          },
+          {
+            "type": "range",
+            "id": "star",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "label": "Rating",
+            "default": 5
+          },
+          {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Title",
+            "default": "CUSTOMER REVIEWS"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "name",
+            "label": "Name",
+            "default": "Christina M."
+          },
+          {
+            "type": "inline_richtext",
+            "id": "info",
+            "label": "Info",
+            "default": "From Canada"
+          },
+          {
+            "type": "richtext",
+            "id": "quote",
+            "label": "Text",
+            "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Testimonials",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

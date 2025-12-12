@@ -1,0 +1,201 @@
+{% comment %} Meine Dampfwelt – Kontakt-Kanäle (Chat/WhatsApp/Form) {% endcomment %}
+<section class="mdw-cc section-{{ section.id }}">
+  <div class="mdw-cc__inner {% if section.settings.narrow %}mdw--narrow{% endif %}">
+    {% if section.settings.heading != blank %}
+      <h2 class="mdw-cc__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p class="mdw-cc__sub">{{ section.settings.subheading }}</p>
+    {% endif %}
+
+    <div class="mdw-cc__grid">
+      {% for block in section.blocks %}
+        {% assign b = block.settings %}
+        {% capture card_attrs %}
+          class="mdw-cc__card"
+          {% if b.kind == 'chat' %} data-open-chat{% endif %}
+          {% if b.kind == 'whatsapp' and b.whatsapp_phone != blank %}
+            href="https://wa.me/{{ b.whatsapp_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | replace: '+', '' }}{% if b.whatsapp_prefill != blank %}?text={{ b.whatsapp_prefill | url_encode }}{% endif %}"
+            target="_blank" rel="noopener"
+          {% endif %}
+          {% if b.kind == 'link' and b.link_url != blank %}
+            href="{{ b.link_url }}"
+          {% endif %}
+        {% endcapture %}
+
+        {% if b.kind == 'chat' or b.kind == 'whatsapp' or b.kind == 'link' %}
+          {% assign tagname = 'a' %}
+        {% else %}
+          {% assign tagname = 'div' %}
+        {% endif %}
+
+        <{{ tagname }} {{ card_attrs }} {{ block.shopify_attributes }}>
+          <div class="mdw-cc__icon">
+            {% if b.icon != blank %}
+              <img src="{{ b.icon | image_url: width: 220 }}" alt="" width="{{ b.icon.width }}" height="{{ b.icon.height }}" loading="lazy">
+            {% endif %}
+          </div>
+          <h3 class="mdw-cc__title">{{ b.title }}</h3>
+          {% if b.text != blank %}<p class="mdw-cc__text">{{ b.text }}</p>{% endif %}
+        </{{ tagname }}>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Öffnet/Toggle die Shopify Inbox Blase
+      function openInbox() {
+        try{
+          var host = document.getElementById('ShopifyChat');
+          var btn  = host && host.shadowRoot && host.shadowRoot.querySelector('.chat-app > button');
+          if(btn){ btn.click(); return true; }
+        }catch(e){}
+        return false;
+      }
+
+      // Delegierter Click: alle Elemente mit data-open-chat
+      document.addEventListener('click', function(e){
+        var el = e.target.closest('[data-open-chat]');
+        if(!el) return;
+        e.preventDefault();
+        if(openInbox()) return;
+
+        // Falls Widget noch nicht da: warten bis es im DOM erscheint
+        var obs = new MutationObserver(function(){
+          if(openInbox()) obs.disconnect();
+        });
+        obs.observe(document.documentElement, {childList:true, subtree:true});
+
+        // Fallback-Timeout
+        setTimeout(openInbox, 1200);
+      });
+
+      // Optional: Deep-Link ?show_chat automatisch öffnen
+      if(new URLSearchParams(location.search).has('show_chat')){
+        setTimeout(openInbox, 800);
+      }
+    })();
+  </script>
+</section>
+
+<style>
+  .section-{{ section.id }}{
+    --mdw-title: {{ section.settings.title_color }};
+    --mdw-text: {{ section.settings.text_color }};
+    --mdw-card-bg: {{ section.settings.card_bg }};
+    --mdw-card-border: {{ section.settings.card_border }};
+    --mdw-card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    --mdw-card-shadow-hover: 0 10px 28px rgba(0,0,0,0.10);
+    padding: {{ section.settings.pad_top }}px 16px {{ section.settings.pad_bottom }}px;
+  }
+  .section-{{ section.id }} .mdw--narrow{max-width: 1080px; margin: 0 auto;}
+  .section-{{ section.id }} .mdw-cc__heading{
+    text-align:center; margin:0 0 8px; color:var(--mdw-title);
+    font-size: clamp(24px, 2.2vw, 34px); line-height:1.1; font-weight:700;
+  }
+  .section-{{ section.id }} .mdw-cc__sub{
+    text-align:center; color:var(--mdw-text); margin:0 0 40px;
+    font-size:16px; line-height:1.6; max-width:760px; margin-left:auto; margin-right:auto;
+  }
+  .section-{{ section.id }} .mdw-cc__grid{
+    display:grid; gap: 64px 80px; align-items:start;
+    grid-template-columns: 1fr; justify-items:center;
+  }
+  @media (min-width: 780px){ .section-{{ section.id }} .mdw-cc__grid{ grid-template-columns: repeat(2,1fr);} }
+  @media (min-width: 1100px){ .section-{{ section.id }} .mdw-cc__grid{ grid-template-columns: repeat(3,1fr);} }
+
+  .section-{{ section.id }} .mdw-cc__card{
+    width:100%; max-width: 340px; background:var(--mdw-card-bg);
+    border: 1px solid var(--mdw-card-border); border-radius: 14px;
+    box-shadow: var(--mdw-card-shadow);
+    padding: 28px 24px; text-align:center; text-decoration:none;
+    color: inherit; display:flex; flex-direction:column; align-items:center;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
+  }
+  .section-{{ section.id }} .mdw-cc__card:hover{ transform: translateY(-2px); box-shadow: var(--mdw-card-shadow-hover); }
+  .section-{{ section.id }} .mdw-cc__icon{ margin-bottom: 14px; }
+  .section-{{ section.id }} .mdw-cc__icon img{ width: 84px; height:auto; display:block; }
+  .section-{{ section.id }} .mdw-cc__title{
+    margin: 6px 0 10px; color: var(--mdw-title);
+    font-size: 20px; font-weight: 700;
+  }
+  .section-{{ section.id }} .mdw-cc__text{
+    color: var(--mdw-text); font-size: 15px; line-height: 1.6; margin:0;
+    max-width: 46ch;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MDW – Kontaktkanäle",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "So erreichst du uns" },
+    { "type": "textarea", "id": "subheading", "label": "Beschreibung", "default": "Wähle deinen bevorzugten Kanal – wir melden uns so schnell wie möglich." },
+    { "type": "checkbox", "id": "narrow", "label": "Schmaler Inhalt (max. 1080px)", "default": true },
+
+    { "type": "color", "id": "title_color", "label": "Titel-Farbe", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "Text-Farbe", "default": "#4a4a4a" },
+    { "type": "color", "id": "card_bg", "label": "Karten-Hintergrund", "default": "#ffffff" },
+    { "type": "color", "id": "card_border", "label": "Karten-Rand", "default": "rgba(0,0,0,0.06)" },
+    { "type": "range", "id": "pad_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding oben", "default": 48 },
+    { "type": "range", "id": "pad_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding unten", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Karte",
+      "settings": [
+        { "type": "select", "id": "kind", "label": "Karten-Typ", "default": "chat",
+          "options": [
+            { "value": "chat", "label": "Shopify Inbox (öffnet Bubble)" },
+            { "value": "whatsapp", "label": "WhatsApp (externer Link)" },
+            { "value": "link", "label": "Beliebige URL (z. B. Kontaktformular)" }
+          ]
+        },
+        { "type": "image_picker", "id": "icon", "label": "Icon (SVG/PNG)" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Chat" },
+        { "type": "textarea", "id": "text", "label": "Beschreibung", "default": "Chatte sofort mit unserem Support-Team!" },
+
+        { "type": "header", "content": "WhatsApp (optional)" },
+        { "type": "text", "id": "whatsapp_phone", "label": "WhatsApp Telefonnummer (z. B. +49 160 1234567)", "default": "default" },
+        { "type": "text", "id": "whatsapp_prefill", "label": "Vorbefüllte Nachricht", "default": "default" },
+
+        { "type": "header", "content": "Link (optional)" },
+        { "type": "url", "id": "link_url", "label": "Ziel-URL (z. B. /pages/kontakt)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MDW – Kontaktkanäle (3 Karten)",
+      "blocks": [
+        { "type": "card",
+          "settings": {
+            "kind": "chat",
+            "title": "Chat",
+            "text": "Chatte sofort mit unserem Support Team!"
+          }
+        },
+        { "type": "card",
+          "settings": {
+            "kind": "link",
+            "title": "Kontaktformular",
+            "text": "Kontaktiere uns – wir antworten dir schnellstmöglich.",
+            "link_url": "/pages/kontakt"
+          }
+        },
+        { "type": "card",
+          "settings": {
+            "kind": "whatsapp",
+            "title": "WhatsApp",
+            "text": "Schreib uns auf WhatsApp – wir melden uns schnell zurück.",
+            "whatsapp_phone": "+49 160 0000000",
+            "whatsapp_prefill": "Hallo, ich habe eine Frage zu meiner Bestellung."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

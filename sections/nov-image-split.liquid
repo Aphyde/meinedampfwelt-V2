@@ -1,0 +1,748 @@
+{%- liquid
+  assign sst = section.settings
+  assign bg_image = sst.background_image
+-%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    {% if sst.background_color != blank or bg_image.src != blank %}
+      background: {{ sst.background_color }}{% if bg_image.src != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %};
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .split-image__item {
+    border-radius: {{ sst.bd_radius}}px;
+  }
+  {% for block in section.blocks %}
+    {%- assign bst = block.settings -%}
+    #shopify-section-{{ section.id }} .cap-{{ forloop.index }} {
+      --bg: {{ bst.bg | color_to_rgb | remove: 'rgb(' | remove: 'rgba(' | remove: ')' | remove: ', 0.0' }};
+      --opacity: {{ bst.bg_opacity }}%;
+    }
+    #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+      color: {{ bst.cta_label_c }};
+      font-size: {{ bst.cta_label_n_xs }}px;z
+      line-height: {{ bst.cta_label_l }};
+      letter-spacing: {{ bst.cta_label_letter }}px;
+      margin-bottom: clamp(5px, {{ bst.cta_label_mb | times: 0.6 }}px, 20px);
+    }
+    #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+      color: {{ bst.cta_label2_c }};
+      font-size: {{ bst.cta_label2_n_xs }}px;
+      line-height: {{ bst.cta_label2_l }};
+      letter-spacing: {{ bst.cta_label_letter2 }}px;
+      margin-bottom: clamp(5px, {{ bst.cta_label2_mb | times: 0.6 }}px, 20px);
+    }
+    #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 p {
+      max-width: {{ bst.mw_2 }}px;
+    }
+    #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 a {
+      --color-link: {{ bst.cta_label2_c }};
+    }
+    @media(min-width: 576px) {
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+        font-size: {{ bst.cta_label_n_sm}}px;
+        margin-bottom: clamp(5px, {{ bst.cta_label_mb | times: 0.7 }}px, 20px);
+      }
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+        font-size: {{ bst.cta_label2_n_sm}}px;
+        margin-bottom: clamp(5px, {{ bst.cta_label2_mb | times: 0.7 }}px, 20px);
+      }
+    }
+    @media(min-width: 768px) {
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+        font-size: {{ bst.cta_label_n_md}}px;
+      }
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+        font-size: {{ bst.cta_label2_n_md}}px;
+      }
+    }
+    @media(min-width: 992px) {
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+        font-size: {{ bst.cta_label_n_lg }}px;
+        margin-bottom: {{ bst.cta_label_mb | times: 0.8 }}px;
+      }
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+        font-size: {{ bst.cta_label2_n_lg }}px;
+        margin-bottom: {{ bst.cta_label2_mb | times: 0.8 }}px;
+      }
+    }
+    @media(min-width: 1200px) {
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+        font-size: {{ bst.cta_label_n_xl}}px;
+        margin-bottom: {{ bst.cta_label_mb }}px;
+      }
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+        font-size: {{ bst.cta_label2_n_xl}}px;
+        margin-bottom: {{ bst.cta_label2_mb }}px;
+      }
+    }
+    @media(min-width: 1441px) {
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text1 {
+        font-size: {{ bst.cta_label_n_xxl}}px;
+      }
+      #shopify-section-{{ section.id }} .cap-{{ forloop.index }} .gallery-image__text2 {
+        font-size: {{ bst.cta_label2_n_xxl}}px;
+      }
+    }
+  {% endfor %}
+  @media(min-width: 992px) {
+    #shopify-section-{{ section.id }} .split-image__column {
+      height: {{ sst.h_lg }}px !important;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .split-image__column {
+      height: {{ sst.h_xl }}px !important;
+    }
+  }
+  @media(min-width: 1600px) {
+    #shopify-section-{{ section.id }} .split-image__column {
+      height: {{ sst.h_xxl }}px !important;
+    }
+  }
+  @media(min-width: 2000px) {
+    #shopify-section-{{ section.id }} .split-image__column {
+      height: {{ sst.h_xxxl }}px !important;
+    }
+  }
+{% endstyle %}
+<div class="{% if sst.bg_size == 'full' %}distance{% if sst.class_section != blank %} {{ sst.class_section }}{% endif %}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}distance{% if sst.class_section != blank %} {{ sst.class_section }}{% endif %}{% endif %}">
+      {% render 'heading-section', sub_position: sst.subheading_position %}
+      <div class="row {% if sst.spacing_1 %}spacing-1{% else %}spacing-{{ sst.spacing }}{% endif %}">
+        {% for block in section.blocks %}
+          {% assign bst = block.settings %}
+          {% if block.type == 'image' %}
+            <div class="col-lg col-md-6 col-12 split-image__column{% if sst.spacing_1 == false %} mb-{{ sst.spacing }}{% endif %}{% if bst.class != blank %} {{ bst.class }}{% endif %}">
+              <div class="split-image__item overflow_hidden position-relative">
+
+                {% if bst.link != blank %}
+                  <a class="gallery-image__link" href="{{ bst.link }}">
+                {% endif %}
+
+                {% if bst.image != blank %}
+                  <img data-src="{{ bst.image | image_url: width: 1920 }}" class="lazyload" width="{{ bst.image.width }}" height="{{ bst.image.height }}">
+                {% else %}
+                  {%- capture current -%}{% cycle 1, 2, 3 %}{%- endcapture -%}
+                  {{ 'hero-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+
+                {% if bst.link != blank %}
+                  </a>
+                {% endif %}
+
+                {% if bst.cta_label != blank or bst.cta_label2 != blank or bst.btn_label != blank %}
+                  <div class="gallery-image__caption position-absolute text-{{ bst.text_align }} cap-{{ forloop.index }}">
+                    <div class="image-caption__content">
+                      {% if bst.cta_label != blank %}
+                      <div class="gallery-image__text1 {{ bst.ff_1 }} {{ bst.cta_label_fw }}">{{ bst.cta_label }}</div>
+                      {% endif %}
+                      {% if bst.cta_label2 != blank %}
+                        <div class="gallery-image__text2 {{ bst.ff_2 }} {{ bst.cta_label_fw2 }}">{{ bst.cta_label2 }}</div>
+                      {% endif %}
+                      {% if bst.btn_label != blank %}
+                        <a href="{{ bst.link }}" class="btn justify-content-between color-{{ bst.btn_color }}">
+                          <span>{{ bst.btn_label }}</span>
+                          {% render 'icon-arrow-long-right' %}
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endif %}
+
+                {% if sst.show_btn_arrow %}
+                  <a class="btn-arrow btn position-absolute right-top color-{{ bst.btn_color }}">
+                    {% render 'icon-arrow-long-right' %}
+                  </a>
+                {% endif %}
+
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div><!-- End row -->
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div><!-- End container -->
+</div>
+{% if section.blocks.size == 0 %}
+  {% render 'no-blocks' %}
+{% endif %}
+{% schema %}
+  {
+    "name": "Vinova Image Split",
+    "class": "section-image-split",
+    "max_blocks": 6,
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Image Split</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Height"
+      },
+      {
+        "type": "number",
+        "id": "h_xxxl",
+        "label": "Height 4k",
+        "info": "Breakpoint 2000px ↑",
+        "default": 850
+      },
+      {
+        "type": "number",
+        "id": "h_xxl",
+        "label": "Height desktop",
+        "info": "Breakpoint 1600px ↑",
+        "default": 850
+      },
+      {
+        "type": "number",
+        "id": "h_xl",
+        "label": "Height large laptop",
+        "info": "Breakpoint 1200px ↑",
+        "default": 700
+      },
+      {
+        "type": "number",
+        "id": "h_lg",
+        "label": "Height laptop",
+        "info": "Breakpoint 992px ↑",
+        "default": 600
+      },
+      {
+        "type": "header",
+        "content": "Item Image Style"
+      },
+      {
+        "type": "range",
+        "id": "bd_radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius image",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "spacing",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "label": "Spacing items",
+        "default": 20
+      },
+      {
+        "type": "checkbox",
+        "id": "spacing_1",
+        "label": "Spacing 1px"
+      },
+      {
+        "type": "header",
+        "content": "Button arrow"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_btn_arrow",
+        "label": "Show button arrow",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "full", "label": "Full" },
+          { "value": "container", "label": "Container"}
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class_section",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "570 x 650px recommend"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Caption 1"
+          },
+          {
+            "type": "richtext",
+            "id": "cta_label",
+            "label": "Caption",
+            "default": "<p>Lorem ipsum</p>"
+          },
+          {
+            "type": "color",
+            "id": "cta_label_c",
+            "label": "Color",
+            "default": "#222222"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_xxl",
+            "label": "Font size desktop",
+            "default": 22,
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_xl",
+            "label": "Font size large laptop",
+            "default": 22,
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_lg",
+            "label": "Font size laptop",
+            "default": 22,
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_md",
+            "label": "Font size tablet",
+            "default": 22,
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_sm",
+            "label": "Font size large mobile",
+            "default": 22,
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label_n_xs",
+            "label": "Font size mobile",
+            "default": 22
+          },
+          {
+            "type": "select",
+            "id": "cta_label_fw",
+            "label": "Font weight",
+            "default": "font-400",
+            "options": [
+              {"value": "font-300","label": "Light"},
+              {"value": "font-400","label": "Regular"},
+              {"value": "font-500","label": "Medium"},
+              {"value": "font-600","label": "SemiBold"},
+              {"value": "font-700","label": "Bold"},
+              {"value": "font-800","label": "ExtraBold"},
+              {"value": "font-900","label": "Black"}
+            ]
+          },
+          {
+            "type": "radio",
+            "id": "ff_1",
+            "label": "Font family",
+            "default": "f_pr",
+            "options": [
+              {"value": "f_df","label": "Body font"},
+              {"value": "f_pr","label": "Heading font"}
+            ]
+          },
+          {
+            "type": "number",
+            "id": "cta_label_letter",
+            "label": "Letter spacing"
+          },
+          {
+            "type": "text",
+            "id": "cta_label_l",
+            "label": "Line height"
+          },
+          {
+            "type": "range",
+            "id": "cta_label_mb",
+            "min": 0,
+            "max": 40,
+            "step": 1,
+            "unit": "px",
+            "label": "Margin bottom",
+            "default": 0,
+            "info": "========================"
+          },
+          {
+            "type": "header",
+            "content": "Caption 2"
+          },
+          {
+            "type": "richtext",
+            "id": "cta_label2",
+            "label": "Caption",
+            "default": "<p>Quisque id odio sit amet erat</p>"
+          },
+          {
+            "type": "color",
+            "id": "cta_label2_c",
+            "label": "Color",
+            "default": "#222222"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_xxl",
+            "label": "Font size desktop",
+            "default": 16,
+            "info": "Breakpoint 1440px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_xl",
+            "label": "Font size large laptop",
+            "default": 16,
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_lg",
+            "label": "Font size laptop",
+            "default": 16,
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_md",
+            "label": "Font size tablet",
+            "default": 16,
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_sm",
+            "label": "Font size large mobile",
+            "default": 16,
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "number",
+            "id": "cta_label2_n_xs",
+            "label": "Font size mobile",
+            "default": 16
+          },
+          {
+            "type": "select",
+            "id": "cta_label_fw2",
+            "label": "Font weight",
+            "default": "font-400",
+            "options": [
+              {"value": "font-300","label": "Light"},
+              {"value": "font-400","label": "Regular"},
+              {"value": "font-500","label": "Medium"},
+              {"value": "font-600","label": "SemiBold"},
+              {"value": "font-700","label": "Bold"},
+              {"value": "font-800","label": "ExtraBold"},
+              {"value": "font-900","label": "Black"}
+            ]
+          },
+          {
+            "type": "radio",
+            "id": "ff_2",
+            "label": "Font family",
+            "default": "f_df",
+            "options": [
+              {"value": "f_df","label": "Body font"},
+              {"value": "f_pr","label": "Heading font"}
+            ]
+          },
+          {
+            "type": "number",
+            "id": "cta_label_letter2",
+            "label": "Letter spacing"
+          },
+          {
+            "type": "text",
+            "id": "cta_label2_l",
+            "label": "Line height",
+            "default": "1.5"
+          },
+          {
+            "type": "number",
+            "id": "mw_2",
+            "label": "Max width",
+            "default": 500
+          },
+          {
+            "type": "range",
+            "id": "cta_label2_mb",
+            "min": 0,
+            "max": 40,
+            "step": 1,
+            "unit": "px",
+            "label": "Margin bottom",
+            "default": 10,
+            "info": "========================"
+          },
+          {
+            "type": "header",
+            "content": "Button"
+          },
+          {
+            "type": "text",
+            "id": "btn_label",
+            "label": "Button label",
+            "default": "Shop now"
+          },
+          {
+            "type": "color_scheme",
+            "id": "btn_color",
+            "label": "Button color",
+            "default": "background-1"
+          },
+          {
+            "type": "header",
+            "content": "Text Alignment"
+          },
+          {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text alignment",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "bg",
+            "label": "Background",
+            "default": "#fff"
+          },
+          {
+            "type": "range",
+            "id": "bg_opacity",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Background opacity",
+            "unit": "%",
+            "default": 0
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Image Split",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

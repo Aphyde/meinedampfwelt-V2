@@ -1,0 +1,130 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer 3",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "nov-footer-3",
+      "blocks": {
+        "block_html_RmyWFN": {
+          "type": "block_html",
+          "settings": {
+            "block_title": "Contact Us",
+            "h_t": false,
+            "img_width": 150,
+            "img_spacing": 10,
+            "show_payment": false,
+            "html_content": "<p>2357 Gordon Street, CA</p>\n<p>+ (909) - 478-2742</p>\n<p>Vapure@Example.com</p>\n<p>@NovaVapure</p>",
+            "show_social": false,
+            "block_class": "",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-4",
+            "grid_md": "col-md-4",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_3yCeE3": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Let us help",
+            "h_t": false,
+            "menu_handle": "let-us-help",
+            "block_class": "mb-xl-50",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-4",
+            "grid_md": "col-md-3",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_html_hDgM4R": {
+          "type": "block_html",
+          "settings": {
+            "block_title": "About Us",
+            "h_t": true,
+            "img": "shopify://shop_images/Logo_white.png",
+            "img_width": 150,
+            "img_spacing": 30,
+            "show_payment": false,
+            "html_content": "Vapure is at the forefront of the vaping revolution. Founded in 2025 by a team of passionate innovators, our goal is to enhance the vaping lifestyle with cutting-edge technology and premium flavors.",
+            "show_social": true,
+            "block_class": "text-xl-center mb-lg-50",
+            "grid_xxl": "col-xxl-4",
+            "grid_xl": "col-xl-4",
+            "grid_lg": "col-lg-4",
+            "grid_md": "col-md-5",
+            "grid_sm": "col-sm-12"
+          }
+        },
+        "block_menu_Xx6gEh": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Our policies",
+            "h_t": false,
+            "menu_handle": "our-policies",
+            "block_class": "text-xl-right",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-4",
+            "grid_md": "col-md-4",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_DDPbqr": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "My Account",
+            "h_t": false,
+            "menu_handle": "my-account",
+            "block_class": "text-xl-right",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-4",
+            "grid_md": "col-md-4",
+            "grid_sm": "col-sm-6"
+          }
+        }
+      },
+      "block_order": [
+        "block_html_RmyWFN",
+        "block_menu_3yCeE3",
+        "block_html_hDgM4R",
+        "block_menu_Xx6gEh",
+        "block_menu_DDPbqr"
+      ],
+      "settings": {
+        "animate": true,
+        "border_top": false,
+        "container": "container-fluid",
+        "color_section": "scheme-eaa16c70-5060-4f30-9afa-bd59172a3b62",
+        "background_color": "linear-gradient(180deg, rgba(241, 98, 186, 0.05), rgba(139, 57, 107, 0.4) 100%)",
+        "background_image_size": "auto",
+        "bg_size": "full",
+        "btn_type": "btn-primary",
+        "show_footer_copyright": true,
+        "color_copyright": "scheme-eaa16c70-5060-4f30-9afa-bd59172a3b62",
+        "bg_copyright": "rgba(0,0,0,0)",
+        "show_copyright_border_top": true,
+        "copyright_border_top_opa": 15,
+        "copyright": "Copyright © 2025 Nova Creative. All Rights Reserved.",
+        "show_payment": true,
+        "payment": "shopify://shop_images/payment.png",
+        "payment_mw": 170,
+        "show_copyright_social": false,
+        "mobile_acc": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

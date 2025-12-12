@@ -1,0 +1,411 @@
+<section id="flavors-ai-{{ section.id }}" class="flavors-ai-section">
+  <div class="flavors-ai-container">
+    {% if section.settings.show_bg_grid %}
+      <div class="ai-bg-grid" aria-hidden="true"></div>
+    {% endif %}
+
+    <header class="ai-hero">
+      <h1 class="ai-title">{{ section.settings.title | escape }}</h1>
+      {% if section.settings.subtitle != blank %}
+        <p class="ai-subtitle">
+          {{ section.settings.subtitle }}
+          {% if section.settings.subtitle_link_label and section.settings.subtitle_link_url %}
+            <a href="{{ section.settings.subtitle_link_url }}" class="ai-subtitle-link">{{ section.settings.subtitle_link_label }}</a>
+          {% endif %}
+        </p>
+      {% endif %}
+    </header>
+
+    <div class="ai-grid">
+      {% for block in section.blocks %}
+        {% assign img = block.settings.image %}
+        {% assign icon = block.settings.icon %}
+        {% assign chips = block.settings.chips | split: ',' %}
+
+        <article class="ai-card"
+          data-tilt
+          data-tilt-scale="{{ section.settings.tilt_scale_pct | default: 105 }}"
+          data-tilt-max="{{ section.settings.tilt_max }}"
+          style="--card-h: {{ section.settings.card_height_px }}px; animation-delay: {{ forloop.index | times: 0.1 }}s;">
+          <div class="ai-card-inner">
+            <!-- MEDIA oben (nur oberer Teil der Karte) -->
+            <div class="ai-media" style="height: {{ section.settings.media_height_pct }}%;">
+              <div class="ai-media-img" {% if img %}style="background-image:url('{{ img | img_url: '1600x' }}');"{% endif %}></div>
+              {% if icon %}
+                <span class="ai-card-pill">
+                  <img src="{{ icon | img_url: '64x64' }}" alt="" width="32" height="32" loading="lazy">
+                </span>
+              {% endif %}
+              <div class="ai-media-sheen" aria-hidden="true"></div>
+            </div>
+
+            <!-- BODY unten -->
+            <div class="ai-card-body">
+              <div class="ai-body-content">
+                <h3 class="ai-card-title">{{ block.settings.title | escape }}</h3>
+                {% if block.settings.desc != blank %}
+                  <p class="ai-card-desc">{{ block.settings.desc }}</p>
+                {% endif %}
+
+                {% if chips.size > 0 and chips.first != blank %}
+                  <ul class="ai-chips">
+                    {% for chip in chips limit:6 %}
+                      {% assign c = chip | strip %}
+                      {% if c != blank %}
+                        <li class="ai-chip">{{ c }}</li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+              {% if block.settings.cta_label != blank and block.settings.cta_url != blank %}
+                <a class="ai-btn ai-btn-full" href="{{ block.settings.cta_url }}">
+                  <span>{{ block.settings.cta_label }}</span>
+                  <svg class="ai-btn-arrow" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <style>
+:root{
+  /* CI Farben */
+  --ci-green:#ABCA20;
+  --ci-navy:#0B283A;
+  --ci-bg:#17171A;
+
+  /* Oberflächen & Typo */
+  --ai-bg:var(--ci-bg);
+  --ai-card:#0C1620;           /* dunkler als Navy, für Tiefe */
+  --ai-card-2:#0F1C28;         /* sanfter Verlauf in Card */
+  --ai-text:#F2F5F7;
+  --ai-muted:#B7C2C9;
+
+  /* Chips / feine Linien */
+  --ai-chip:#132331;
+  --ai-chip-border:rgba(255,255,255,.06);
+  --subtle-border:rgba(255,255,255,.07);
+  --grid-line:rgba(171,202,32,.06); /* Grid in CI-Grün, sehr subtil */
+
+  /* Buttons: Basis & Hover (Reflex leicht rechts) */
+  --btn-grad-base:linear-gradient(135deg,
+    #0B283A 0%,
+    #3AAFA9 35%,
+    #78BFA0 47%,
+    #78BFA0 53%,
+    #3AAFA9 65%,
+    #0B283A 100%);
+  --btn-grad-hover:linear-gradient(135deg,
+    #0B283A 0%,
+    #3AAFA9 35%,
+    #78BFA0 58%,
+    #78BFA0 64%,
+    #3AAFA9 76%,
+    #0B283A 100%);
+
+  --radius:22px;
+  --shadow:0 20px 40px rgba(0,0,0,.35);
+  --btn-height:48px;
+}
+
+/* Section */
+#flavors-ai-{{ section.id }}{
+  position:relative; overflow:hidden; background:var(--ai-bg); padding:56px 0 72px; color:var(--ai-text);
+}
+.flavors-ai-container{width:min(1200px,92vw);margin:0 auto;position:relative}
+
+/* CI Grid */
+.ai-bg-grid{
+  position:absolute; inset:-200vh -200vw; pointer-events:none;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0/48px 48px;
+}
+
+/* Hero */
+.ai-hero{ text-align:center; margin-bottom:24px; opacity:0; transform:translateY(50px); animation:fadeUp .8s ease-out forwards; }
+.ai-title{
+  font-size:clamp(32px,7vw,64px); font-weight:800; letter-spacing:.02em; margin:0 0 12px; line-height:1.05;
+  /* ultrafeiner CI-Textverlauf */
+  background:linear-gradient(135deg,
+    #0B283A 0%,
+    #3AAFA9 35%,
+    #78BFA0 47%,
+    #78BFA0 53%,
+    #3AAFA9 65%,
+    #0B283A 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 26px rgba(58,175,169,.25);
+}
+.ai-subtitle{ margin:0 auto 8px; max-width:900px; color:var(--ai-muted); font-size:clamp(14px,2.5vw,18px) }
+.ai-subtitle-link{ color:var(--ci-green); text-decoration:none; border-bottom:1px dashed rgba(171,202,32,.35) }
+.ai-subtitle-link:hover{ opacity:.9 }
+
+/* Grid */
+.ai-grid{ display:grid; gap:24px; grid-template-columns:repeat(12,1fr) }
+
+/* Cards */
+.ai-card{
+  grid-column:span 4; position:relative; border-radius:var(--radius);
+  height:var(--card-h);
+  overflow:visible; transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  animation: floaty 8s ease-in-out infinite, fadeUp .8s ease-out forwards;
+  will-change:transform;
+}
+.ai-card:hover{ box-shadow:0 30px 60px rgba(0,0,0,.5); transform: translateY(-8px) scale(1.05); }
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fadeUp{ to{opacity:1; transform:translateY(0);} }
+
+/* Card inner */
+.ai-card-inner{
+  height:100%; display:flex; flex-direction:column;
+  border-radius:var(--radius); overflow:hidden;
+  background:linear-gradient(180deg, var(--ai-card) 0%, var(--ai-card-2) 100%);
+  box-shadow:var(--shadow);
+  border:1px solid var(--subtle-border);
+}
+
+/* Media oben */
+.ai-media{ position:relative; min-height:160px; border-top-left-radius:var(--radius); border-top-right-radius:var(--radius); overflow:hidden; flex:0 0 auto; }
+.ai-media-img{
+  position:absolute; inset:0; background-position:center; background-size:cover; opacity:.95;
+  transform:translateZ(-10px) scale(1.06);
+  filter:contrast(1.05) saturate(1.05);
+  transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .4s ease;
+}
+.ai-card:hover .ai-media-img{ transform:translateZ(-10px) scale(1.12); opacity:1 }
+/* Sheen in CI-Farben (ohne Pink) */
+.ai-media-sheen{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(100% 60% at 0% 0%, rgba(171,202,32,.16) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(100% 60% at 100% 0%, rgba(58,175,169,.16) 0%, rgba(0,0,0,0) 60%);
+  mix-blend-mode:screen; pointer-events:none;
+}
+.ai-card-pill{
+  position:absolute; left:16px; top:16px; display:inline-flex; align-items:center; justify-content:center;
+  width:44px; height:44px; border-radius:50%;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(6px); box-shadow:0 6px 16px rgba(0,0,0,.25); z-index:2;
+}
+
+/* Body */
+.ai-card-body{
+  display:flex; flex-direction:column; gap:16px;
+  padding:22px 22px 28px;
+  background:linear-gradient(180deg, rgba(10,12,16,0) 0%, rgba(10,12,16,.35) 12%, rgba(10,12,16,.88) 100%);
+  flex:1 1 auto;
+  min-height: calc(120px + var(--btn-height));
+}
+.ai-body-content{ display:flex; flex-direction:column; gap:12px; margin-bottom:8px }
+.ai-card-title{ margin:0; font-size:20px; font-weight:800; letter-spacing:.02em; text-transform:uppercase }
+.ai-card-desc{ margin:0; color:var(--ai-muted); font-size:14px; line-height:1.45 }
+.ai-chips{ display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none }
+.ai-chip{ font-size:12px; color:var(--ai-text); opacity:.9; padding:7px 10px; border-radius:999px; background:var(--ai-chip); border:1px solid var(--ai-chip-border) }
+
+/* Button */
+.ai-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:12px;
+  padding:14px 18px; border-radius:999px; color:#fff; text-decoration:none;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 12px 28px rgba(0,0,0,.35);
+  background: var(--btn-grad-base);
+  transition: transform .2s ease, background .35s ease, box-shadow .3s ease;
+  margin-top:auto; height: var(--btn-height);
+}
+.ai-btn-full{ width:100% }
+.ai-btn:hover{
+  background: var(--btn-grad-hover);
+  transform: translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 36px rgba(0,0,0,.45);
+}
+.ai-btn-arrow{ transform:translateX(0); transition:transform .25s ease }
+.ai-btn:hover .ai-btn-arrow{ transform:translateX(4px) }
+
+/* Responsive */
+@media (max-width:1100px){ .ai-card{grid-column:span 6} }
+@media (max-width:720px){
+  .ai-card{grid-column:span 12; height:auto}
+  .ai-card-inner{height:auto}
+  .ai-title{ font-size:38px; word-break:break-word; overflow-wrap:break-word; hyphens:auto }
+  .ai-media{height:auto}
+  .ai-card-body{min-height:auto}
+}
+
+  </style>
+
+  <script>
+    (function(){
+      var root = document.getElementById('flavors-ai-{{ section.id }}');
+      if (!root) return;
+
+      // Tilt-Effekt für Karten
+      var cards = root.querySelectorAll('.ai-card[data-tilt]');
+      var maxGlobal = parseFloat({{ section.settings.tilt_max | default: 8 | json }});
+      var scaleGlobalPct = parseInt({{ section.settings.tilt_scale_pct | default: 105 | json }}, 10) || 105;
+      var scaleGlobal = scaleGlobalPct / 100;
+
+      cards.forEach(function(card) {
+        var max = parseFloat(card.getAttribute('data-tilt-max')) || maxGlobal;
+        var scaleAttr = card.getAttribute('data-tilt-scale');
+        var scalePct = parseInt(scaleAttr, 10);
+        var scale = isNaN(scalePct) ? scaleGlobal : (scalePct / 100);
+        var raf = null;
+
+        function onMove(e) {
+          var rect = card.getBoundingClientRect();
+          var cx = ((e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0) - rect.left) / rect.width;
+          var cy = ((e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 0) - rect.top) / rect.height;
+          var rx = (cy - 0.5) * (-2 * max);
+          var ry = (cx - 0.5) * (2 * max);
+          if (raf) cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(function() {
+            card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(' + scale + ')';
+          });
+        }
+        function reset() {
+          if (raf) cancelAnimationFrame(raf);
+          card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+        }
+        card.addEventListener('mousemove', onMove, { passive: true });
+        card.addEventListener('mouseleave', reset);
+        card.addEventListener('touchmove', onMove, { passive: true });
+        card.addEventListener('touchend', reset);
+      });
+
+      // Höhenangleichung für Karten in derselben Zeile
+      function alignCardHeights() {
+        // Reset heights to auto to measure natural height
+        cards.forEach(function(card) {
+          card.style.height = 'var(--card-h)';
+        });
+
+        // Gruppiert Karten nach Zeilen basierend auf ihrer Y-Position
+        var rows = [];
+        var currentRow = [];
+        var lastTop = null;
+
+        cards.forEach(function(card) {
+          var rect = card.getBoundingClientRect();
+          if (lastTop === null || Math.abs(rect.top - lastTop) < 10) { // Toleranz von 10px für Zeilen
+            currentRow.push(card);
+          } else {
+            if (currentRow.length > 0) rows.push(currentRow);
+            currentRow = [card];
+          }
+          lastTop = rect.top;
+        });
+        if (currentRow.length > 0) rows.push(currentRow);
+
+        // Setze die maximale Höhe für jede Zeile
+        rows.forEach(function(row) {
+          var maxHeight = Math.max(...row.map(function(card) {
+            var inner = card.querySelector('.ai-card-inner');
+            inner.style.height = 'auto'; // Temporär auf auto für Messung
+            return card.offsetHeight;
+          }));
+          row.forEach(function(card) {
+            card.style.height = maxHeight + 'px';
+            card.querySelector('.ai-card-inner').style.height = '100%';
+          });
+        });
+      }
+
+      // Initiale Höhenangleichung
+      alignCardHeights();
+
+      // Höhenangleichung bei Fenstergrößenänderung
+      window.addEventListener('resize', alignCardHeights);
+    })();
+  </script>
+</section>
+<style id="ai-flavors-force-dark-{{ section.id }}">
+  /* Seite und alle üblichen Wrapper in Schwarz ziehen */
+  html, body,
+  #MainContent,
+  .content-for-layout,
+  .main-content,
+  .page-width,
+  .container,
+  .nov-container,
+  .section,
+  .shopify-section {
+    color: #f5f5f5;
+  }
+
+  /* Unsere AI-Section + direkter Nachbar (meist Footer-Wrapper) ohne Abstand */
+  #shopify-section-ai_flavors_grid_cqBbNX,
+  #shopify-section-ai_flavors_grid_cqBbNX + .shopify-section {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* Footer oben bündig – kein weißer Puffer */
+  #shopify-section-footer,
+  footer.shopify-section,
+  footer.site-footer {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    background: #0a0a0a; /* leicht abgesetzt, falls gewünscht */
+    color: #f5f5f5;
+  }
+
+  /* Linkfarbe in der dunklen Sektion */
+  #shopify-section-ai_flavors_grid_cqBbNX a { color: #ff62ff; }
+  #shopify-section-ai_flavors_grid_cqBbNX a:hover { opacity: .9; }
+</style>
+
+{% schema %}
+{
+  "name": "AI Flavors Grid",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Titel (H1)", "default": "GESCHMACKS-RICHTUNGEN" },
+    { "type": "textarea", "id": "subtitle", "label": "Untertitel", "default": "Von klassischen Tabakgeschmäckern bis hin zu exotischen Kreationen – finde den perfekten Geschmack für dein Dampferlebnis." },
+    { "type": "text", "id": "subtitle_link_label", "label": "Untertitel-Link Label", "default": "Jetzt lesen" },
+    { "type": "url", "id": "subtitle_link_url", "label": "Untertitel-Link URL" },
+    { "type": "checkbox", "id": "show_bg_grid", "label": "Hintergrund-Grid anzeigen", "default": true },
+    { "type": "range", "id": "tilt_max", "label": "Tilt-Winkel (max °)", "min": 2, "max": 18, "step": 1, "default": 8 },
+    { "type": "range", "id": "tilt_scale_pct", "label": "Hover-Scale (%)", "min": 100, "max": 112, "step": 1, "default": 105 },
+    { "type": "range", "id": "media_height_pct", "label": "Bildhöhe oben (%)", "min": 45, "max": 70, "step": 1, "default": 58 },
+    { "type": "range", "id": "card_height_px", "label": "Kartenhöhe (Desktop, px)", "min": 360, "max": 560, "step": 10, "default": 440 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Karte",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Hintergrundbild" },
+        { "type": "image_picker", "id": "icon", "label": "Icon (optional, rundes Badge)" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "TABAK" },
+        { "type": "text", "id": "desc", "label": "Kurzbeschreibung", "default": "Klassische Tabakgeschmäcker für traditionelle Dampfer" },
+        { "type": "textarea", "id": "chips", "label": "Chips (kommasepariert)", "default": "Klassischer Tabak, American Blend, Zigarre" },
+        { "type": "text", "id": "cta_label", "label": "Button-Text", "default": "Alle Sorten entdecken" },
+        { "type": "url", "id": "cta_url", "label": "Button-Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AI Flavors Grid",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+<div class="product-single__tab mt-100"{% if section.settings.background_color != blank %} style="background-color: {{ section.settings.background_color }};"{% endif %}>
+  <div class="container">
+    <ul class="nav nav-tabs">
+      {% if section.settings.show_description %}
+        <li><a class="active" href="#proTabs1" data-toggle="tab">{{ 'products.product.tabdes' | t }}</a></li>
+      {% endif %}
+      {% for block in section.blocks %}
+        {% if block.type == 'block_text' %}
+          <li><a href="#tabCustom-{{ forloop.index }}" data-toggle="tab">{{ block.settings.custom_title }}</a></li>
+        {% endif %}
+        {% if block.type == 'block_img' %}
+          <li><a href="#tabCustom-{{ forloop.index }}" data-toggle="tab">{{ block.settings.custom_title }}</a></li>
+        {% endif %}
+        {% if block.type == 'block_video' %}
+          <li><a href="#tabCustom-{{ forloop.index }}" data-toggle="tab">{{ block.settings.custom_title }}</a></li>
+        {% endif %}
+        {% if block.type == 'block_customtab' %}
+          <li><a href="#tabCustom-{{ forloop.index }}" data-toggle="tab">{{ block.settings.custom_title }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="tab-content">
+      {% if section.settings.show_description %}
+      <div class="tab-pane active" id="proTabs1">{{ product.description }}</div>
+      {% endif %}
+      {% for block in section.blocks %}
+        {% if block.type == 'block_text' %}
+          <div class="tab-pane" id="tabCustom-{{ forloop.index }}">
+            <div class="block_text">{{ block.settings.custom_content }}</div>
+          </div>
+        {% endif %}
+        {% if block.type == 'block_img' %}
+          <div class="tab-pane" id="tabCustom-{{ forloop.index }}">
+            <div class="block_img mt-20">
+              {% assign img_url = block.settings.custom_content %}
+              <div class="respone_image" style="padding-top:{{ 1 | divided_by: img_url.aspect_ratio | times: 100}}%;">
+                <img class="lazyload"
+                  src="{{ img_url | image_url: width: 180 }}"
+                  data-src="{{ img_url | image_url: width: 180 }}"
+                  data-srcset="{{ img_url | image_url: width: 380 }} 380w,{{ img_url | image_url: width: 580 }} 580w,{{ img_url | image_url: width: 768 }} 768w,{{ img_url | image_url: width: 900 }} 900w,{{ img_url | image_url: width: 1080 }} 1080w,{{ img_url | image_url: width: 1296 }} 1296w,{{ img_url | image_url: width: 1512 }} 1512w,{{ img_url | image_url: width: 1728 }} 1728w, {{ img_url | image_url: width: 2048 }} 2048w" data-sizes="auto" alt="{{ img_url.alt }}" width="{{ img_url.width }}" height="{{ img_url.height }}" loading="lazy">
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% if block.type == 'block_video' %}
+          <div class="tab-pane" id="tabCustom-{{ forloop.index }}">
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}" id="video" allowfullscreen></iframe>
+            </div>
+          </div>
+        {% endif %}
+        {% if block.type == 'block_customtab' %}
+          <div class="tab-pane" id="tabCustom-{{ forloop.index }}">
+            <ul class="product-single__customtab list-unstyled">
+              {% for i in (1..10) %}
+                {%- assign t_id = 't' | append: i -%}
+                {%- assign c_id = 'c' | append: i -%}
+                {% if block.settings[t_id] != blank or block.settings[c_id] != blank %}
+                  <li>
+                    <div class="row align-items-center p-4 pt-10 pb-10">
+                      <div class="title col-4">{{ block.settings[t_id] }}</div>
+                      <div class="content col-8">{{ block.settings[c_id] }}</div>
+                    </div>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>

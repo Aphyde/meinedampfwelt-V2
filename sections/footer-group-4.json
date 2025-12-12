@@ -1,0 +1,152 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer 4",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "nov-footer-4",
+      "blocks": {
+        "block_html_hDgM4R": {
+          "type": "block_html",
+          "settings": {
+            "block_title": "",
+            "h_t": false,
+            "img": "shopify://shop_images/Logo_black.png",
+            "img_width": 150,
+            "img_spacing": 30,
+            "show_payment": false,
+            "html_content": "",
+            "show_social": false,
+            "block_class": "mb-md-30 mb-xs-0",
+            "grid_xxl": "col-xxl-5",
+            "grid_xl": "col-xl-3",
+            "grid_lg": "col-lg-5",
+            "grid_md": "col-md-12",
+            "grid_sm": "col-sm-12"
+          }
+        },
+        "block_newsletter_nJGqQK": {
+          "type": "block_newsletter",
+          "settings": {
+            "block_title": "<p>Get exclusive our offers and updates</p>",
+            "desc": "",
+            "h_t": false,
+            "show_social": false,
+            "show_payment": false,
+            "payment": "shopify://shop_images/payment.png",
+            "payment_mw": 170,
+            "input_color": "#1c1c1c",
+            "input_bg": "#ffffff",
+            "btn_type": "btn-primary",
+            "block_class": "mb-80",
+            "grid_xxl": "col-xxl-7",
+            "grid_xl": "col-xl-9",
+            "grid_lg": "col-lg-7",
+            "grid_md": "col-md-12",
+            "grid_sm": "col-sm-12"
+          }
+        },
+        "block_html_6DUVML": {
+          "type": "block_html",
+          "settings": {
+            "block_title": "Contact Us",
+            "h_t": false,
+            "img_width": 150,
+            "img_spacing": 10,
+            "show_payment": false,
+            "html_content": "<p>2357 Gordon Street, CA</p>\n<p>+ (909) - 478-2742</p>\n<p>GearnixStore@Vinova.com</p>\n<p>@VinovaGear</p>",
+            "show_social": false,
+            "block_class": "",
+            "grid_xxl": "col-xxl-3",
+            "grid_xl": "col-xl-3",
+            "grid_lg": "col-lg-3",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_3yCeE3": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Let us help",
+            "h_t": false,
+            "menu_handle": "let-us-help",
+            "block_class": "mb-xl-50",
+            "grid_xxl": "col-xxl-3",
+            "grid_xl": "col-xl-3",
+            "grid_lg": "col-lg-3",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_H8QtWA": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Our policies",
+            "h_t": false,
+            "menu_handle": "our-policies",
+            "block_class": "mb-xl-50",
+            "grid_xxl": "col-xxl-3",
+            "grid_xl": "col-xl-3",
+            "grid_lg": "col-lg-3",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_DDPbqr": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "My Account",
+            "h_t": false,
+            "menu_handle": "my-account",
+            "block_class": "",
+            "grid_xxl": "col-xxl-3",
+            "grid_xl": "col-xl-3",
+            "grid_lg": "col-lg-3",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        }
+      },
+      "block_order": [
+        "block_html_hDgM4R",
+        "block_newsletter_nJGqQK",
+        "block_html_6DUVML",
+        "block_menu_3yCeE3",
+        "block_menu_H8QtWA",
+        "block_menu_DDPbqr"
+      ],
+      "settings": {
+        "animate": true,
+        "border_top": false,
+        "container": "container-fluid",
+        "color_section": "background-1",
+        "background_color": "#f5f6fc",
+        "background_image_size": "auto",
+        "bg_size": "full",
+        "btn_type": "btn-primary",
+        "show_footer_copyright": true,
+        "color_copyright": "background-1",
+        "bg_copyright": "#f5f6fc",
+        "show_copyright_border_top": true,
+        "copyright_border_top_opa": 100,
+        "copyright": "Copyright © 2025 Nova Creative. All Rights Reserved.",
+        "show_payment": true,
+        "payment": "shopify://shop_images/payment.png",
+        "payment_mw": 200,
+        "show_copyright_social": true,
+        "mobile_acc": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

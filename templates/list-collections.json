@@ -1,0 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "list-collections-template",
+      "blocks": {
+        "6f170e10-3222-4971-8ef6-70bf43eaae67": {
+          "type": "collection",
+          "settings": {
+            "collection": "aquarium"
+          }
+        },
+        "4fd91f58-7bca-4bcc-8b47-71bbccbf12c3": {
+          "type": "collection",
+          "settings": {
+            "collection": "bird-shop"
+          }
+        }
+      },
+      "block_order": [
+        "6f170e10-3222-4971-8ef6-70bf43eaae67",
+        "4fd91f58-7bca-4bcc-8b47-71bbccbf12c3"
+      ],
+      "settings": {
+        "display_type": "all",
+        "sort": "alphabetical",
+        "grid": "3"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

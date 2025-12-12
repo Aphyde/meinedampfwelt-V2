@@ -1,0 +1,1194 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{%- style -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    border-radius: {{ sst.corner_radius }}px;
+    {% if sst.background_color != blank or bg_image.src != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}") no-repeat center{% endif %};
+      background-size: cover;
+    {% endif %}
+    --corner: {{ sst.corner_radius }}px;
+    --spacing: {{ sst.spacing }}px;
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% for block in section.blocks %}
+    {% if block.type == 'image' %}
+      #shopify-section-{{ section.id }} .block-image {
+        --vertical-xxl: {{ block.settings.position_vertical_xxl }}%;
+        --vertical-xl: {{ block.settings.position_vertical_xl }}%;
+        --vertical-lg: {{ block.settings.position_vertical_lg }}%;
+        --vertical-md: {{ block.settings.position_vertical_md }}%;
+        --vertical-sm: {{ block.settings.position_vertical_sm }}%;
+        --vertical-xs: {{ block.settings.position_vertical_xs }}%;
+        --horizotal-xxl: {{ block.settings.position_horizotal_xxl }}%;
+        --horizotal-xl: {{ block.settings.position_horizotal_xl }}%;
+        --horizotal-lg: {{ block.settings.position_horizotal_lg }}%;
+        --horizotal-md: {{ block.settings.position_horizotal_md }}%;
+        --horizotal-sm: {{ block.settings.position_horizotal_sm }}%;
+        --horizotal-xs: {{ block.settings.position_horizotal_xs }}%;
+        --width-xxl: {{ block.settings.w_xxl }}%;
+        --width-xl: {{ block.settings.w_xl }}%;
+        --width-lg: {{ block.settings.w_lg }}%;
+        --width-md: {{ block.settings.w_md }}%;
+        --width-sm: {{ block.settings.w_sm }}%;
+        --width-xs: {{ block.settings.w_xs }}%;
+
+        {% if block.settings.title != blank %}
+          --title-color: {{ block.settings.title_color }};
+          --title-letter-spacing: {{ block.settings.title_letter }}px;
+          --title-line-height: {{ block.settings.title_lh }};
+          --title-fz-xxl: {{ block.settings.title_fz_xxl }}px;
+          --title-fz-xl: {{ block.settings.title_fz_xl }}px;
+          --title-fz-lg: {{ block.settings.title_fz_lg }}px;
+          --title-fz-md: {{ block.settings.title_fz_md }}px;
+          --title-fz-sm: {{ block.settings.title_fz_sm }}px;
+          --title-fz-xs: {{ block.settings.title_fz_xs }}px;
+          --title-mb: {{ block.settings.title_mb }}px;
+        {% endif %}
+
+        {% if block.settings.subtitle != blank %}
+          --subtitle-color: {{ block.settings.subtitle_color }};
+          --subtitle-letter-spacing: {{ block.settings.subtitle_letter }}px;
+          --subtitle-line-height: {{ block.settings.subtitle_lh }};
+          --subtitle-fz-xxl: {{ block.settings.subtitle_fz_xxl }}px;
+          --subtitle-fz-xl: {{ block.settings.subtitle_fz_xl }}px;
+          --subtitle-fz-lg: {{ block.settings.subtitle_fz_lg }}px;
+          --subtitle-fz-md: {{ block.settings.subtitle_fz_md }}px;
+          --subtitle-fz-sm: {{ block.settings.subtitle_fz_sm }}px;
+          --subtitle-fz-xs: {{ block.settings.subtitle_fz_xs }}px;
+          --subtitle-mb: {{ block.settings.subtitle_mb }}px;
+        {% endif %}
+      }
+    {% endif %}
+  {% endfor %}
+{%- endstyle -%}
+<div class="color-{{ sst.color_section }}{% if sst.animate %} wow fadeInUp animated{% endif %}{% if sst.bg_size == 'full' %} distance{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}" data-section-id="{{ section.id }}" data-section-type="nov-slick">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}distance position-relative{% if sst.class != blank %} {{ sst.class }}{% endif %} {% endif %}">
+      {% if sst.btn_learn_more %}
+        <div class="d-flex align-items-center justify-content-between mb-50 position-relative">
+          {% render 'heading-section', sub_position: sst.subheading_position, class: 'mb-0' %}
+          <a href="{{ sst.btn_learn_more_link }}" class="btn {{ sst.btn_type }} {{ sst.btn_size }}">
+            <span>{{ 'sections.button.learn_more' | t }}</span>
+          </a>
+        </div>
+      {% else %}
+        {% render 'heading-section', sub_position: sst.subheading_position %}
+      {% endif %}
+      <div class="row spacing-{{ sst.spacing }}">
+        <div class="col-xl-6">
+          <div class="row spacing-{{ sst.spacing }}">
+            {% for block in section.blocks %}
+              {% if block.type == 'policy' %}
+                {%- for i in (1..4) -%}
+                {%- liquid
+                  assign t_id = 't' | append: i
+                  assign d_id = 'd' | append: i
+                  assign icon_id = 'icon' | append: i
+                  assign colortitle_id = 'colortitle'| append: i
+                  assign colordesc_id = 'colordesc'| append: i
+                  assign bg_id = 'bg' | append: i
+                -%}
+                  {% if block.settings[d_id] != blank or block.settings[t_id] != blank %}
+                    <div class="col-md-6{% if i == 1 or i == 2 %} mb-{{ sst.spacing }}{% endif %}{% if i == 3 %} mb-sm-{{ sst.spacing }}{% endif %}">
+                      <div class="policy-item d-flex flex-column"style="--color-title: {{ block.settings[colortitle_id] }};--color-text: {{ block.settings[colordesc_id] }};--bg: {{ block.settings[bg_id] }}">
+                        {% if block.settings[icon_id] != blank %}
+                          <div class="p-icon">
+                            {% render 'nov-aspect-image', image: block.settings[icon_id] %}
+                          </div>
+                        {% endif %}
+                        {% if block.settings[t_id] != blank %}
+                          <div class="title">{{ block.settings[t_id] }}</div>
+                        {% endif %}
+                        {% if block.settings[d_id] != blank %}
+                          <div class="desc mt-15">{{ block.settings[d_id] }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {%- endfor -%}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-xl-6 mt-lg-{{ sst.spacing }}">
+          <div class="position-relative">
+            {% for block in section.blocks %}
+              {% if block.type == 'image_slider' %}
+                <div
+                  class="nov-slick-carousel"
+                  data-autoplay="false"
+                  data-autoplaytimeout="6000"
+                  data-loop="false"
+                  data-dots="{{ block.settings.show_dots }}"
+                  data-nav="{{ block.settings.show_nav }}"
+                  data-items="1"
+                  data-row="1"
+                  style="--slider-dot-color: {{ block.settings.color_nav }};--slider-dot-color-act: {{ block.settings.color_nav_act }};--slider-arrow-color: {{ block.settings.color_nav }};--slider-arrow-color-act: {{ block.settings.color_nav_act }};">
+                  {% for i in (1..3) %}
+                    {%- liquid
+                      assign img_id = 'image' | append: i
+                      assign imglink_id = 'imglink' | append: i
+                    -%}
+                    <div class="item">
+                      {% if block.settings[imglink_id] != blank %}
+                        <a href="{{ block.settings[imglink_id] }}">
+                      {% endif %}
+                       {% render 'nov-aspect-image', image: block.settings[img_id] %}
+                      {% if block.settings[imglink_id] != blank %}
+                        </a>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+            <div class="block-social-image d-flex mt-{{ sst.spacing }}">
+              <div class="social color-{{ sst.color_social }} text-center">
+                <div class="title-social font-500 f_pr mb-20">{{ 'sections.collage.social' | t }}</div>
+                {% render 'nov-social' %}
+              </div>
+              <div class="block-image position-relative">
+                {% for block in section.blocks %}
+                  {% if block.type == 'image' %}
+                    {% if block.settings.image != blank %}
+                      {% render 'nov-aspect-image', image: block.settings.image %}
+                    {% else %}
+                      {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}  
+                    {% endif %}
+                    {% if block.settings.title != blank or block.settings.subtitle != blank or block.settings.desc != blank or block.settings.button != blank %}
+                      <div class="block-image-caption position-absolute {{ block.settings.text_align }} {{ block.settings.position }}">
+                        {% if block.settings.title != blank %}
+                          <div class="title {{ block.settings.title_fw }} {{ block.settings.title_ff }}">{{ block.settings.title }}</div>
+                        {% endif %}
+                        {% if block.settings.subtitle != blank %}
+                          <div class="sub_title {{ block.settings.subtitle_fw }} {{ block.settings.subtitle_ff }}">{{ block.settings.subtitle }}</div>
+                        {% endif %}
+                        {% if block.settings.link_label != blank %}
+                          <a href="{{ block.settings.link }}" class="link color-{{ block.settings.color_link }}">
+                            {{ block.settings.link_label }}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.show_btn_arrow %}
+                      <a href="{{ block.settings.btn_link }}" class="btn-arrow btn position-absolute right-bottom color-{{ block.settings.btn_color }}">
+                        <span>{% render 'icon-arrow-long-right' %}</span>
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Collage",
+    "class": "section-collage",
+    "max_blocks": 3,
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Collage</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_social",
+        "label": "Color social",
+        "default": "background-1"
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "label": "Corner radius item",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "spacing",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "label": "Spacing",
+        "unit": "px",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "full", "label": "Full" },
+          { "value": "container", "label": "Container"}
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "policy",
+        "name": "Policy",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "header",
+            "content": "Policy 1"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon1",
+            "label": "Icon"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "t1",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "color",
+            "id": "colortitle1",
+            "label": "Color title",
+            "default": "#222"
+          },
+          {
+            "type": "richtext",
+            "id": "d1",
+            "label": "Description",
+            "default": "<p>Lorem ipsum dolor sit amet</p>"
+          },
+          {
+            "type": "color",
+            "id": "colordesc1",
+            "label": "Color description",
+            "default": "#222"
+          },
+          {
+            "type": "color",
+            "id": "bg1",
+            "label": "Background",
+            "default": "#d2d2d2"
+          },
+          {
+            "type": "header",
+            "content": "Policy 2"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon2",
+            "label": "Icon"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "t2",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "color",
+            "id": "colortitle2",
+            "label": "Color title",
+            "default": "#222"
+          },
+          {
+            "type": "richtext",
+            "id": "d2",
+            "label": "Description",
+            "default": "<p>Lorem ipsum dolor sit amet</p>"
+          },
+          {
+            "type": "color",
+            "id": "colordesc2",
+            "label": "Color description",
+            "default": "#222"
+          },
+          {
+            "type": "color",
+            "id": "bg2",
+            "label": "Background",
+            "default": "#d2d2d2"
+          },
+          {
+            "type": "header",
+            "content": "Policy 3"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon3",
+            "label": "Icon"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "t3",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "color",
+            "id": "colortitle3",
+            "label": "Color title",
+            "default": "#222"
+          },
+          {
+            "type": "richtext",
+            "id": "d3",
+            "label": "Description",
+            "default": "<p>Lorem ipsum dolor sit amet</p>"
+          },
+          {
+            "type": "color",
+            "id": "colordesc3",
+            "label": "Color description",
+            "default": "#222"
+          },
+          {
+            "type": "color",
+            "id": "bg3",
+            "label": "Background",
+            "default": "#d2d2d2"
+          },
+          {
+            "type": "header",
+            "content": "Policy 4"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon4",
+            "label": "Icon"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "t4",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "color",
+            "id": "colortitle4",
+            "label": "Color title",
+            "default": "#222"
+          },
+          {
+            "type": "richtext",
+            "id": "d4",
+            "label": "Description",
+            "default": "<p>Lorem ipsum dolor sit amet</p>"
+          },
+          {
+            "type": "color",
+            "id": "colordesc4",
+            "label": "Color description",
+            "default": "#222"
+          },
+          {
+            "type": "color",
+            "id": "bg4",
+            "label": "Background",
+            "default": "#d2d2d2"
+          }
+        ]
+      },
+      {
+        "type": "image_slider",
+        "name": "Image Slider",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "header",
+            "content": "Image 1"
+          },
+          {
+            "type": "image_picker",
+            "id": "image1",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "imglink1",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Image 2"
+          },
+          {
+            "type": "image_picker",
+            "id": "image2",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "imglink2",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Image 3"
+          },
+          {
+            "type": "image_picker",
+            "id": "image3",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "imglink3",
+            "label": "Link"
+          },
+          {
+            "type": "checkbox",
+            "id": "show_nav",
+            "label": "Show arrow",
+            "default": true
+          },
+          {
+            "type": "checkbox",
+            "id": "show_dots",
+            "label": "Show dots",
+            "default": true
+          },
+          {
+            "type": "color",
+            "id": "color_nav",
+            "label": "Color arrow/dots",
+            "default": "#d2d2d2"
+          },
+          {
+            "type": "color",
+            "id": "color_nav_act",
+            "label": "Color arrow/dots active",
+            "default": "#000"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "name": "Image",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "header",
+            "content": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "color",
+            "id": "title_color",
+            "label": "Color",
+            "default": "#000"
+          },
+          {
+            "type": "select",
+            "id": "title_ff",
+            "label": "Font family",
+            "default": "f_df",
+            "options": [
+              {"value": "f_df","label": "Body font"},
+              {"value": "f_pr","label": "Heading font"}
+            ]
+          },
+          {
+            "type": "select",
+            "id": "title_fw",
+            "label": "Font weight",
+            "default": "font-400",
+            "options": [
+              {"value": "font-300","label": "Light"},
+              {"value": "font-400","label": "Regular"},
+              {"value": "font-500","label": "Medium"},
+              {"value": "font-600","label": "SemiBold"},
+              {"value": "font-700","label": "Bold"},
+              {"value": "font-800","label": "ExtraBold"},
+              {"value": "font-900","label": "Black"}
+            ]
+          },
+          {
+            "type": "number",
+            "id": "title_letter",
+            "label": "Letter spacing",
+            "default": 0
+          },
+          {
+            "type": "text",
+            "id": "title_lh",
+            "label": "Line height",
+            "default": "1.5"
+          },
+          {
+            "type": "paragraph",
+            "content": "FONT SIZE"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_xxl",
+            "label": "Desktop",
+            "default": 22,
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_xl",
+            "label": "Large laptop",
+            "default": 22,
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_lg",
+            "label": "Laptop",
+            "default": 22,
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_md",
+            "label": "Tablet",
+            "default": 22,
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_sm",
+            "label": "Large mobile",
+            "default": 22,
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "number",
+            "id": "title_fz_xs",
+            "label": "Mobile",
+            "default": 22
+          },
+          {
+            "type": "range",
+            "id": "title_mb",
+            "min": 0,
+            "max": 50,
+            "step": 1,
+            "label": "Margin bottom",
+            "unit": "px",
+            "default": 10
+          },
+          {
+            "type": "header",
+            "content": "Sub Title"
+          },
+          {
+            "type": "richtext",
+            "id": "subtitle",
+            "label": "Sub title"
+          },
+          {
+            "type": "color",
+            "id": "subtitle_color",
+            "label": "Color",
+            "default": "#000"
+          },
+          {
+            "type": "checkbox",
+            "id": "btn_style",
+            "label": "Button style"
+          },
+          {
+            "type": "color",
+            "id": "subtitle_bg",
+            "label": "Background button style",
+            "default": "#fff"
+          },
+          {
+            "type": "select",
+            "id": "subtitle_ff",
+            "label": "Font family",
+            "default": "f_df",
+            "options": [
+              {"value": "f_df","label": "Body font"},
+              {"value": "f_pr","label": "Heading font"}
+            ]
+          },
+          {
+            "type": "select",
+            "id": "subtitle_fw",
+            "label": "Font weight",
+            "default": "font-400",
+            "options": [
+              {"value": "font-300","label": "Light"},
+              {"value": "font-400","label": "Regular"},
+              {"value": "font-500","label": "Medium"},
+              {"value": "font-600","label": "SemiBold"},
+              {"value": "font-700","label": "Bold"},
+              {"value": "font-800","label": "ExtraBold"},
+              {"value": "font-900","label": "Black"}
+            ]
+          },
+          {
+            "type": "number",
+            "id": "subtitle_letter",
+            "label": "Letter spacing",
+            "default": 0
+          },
+          {
+            "type": "text",
+            "id": "subtitle_lh",
+            "label": "Line height",
+            "default": "1.5"
+          },
+          {
+            "type": "paragraph",
+            "content": "FONT SIZE"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_xxl",
+            "label": "Desktop",
+            "default": 22,
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_xl",
+            "label": "Large laptop",
+            "default": 22,
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_lg",
+            "label": "Laptop",
+            "default": 22,
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_md",
+            "label": "Tablet",
+            "default": 22,
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_sm",
+            "label": "Large mobile",
+            "default": 22,
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "number",
+            "id": "subtitle_fz_xs",
+            "label": "Mobile",
+            "default": 22
+          },
+          {
+            "type": "range",
+            "id": "subtitle_mb",
+            "min": 0,
+            "max": 50,
+            "step": 1,
+            "label": "Margin bottom",
+            "unit": "px",
+            "default": 10
+          },
+          {
+            "type": "header",
+            "content": "Link"
+          },
+          {
+            "type": "text",
+            "id": "link_label",
+            "label": "Link label"
+          },
+          {
+            "type": "color_scheme",
+            "id": "color_link",
+            "label": "Color link",
+            "default": "background-1"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Button"
+          },
+          {
+            "type": "checkbox",
+            "id": "show_btn_arrow",
+            "label": "Show button arrow"
+          },
+          {
+            "type": "url",
+            "id": "btn_link",
+            "label": "Button link"
+          },
+          {
+            "type": "color_scheme",
+            "id": "btn_color",
+            "label": "Button color",
+            "default": "background-1"
+          },
+          {
+            "type": "select",
+            "id": "text_align",
+            "label": "Text align",
+            "default": "text-left",
+            "options": [
+              {
+                "value": "text-left",
+                "label": "Left"
+              },
+              {
+                "value": "text-center",
+                "label": "Center"
+              },
+              {
+                "value": "text-right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Position"
+          },
+          {
+            "type": "select",
+            "id": "position",
+            "label": "Position",
+            "default": "left-center",
+            "options": [
+              {"value": "left-top", "label": "Left top" },
+              {"value": "left-center", "label": "Left center"},
+              {"value": "left-bottom", "label": "Left bottom"},
+              {"value": "right-top", "label": "Right top" },
+              {"value": "right-center", "label": "Right center"},
+              {"value": "right-bottom", "label": "Right bottom"},
+              {"value": "top-center", "label": "Top center"},
+              {"value": "center-center", "label": "Middle center"},
+              {"value": "bottom-center", "label": "Bottom center"}
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Spacing Horizotal"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_xxl",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%",
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_xl",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%",
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_lg",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%",
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_md",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%",
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_sm",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%",
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "range",
+            "id": "position_horizotal_xs",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 5,
+            "unit": "%"
+          },
+          {
+            "type": "header",
+            "content": "Spacing Vertical"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_xxl",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%",
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_xl",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%",
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_lg",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%",
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_md",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%",
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_sm",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%",
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "range",
+            "id": "position_vertical_xs",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "Spacing",
+            "default": 0,
+            "unit": "%"
+          },
+          {
+            "type": "header",
+            "content": "Width Block Text"
+          },
+          {
+            "type": "range",
+            "id": "w_xxl",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50,
+            "info": "Breakpoint 1441px"
+          },
+          {
+            "type": "range",
+            "id": "w_xl",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50,
+            "info": "Breakpoint 1200px"
+          },
+          {
+            "type": "range",
+            "id": "w_lg",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50,
+            "info": "Breakpoint 992px"
+          },
+          {
+            "type": "range",
+            "id": "w_md",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50,
+            "info": "Breakpoint 768px"
+          },
+          {
+            "type": "range",
+            "id": "w_sm",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50,
+            "info": "Breakpoint 576px"
+          },
+          {
+            "type": "range",
+            "id": "w_xs",
+            "min": 20,
+            "max": 100,
+            "step": 1,
+            "label": "Width",
+            "unit": "%",
+            "default": 50
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Collage",
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "policy"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

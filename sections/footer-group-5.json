@@ -1,0 +1,135 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer 5",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "nov-footer-5",
+      "blocks": {
+        "block_html_6DUVML": {
+          "type": "block_html",
+          "settings": {
+            "block_title": "Contact Us",
+            "h_t": false,
+            "img_width": 150,
+            "img_spacing": 10,
+            "show_payment": false,
+            "html_content": "<p>2357 Gordon Street, CA</p>\n<p>+ (909) - 478-2742</p>\n<p>GearnixStore@Vinova.com</p>\n<p>@VinovaGear</p>",
+            "show_social": false,
+            "block_class": "",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-6",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_3yCeE3": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Let us help",
+            "h_t": false,
+            "menu_handle": "let-us-help",
+            "block_class": "mb-xl-50 mb-lg-30",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-6",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_newsletter_nJGqQK": {
+          "type": "block_newsletter",
+          "settings": {
+            "block_title": "<p>Newsletter</p>",
+            "desc": "",
+            "h_t": true,
+            "image": "shopify://shop_images/Logo_white.png",
+            "img_width": 150,
+            "img_spacing": 35,
+            "show_social": false,
+            "show_payment": false,
+            "payment": "shopify://shop_images/payment.png",
+            "payment_mw": 170,
+            "input_color": "#1c1c1c",
+            "input_bg": "#ffffff",
+            "btn_type": "btn-primary",
+            "block_class": "text-xl-center mb-lg-50",
+            "grid_xxl": "col-xxl-4",
+            "grid_xl": "col-xl-4",
+            "grid_lg": "col-lg-12",
+            "grid_md": "col-md-12",
+            "grid_sm": "col-sm-12"
+          }
+        },
+        "block_menu_H8QtWA": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "Our policies",
+            "h_t": false,
+            "menu_handle": "our-policies",
+            "block_class": "text-xl-right",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-6",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        },
+        "block_menu_DDPbqr": {
+          "type": "block_menu",
+          "settings": {
+            "block_title": "My Account",
+            "h_t": false,
+            "menu_handle": "my-account",
+            "block_class": "text-xl-right",
+            "grid_xxl": "col-xxl-2",
+            "grid_xl": "col-xl-2",
+            "grid_lg": "col-lg-6",
+            "grid_md": "col-md-6",
+            "grid_sm": "col-sm-6"
+          }
+        }
+      },
+      "block_order": [
+        "block_html_6DUVML",
+        "block_menu_3yCeE3",
+        "block_newsletter_nJGqQK",
+        "block_menu_H8QtWA",
+        "block_menu_DDPbqr"
+      ],
+      "settings": {
+        "animate": true,
+        "border_top": false,
+        "container": "container-fluid",
+        "color_section": "scheme-b6a12cee-b185-452c-8ab4-87bf4f6f17cc",
+        "background_color": "#f5f6fc",
+        "background_image_size": "cover",
+        "bg_size": "full",
+        "btn_type": "btn-primary",
+        "show_footer_copyright": true,
+        "color_copyright": "scheme-b6a12cee-b185-452c-8ab4-87bf4f6f17cc",
+        "bg_copyright": "rgba(0,0,0,0)",
+        "show_copyright_border_top": true,
+        "copyright_border_top_opa": 25,
+        "copyright": "Copyright © 2025 Nova Creative. All Rights Reserved.",
+        "show_payment": true,
+        "payment": "shopify://shop_images/payment.png",
+        "payment_mw": 200,
+        "show_copyright_social": true,
+        "mobile_acc": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

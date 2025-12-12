@@ -1,0 +1,146 @@
+<div id="Form_newletter" class="form-vertical modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header" data-dismiss="modal">
+        <i class="zmdi zmdi-hc-fw zmdi-close"></i>
+      </div>
+      <div class="modal-body">
+        <div class="block_title text-center">
+          <div class="title font-700 black mb-15">{{ 'general.newsletter_form.title_popup_soldout' | t }}</div>
+          <div class="sub font-500">{{ 'general.newsletter_form.sub_popup_soldout' | t }}</div>
+        </div>
+        {% form 'customer' %}
+          {{ form.errors | default_errors }}
+          {% if form.posted_successfully? %}
+            <p class="form--success text-center" style="color: #fff;">{{ 'general.newsletter_form.confirmation' | t }}</p>
+          {% else %}
+            <div class="input-group d-block mb-30">
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <input type="email"
+                name="contact[email]"
+                id="Email_newsletter"
+                class="input-group__field newsletter__input text-center"
+                value="{% if customer %}{{ customer.email }}{% endif %}"
+                placeholder="{{ 'general.newsletter_form.email_placeholder_soldout' | t }}">
+              <button type="submit" class="btn newsletter__submit w-100 d-flex align-items-center justify-content-center" name="commit" id="Subscribe_newsletter">
+                <i class="zmdi zmdi-email"></i>
+                <span>{{ 'general.newsletter_form.noitify_me' | t }}</span>
+              </button>
+            </div>
+            <div class="checkbox">
+              <label id="myCheck" class="d-inline-flex">
+                <span class="custom-checkbox">
+                  <input name="no-view" class="no-view" type="checkbox">
+                  <span class="ps-shown-by-js"><i class="zmdi zmdi-check"></i></span>
+                </span>
+                <span class="text">
+                  {{ 'general.newsletter_form.note' | t }}
+                  <a href="/pages/term-and-services">Terms of Service</a>
+                  and
+                  <a href="/pages/privacy-policy">Privacy Policy</a>
+                </span>
+              </label>
+            </div>
+            
+          {% endif %}
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  // kleine Helfer
+  function getCurrentVariantId() {
+    // bevorzugt das Hidden-Feld aus euren Product-Templates
+    var v = document.getElementById('variant_id');
+    if (v && v.value) return v.value;
+
+    // Fallback: ausgewählte Option aus #productSelect (z.B. Quick View)
+    var sel = document.getElementById('productSelect');
+    if (sel && sel.value) return sel.value;
+
+    // Fallback: URL-Parameter ?variant=...
+    var m = (location.search || '').match(/[?&]variant=(\d+)/);
+    if (m) return m[1];
+
+    return null;
+  }
+
+  function getProductId() {
+    // Shopify stellt das auf Produktseiten meist bereit
+    try { return window.ShopifyAnalytics && ShopifyAnalytics.meta && ShopifyAnalytics.meta.product && ShopifyAnalytics.meta.product.id; } catch(e) {}
+    return null;
+  }
+
+  function showMessage(msg, ok) {
+    var container = document.querySelector('#Form_newletter .modal-body');
+    if (!container) return alert(msg);
+    var color = ok ? '#155724' : '#721c24';
+    var bg    = ok ? '#d4edda' : '#f8d7da';
+    var bd    = ok ? '#c3e6cb' : '#f5c6cb';
+    var box = document.createElement('div');
+    box.style.cssText = 'margin-top:15px;padding:12px;border-radius:4px;font-size:14px;';
+    box.style.color = color; box.style.background = bg; box.style.border = '1px solid ' + bd;
+    box.textContent = msg;
+    container.appendChild(box);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    var emailInput = document.getElementById('Email_newsletter');
+    var email = emailInput ? (emailInput.value || '').trim() : '';
+    var variantId = getCurrentVariantId();
+    var productId = getProductId();
+
+    if (!window.BIS || typeof window.BIS.create !== 'function') {
+      showMessage('Benachrichtigungsdienst (AMP) ist nicht geladen. Bitte später erneut versuchen.', false);
+      return;
+    }
+    if (!email) {
+      showMessage('Bitte eine gültige E-Mail eingeben.', false);
+      return;
+    }
+    if (!variantId || !productId) {
+      showMessage('Produkt/Variante konnte nicht ermittelt werden.', false);
+      return;
+    }
+
+    // Anfrage an AMP Back-in-Stock
+    BIS.create(email, Number(variantId), Number(productId))
+      .then(function(resp) {
+        if (resp && resp.status === 'OK') {
+          showMessage(resp.message || 'Danke! Wir benachrichtigen dich, sobald es wieder verfügbar ist.', true);
+        } else {
+          // Fehlermeldungen aggregieren
+          var msg = 'Es ist ein Fehler aufgetreten.';
+          if (resp && resp.errors) {
+            var parts = [];
+            for (var k in resp.errors) { parts.push(k + ': ' + resp.errors[k].join(', ')); }
+            if (parts.length) msg = parts.join(' | ');
+          } else if (resp && resp.status) {
+            msg = String(resp.status);
+          }
+          showMessage(msg, false);
+        }
+      })
+      .catch(function() {
+        showMessage('Netzwerkfehler. Bitte später erneut versuchen.', false);
+      });
+  }
+
+  // Submit-Klick der Modal-Schaltfläche abfangen
+  document.addEventListener('click', function(ev) {
+    var btn = ev.target.closest('#Subscribe_newsletter');
+    if (btn) { handleSubmit(ev); }
+  });
+
+  // Optional: Enter im E-Mail Feld => absenden
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter' && document.activeElement && document.activeElement.id === 'Email_newsletter') {
+      handleSubmit(ev);
+    }
+  });
+})();
+</script>

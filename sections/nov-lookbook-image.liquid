@@ -1,0 +1,288 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }};
+    padding-bottom: {{ sst.distance_bottom_xs }};
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %}url("{{ bg_image | image_url: width: 1920 }}") center{% endif %}
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% for block in section.blocks %}
+    #shopify-section-{{ section.id }} .block-{{ forloop.index }} {
+      {{ block.settings.pin_position_1_xs }}
+    }
+    @media(min-width: 768px) {
+      #shopify-section-{{ section.id }} .block-{{ forloop.index }} {
+        {{ block.settings.pin_position_1 }}
+      }
+    }
+  {% endfor %}
+{% endstyle %}
+<div class="distance color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp animated{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="block-content position-relative">
+      <div class="position-relative">
+        {% if sst.lookbook_image != blank %}
+          {% if sst.lookbook_image_xs != blank %}
+            <div class="d-none d-md-block">
+          {% endif %}
+            {%- render 'nov-aspect-image', image: sst.lookbook_image -%}
+          {% if sst.lookbook_image_xs != blank %}
+            </div>
+          {% endif %}
+          {% if sst.lookbook_image_xs != blank %}
+            <div class="d-md-none">
+              {%- render 'nov-aspect-image', image: sst.lookbook_image_xs -%}
+            </div>
+          {% endif %}
+        {% else %}
+          {{ 'hero-apparel-2' | placeholder_svg_tag : 'placeholder-svg' }}
+        {% endif %}
+        
+        {% for block in section.blocks %}
+          {% if block.type == 'lookbook' %}
+            {%- assign product = all_products[block.settings.product] -%}
+            <div class="item-lookbook {{ block.settings.t_pos }} block-{{ forloop.index }}">
+              <span class="pin"><span class="pin-inner"></span></span>
+              <div class="look-content item">
+                {% render 'product-grid-item-style-1', product: product, section_id: section.id  %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="content">
+        {% if sst.image != blank %}
+          <img data-src="{{ sst.image | image_url: width: 1024 }}" class="lazyload mb-15 mb-md-10 img-fluid" width="1024" height="1024">
+        {% endif %}
+        {% if sst.title != blank %}
+          <div class="title">{{ sst.title }}</div>
+        {% endif %}
+        {% if sst.desc != blank %}
+          <div class="desc mt-15 mt-md-10">{{ sst.desc }}</div>
+        {% endif %}
+        {% if sst.show_btn %}
+          <a class="btn btn-secondary mt-20 mt-md-10" href="{{ sst.button_link }}">
+            <span>{{ 'sections.button.shop_now' | t }}</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova LookBook Product",
+    "class": "section-lookbook-product overflow_hidden",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Caption"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "title",
+        "label": "Title",
+        "default": "Vestibulum maximus"
+      },
+      {
+        "type": "richtext",
+        "id": "desc",
+        "label": "Description",
+        "default": "<p>Praesent ultricies lectus quis nunc</p>"
+      },
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_btn",
+        "label": "Show button",
+        "default": true
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      },
+      {
+        "type":  "header",
+        "content": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "lookbook_image",
+        "label": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "lookbook_image_xs",
+        "label": "Image mobile 575px ↓"
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "lookbook",
+        "name": "Lookbook Item",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          },
+          {
+            "type": "text",
+            "id": "pin_position_1",
+            "label": "Pin position",
+            "info": "Example: Top: 50%; Left: 20%",
+            "default": "Top: 50%; Left: 20%"
+          },
+          {
+            "type": "text",
+            "id": "pin_position_1_xs",
+            "label": "Pin position mobile 575px ↓",
+            "default": "Top: 50%; Left: 20%"
+          },
+          {
+            "type": "select",
+            "id": "t_pos",
+            "label": "Position",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova LookBook Product",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "lookbook"
+          },
+          {
+            "type": "lookbook"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,95 @@
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price_min > product.price_min -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+
+{%- if on_sale -%}
+  {%- assign cap = product.compare_at_price_min -%}
+  {%- assign pr  = product.price_min -%}
+  {%- assign discount = cap | minus: pr | times: 100 | divided_by: cap | round: 0 -%}
+{%- endif -%}
+
+<div class="item-product{% if settings.show_border_product %} h_bd{% endif %}{% if settings.show_background_product %} bg{% endif %}">
+  <div class="inner-top">
+
+    <div class="thumbnail-container{% if product.images.size > 1 %} has-multiimage{% endif %}">
+      <a href="{{ product.url | within: collection }}">
+        {%- assign img = product.featured_image | default: product.images.first -%}
+        <div class="respone_image" style="padding-top:{{ 1 | divided_by: img.aspect_ratio | times: 100}}%;">
+          <img
+            class="product__thumbnail lazyload"
+            src="{{ img | image_url: width: 1 }}"
+            data-src="{{ img | image_url: width: 260 }}"
+            data-srcset="{{ img | image_url: width: 260 }} 260w, {{ img | image_url: width: 360 }} 360w, {{ img | image_url: width: 540 }} 540w, {{ img | image_url: width: 720 }} 720w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1080 }} 1080w"
+            data-sizes="auto"
+            alt="{{ img.alt | escape }}"
+            width="{{ img.width }}"
+            height="{{ img.height }}"
+            loading="lazy"
+            style="height: auto;"
+          >
+          {%- if product.images.size > 1 and settings.show_second_image_product -%}
+            {%- assign second = product.images[1] -%}
+            <img
+              class="product__thumbnail-second lazyload"
+              src="{{ second | image_url: width: 1 }}"
+              data-src="{{ second | image_url: width: 260 }}"
+              data-srcset="{{ second | image_url: width: 260 }} 260w, {{ second | image_url: width: 360 }} 360w, {{ second | image_url: width: 540 }} 540w, {{ second | image_url: width: 720 }} 720w, {{ second | image_url: width: 900 }} 900w, {{ second | image_url: width: 1080 }} 1080w"
+              data-sizes="auto"
+              alt="{{ second.alt | escape }}"
+              width="{{ second.width }}"
+              height="{{ second.height }}"
+              loading="lazy"
+              style="height: auto;"
+            >
+          {%- endif -%}
+        </div>
+      </a>
+
+      {%- comment -%} Badges (NEW / SALE) oben links {%- endcomment -%}
+      {%- assign date_created = product.created_at | date: '%s' -%}
+      {%- assign date_now     = 'now' | date: '%s' -%}
+      {%- assign difference   = date_now | minus: date_created -%}
+      {%- assign date_end     = settings.time_newproduct | times: 86400 -%}
+
+      <div class="product--badge">
+        {%- if difference < date_end and settings.show_badge_new_product -%}
+          <div class="badge badge-new">{{ 'products.product.new' | t }}</div>
+        {%- endif -%}
+        {%- if on_sale and settings.show_badge_sale_product -%}
+          <div class="badge badge-sale">-{{ discount }}%</div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="product__info">
+      <div class="product__title">
+        <a href="{{ product.url | within: collection }}" title="{{ product.title }}">{{ product.title | truncate: 60 }}</a>
+      </div>
+
+      {%- if settings.show_rating -%}
+        <div
+          class="AirReviews-Widget AirReviews-Widget--Stars"
+          data-review-avg="{{ product.metafields.air_reviews_product.review_avg }}"
+          data-review-count="{{ product.metafields.air_reviews_product.review_count }}">
+        </div>
+      {%- endif -%}
+
+ <div class="price-box mt-10 price-st">
+  {% if on_sale %}
+    <div class="price-sale d-inline-flex flex-wrap align-items-center">
+      <span class="special-price" data-price-grid>{{ product.price_min | money }}</span>
+      <span class="old-price" data-compare-price-grid>{{ product.compare_at_price_min | money }}</span>
+    </div>
+  {% else %}
+    <div class="price-regular">
+      <span data-price-grid>{{ product.price_min | money }}</span>
+    </div>
+  {% endif %}
+</div>
+
+    </div>
+
+  </div>
+  <div class="item-product-bg"></div>
+</div>

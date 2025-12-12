@@ -1,0 +1,11 @@
+{{ 'css-swiper-bundle.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'css-novstyle.css' | asset_url | stylesheet_tag }}
+{% render 'nov-product-color-custom' %}
+{%- case request.page_type -%}
+	{%- when 'blog', 'article', 'product', 'collection', 'cart', 'index' -%}{%- else -%}{{ 'css-page_inner.css' | asset_url | stylesheet_tag }}
+{%- endcase -%}
+{% style %}
+	#PBarNextFrameWrapper {
+		display: none !important;
+	}
+{% endstyle %}

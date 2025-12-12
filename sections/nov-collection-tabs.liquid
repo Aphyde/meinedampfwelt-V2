@@ -1,0 +1,1021 @@
+{%- liquid 
+	assign sst = section.settings
+	assign xxl = sst.xxl
+	assign xl = sst.xl
+	assign lg = sst.lg
+	assign md = sst.md
+	assign sm = sst.sm
+	assign xs = sst.xs
+	assign row_number = sst.row_number
+	assign row_mobile = sst.row_mobile
+	assign limit = sst.limit
+-%}
+{% style %}
+	{%- assign bg_image = sst.background_image -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.spacing_horizontal}}px, 15px);
+    padding-right: clamp(0px, {{ sst.spacing_horizontal}}px, 15px);
+  }
+  {% if sst.background_color != blank or bg_image != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      {% if sst.bg_position == 'top' %}
+        top: 0;
+      {% elsif sst.bg_position == 'center' %}
+        top: 50%;
+        transform: translateY(-50%);
+      {% else %}
+        bottom: 0;
+      {% endif %}
+      left: 0;
+      width: 100%;
+      height: {{ sst.height_background }}%;
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} no-repeat {{ sst.bg_img_position }} center;
+      background-size: cover;
+    }
+  {% endif %}
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.spacing_horizontal }}px;
+      padding-right: {{ sst.spacing_horizontal }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+	@media(max-width: 575px) {
+		.collection-carousel:not(.slick-initialized) .col:nth-child(3), .collection-carousel:not(.slick-initialized) .col:nth-child(4) {
+			display: none;
+		}
+	}
+	{% if sst.enable_custom_style %}
+	  #shopify-section-{{ section.id }} {
+	    --product-color-border: {{ sst.product_border_color }};
+	    --product-color-background: {{ sst.product_background_color }};
+	    --product-color-type: {{ sst.product_type_color }};
+	    --product-color-title: {{ sst.product_title_color }};
+	    --product-color-title-hover: {{ sst.product_title_color_hover }};
+	    --product-color-price: {{ sst.product_price_color }};
+	    --product-color-reduced-price: {{ sst.product_price_reduced_color }};
+	  }
+	{% endif %}
+{% endstyle %}
+<div class="{% if sst.bg_size == 'full' %}distance{% if sst.class != blank %} {{ sst.class }}{% endif %} {% endif %}position-relative color-{{ sst.color_section }} {{ sst.style }}" data-product-tabs data-section-id="{{ section.id }}" data-section-type="nov-slick">
+	<div class="{{ sst.container }}">
+		<div class="{% if sst.bg_size == 'container' %}distance{% if sst.class != blank %} {{ sst.class }}{% endif %}{% endif %}">
+			{% render 'heading-section', sub_position: sst.subheading_position %}
+			{% comment %} Nav tab{% endcomment %}
+			<ul class="nav nav-tabs list-product-tabs d-none d-md-flex justify-content-md-center list-unstyled {{ sst.nav_style }} mb-60">
+				{% for block in section.blocks %}
+					{% if block.type == 'tabitem' %}
+						<li class="nav-item position-relative">
+							<a class="nav-link tab-links{% if forloop.first %} active{% endif %}{% if sst.nav_style == 'nav_1' %} box-shadow btn{% endif %} {{ sst.btn_type_nav }} {{ sst.btn_size_nav }} position-relative"
+							data-product-tabTop
+							href="#producttab{{ forloop.index }}{{ section.id }}"
+							data-target="#producttab{{ forloop.index }}{{ section.id }}"
+							data-href="/collections/{{ block.settings.collection_handle }}?view=tab"
+							id="tab-{{ forloop.index }}{{ section.id }}"
+							data-id="{{ forloop.index }}{{ section.id }}"
+							data-toggle="tab"
+							data-limit="{{ limit }}">
+								<span>{{ block.settings.tab_title }}</span>
+							</a>
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+			{% comment %} End Nav tab{% endcomment %}
+
+			{% comment %} Nav mobile{% endcomment %}
+
+			<div class="nav-mobile dropdown d-md-none">
+			  <div class="dropdown-toggle nav-mobile__title d-flex align-items-center justify-content-between w-100" data-toggle="dropdown" aria-expanded="false" role="button">
+			  </div>
+			  <div class="dropdown-menu dropdown-menu-right list-product-tabs w-100">
+			    {% for block in section.blocks %}
+						{% if block.type == 'tabitem' %}
+							<a class="nav-link tab-links{% if forloop.first %} active{% endif %}"
+							data-product-tabTop
+							href="#producttab{{ forloop.index }}{{ section.id }}" 
+							data-target="#producttab{{ forloop.index }}{{ section.id }}"
+							data-href="/collections/{{ block.settings.collection_handle }}?view=tab"
+							data-id="{{ forloop.index }}{{ section.id }}"
+							data-toggle="tab">
+								<span>{{ block.settings.tab_title }}</span>
+							</a>
+						{% endif %}
+			    {% endfor %}
+			  </div>
+			</div>
+
+			{% comment %} Product content {% endcomment %}
+			<div class="product_tab_content position-relative{% if sst.animate %} wow fadeInRight animated{% endif %}" style="--spacing: {{ sst.spacing }}px">
+				{% for block in section.blocks %}
+					{% if block.type == 'tabitem' %}
+						<div class="tab-content{% if forloop.first %} active{% endif %}" data-product-TabContent id="producttab{{ forloop.index }}{{ section.id }}">
+							<div class="products-grid grid--view-items row spacing-{{ sst.spacing }} spacing-md-15 collection-carousel slider-shadow"
+								data-items_xxl="{{ xxl }}"
+								data-items="{{ xl }}"
+								data-items_lg="{{ lg }}"
+								data-items_md="{{ md }}"
+								data-items_sm="{{ sm }}"
+								data-items_xs="{{ xs }}"
+								data-row="{{ row_number }}"
+								data-row_mobile="{{ row_mobile }}"
+								data-loop="true"
+								data-dots="{{ sst.show_dot }}"
+								data-nav="{{ sst.show_nav }}"
+								data-autoplay="false">
+								{% assign limit_placehol = sst.xxl | times: row_number %}
+								{%- for i in (1..limit_placehol) -%}
+									<div class="block mb-{{ sst.spacing }} position-relative {% render 'number-to-col' %}">
+										<div class="imagelazyload" style="padding-top: 133.3333333%;"></div>
+									</div>
+								{%- endfor -%}
+							</div>
+							{% if sst.view_all %}
+							<div class="text-center mt-35">
+								<a href="{{ routes.collections_url }}/{{ block.settings.collection_handle }}" class="btn {{ sst.btn_type }} {{ sst.btn_size }}">
+									<span>{{ 'sections.button.view_all' | t }}</span>
+								</a>
+							</div>
+							{% endif %}
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		{% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+	</div>
+</div>
+
+{% schema %}
+{
+	"name": "Vinova Collection Tabs",
+	"class": "section-collection-tabs",
+	"settings": [
+		{
+			"type": "richtext",
+			"id": "heading",
+			"label": "Heading",
+			"default": "<p>Vinova Collection Tab</p>"
+		},
+		{
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#222222"
+    },
+		{
+			"type": "richtext",
+			"id": "subheading",
+			"label": "Sub heading",
+			"default": "<p>Subtitle from happy customers</p>"
+		},
+		{
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Sub heading color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "subheading_position",
+      "label": "Sub heading position",
+      "default": "bottom",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+	    "type": "select",
+	    "id": "heading_alignment",
+	    "label": "Heading alignment",
+	    "default": "text-center",
+	    "options": [
+	      {
+	        "value": "text-left",
+	        "label": "Left"
+	      },
+	      {
+	        "value": "text-center",
+	        "label": "Center"
+	      },
+	      {
+	        "value": "text-right",
+	        "label": "Right"
+	      }
+	    ]
+	  },
+		{
+			"type":  "header",
+			"content": "Product Item Per Row"
+		},
+		{
+			"type": "range",
+			"id": "xxl",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Desktop",
+			"default": 4,
+			"info": "Breakpoint 1440px"
+		},
+		{
+			"type": "range",
+			"id": "xl",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Large laptop",
+			"default": 4,
+			"info": "Breakpoint 1200px"
+		},
+		{
+			"type": "range",
+			"id": "lg",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Laptop",
+			"default": 3,
+			"info": "Breakpoint 992px"
+		},
+		{
+			"type": "range",
+			"id": "md",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Tablet",
+			"default": 3,
+			"info": "Breakpoint 768px"
+		},
+		{
+			"type": "range",
+			"id": "sm",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Large mobile",
+			"default": 2,
+			"info": "Breakpoint 576px"
+		},
+		{
+			"type": "range",
+			"id": "xs",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Mobile",
+			"default": 2
+		},
+		{
+			"type":  "header",
+			"content": "Slider Options"
+		},
+		{
+			"type": "range",
+			"id": "row_number",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Number row",
+			"default": 1
+		},
+		{
+			"type": "range",
+			"id": "row_mobile",
+			"min": 1,
+			"max": 6,
+			"step": 1,
+			"label": "Number row mobile",
+			"default": 1
+		},
+		{
+			"type": "range",
+			"id": "limit",
+			"min": 4,
+			"max": 30,
+			"step": 1,
+			"label": "Limit",
+			"default": 30,
+			"info": "Select number limit products"
+	  },
+		{
+			"type": "range",
+			"id": "spacing",
+			"min": 0,
+			"max": 30,
+			"step": 5,
+			"unit": "px",
+			"label": "Spacing",
+			"default": 30,
+			"info": "Spacing item"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_dot",
+			"label": "Show dots",
+			"default": false
+		},
+		{
+			"type": "checkbox",
+			"id": "show_nav",
+			"label": "Show prev/next arrow",
+			"default": true
+		},
+		{
+			"type":  "header",
+			"content": "Nav Tab Style"
+		},
+		{
+			"type": "select",
+			"id": "nav_style",
+			"label": "Nav style",
+			"default": "nav_1",
+			"options": [
+				{ "value": "nav_1", "label": "Style 1" },
+				{ "value": "nav_2", "label": "Style 2" }
+			]
+		},
+		{
+			"type": "paragraph",
+			"content": "=======  Nav Style 1 ========"
+		},
+		{
+		  "type": "select",
+		  "id": "btn_type_nav",
+		  "label": "Button type",
+		  "default": "btn-primary",
+		  "options": [
+		    { "value": "btn-primary", "label": "Primary" },
+		    { "value": "btn-secondary", "label": "Secondary" }
+		  ]
+		},
+		{
+		  "type": "select",
+		  "id": "btn_size_nav",
+		  "label": "Button size",
+		  "default": "btn-normal",
+		  "options": [
+		    { "value": "btn-normal", "label": "Normal" },
+		    { "value": "btn-medium", "label": "Medium" },
+		    { "value": "btn-large", "label": "Large" }
+		  ]
+		},
+		{
+      "type": "header",
+      "content": "Product Item Custom Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_style",
+      "label": "Enable custom style"
+    },
+    {
+      "type": "color",
+      "id": "product_border_color",
+      "label": "Border color",
+      "default": "#d2d2d2",
+      "info": "In case the show border option is enabled"
+    },
+    {
+      "type": "color",
+      "id": "product_background_color",
+      "label": "Background color",
+      "default": "#d4d4d4",
+      "info": "In case the show background option is enabled"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Title color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color_hover",
+      "label": "Title color hover",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "product_type_color",
+      "label": "Type color",
+      "default": "#222",
+      "info": "In case the show type option is enabled"
+    },
+    {
+      "type": "color",
+      "id": "product_price_color",
+      "label": "Price color",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "product_price_reduced_color",
+      "label": "Reduced price color",
+      "default": "#222"
+    },
+		{
+			"type":  "header",
+			"content": "Section Style"
+		},
+		{
+			"type": "checkbox",
+			"id": "view_all",
+			"label": "Show button view all",
+			"default": true
+		},
+		{
+		  "type": "select",
+		  "id": "btn_type",
+		  "label": "Button type",
+		  "default": "btn-primary",
+		  "options": [
+		    { "value": "btn-primary", "label": "Primary" },
+		    { "value": "btn-secondary", "label": "Secondary" }
+		  ]
+		},
+		{
+		  "type": "select",
+		  "id": "btn_size",
+		  "label": "Button size",
+		  "default": "btn-normal",
+		  "options": [
+		    { "value": "btn-normal", "label": "Normal" },
+		    { "value": "btn-medium", "label": "Medium" },
+		    { "value": "btn-large", "label": "Large" }
+		  ]
+		},
+		{
+			"type": "checkbox",
+			"id": "animate",
+			"label": "Show animated",
+			"default":   false
+		},
+		{
+			"type": "select",
+			"id": "container",
+			"label": "Container",
+			"default": "container",
+			"options": [
+				{ "value": "container", "label": "Container" },
+				{ "value": "container-fluid", "label": "Container fluid" },
+				{ "value": "container-full", "label": "Container full width" }
+			]
+		},
+		{
+		  "type": "color_scheme",
+		  "id": "color_section",
+		  "label": "Color section",
+		  "default": "background-1"
+		},
+		{
+			"type": "color",
+			"id": "background_color",
+			"label": "Background colors"
+		},
+		{
+			"type": "image_picker",
+			"id": "background_image",
+			"label": "Background image"
+		},
+		{
+      "type": "select",
+      "id": "bg_img_position",
+      "label": "Background image position",
+      "default": "center",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "height_background",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "label": "Height background",
+      "default": 100,
+      "unit": "%"
+    },
+		{
+      "type": "select",
+      "id": "bg_position",
+      "label": "Background position",
+      "default": "top",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    },
+		{
+      "type": "select",
+      "id": "bg_size",
+      "label": "Background size",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Full" },
+        { "value": "container", "label": "Container"}
+      ]
+    },
+		{
+			"type": "text",
+			"id": "class",
+			"label": "Class"
+		},
+		{
+		  "type": "header",
+		  "content": "Spacing Horizontal (px)"
+		},
+		{
+		  "type": "range",
+		  "id": "spacing_horizontal",
+		  "min": 0,
+		  "max": 50,
+		  "step": 5,
+		  "unit": "px",
+		  "label": "Spacing horizontal",
+		  "default": 0
+		},
+		{
+      "type": "header",
+      "content": "Spacing Top (px)"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_xl",
+      "label": "Large laptop",
+      "default": 30,
+      "info": "Breakpoint 1200px"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_md",
+      "label": "Tablet",
+      "default": 30,
+      "info": "Breakpoint 768px"
+    },
+    {
+      "type": "number",
+      "id": "distance_top_xs",
+      "label": "Mobile",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Spacing Bottom (px)"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_xl",
+      "label": "Large laptop",
+      "default": 30,
+      "info": "Breakpoint 1200px"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_md",
+      "label": "Tablet",
+      "default": 30,
+      "info": "Breakpoint 768px"
+    },
+    {
+      "type": "number",
+      "id": "distance_bottom_xs",
+      "label": "Mobile",
+      "default": 30
+    }
+	],
+	"blocks": [
+		{
+			"type": "tabitem",
+			"name": "Tab Item",
+			"settings": [
+				{
+					"type": "text",
+					"id": "tab_title",
+					"label": "Tab title"
+				},
+				{
+					"type": "collection",
+					"id": "collection_handle",
+					"label": "Collection"
+				}
+			]
+		},
+		{
+			"type": "@app"
+		}
+	],
+	"presets": [
+		{
+			"name": "Vinova Collection Tabs",
+			"category": "Collection",
+			"blocks": [
+				{
+					"type":"tabitem",
+					"settings":{
+						"tab_title": "Tab one",
+						"collection_handle": "frontpage"
+					}
+				},
+				{
+					"type":"tabitem",
+					"settings":{
+						"tab_title": "Tab Two",
+						"collection_handle": "frontpage"
+					}
+				},
+				{
+					"type":"tabitem",
+					"settings":{
+						"tab_title": "Tab Three",
+						"collection_handle": "frontpage"
+					}
+				}
+			]
+		}
+	]
+}
+{% endschema %}
+{% style %}
+/* === Gleich hohe Karten in Tabs/Slick — hart gesichert === */
+@media (min-width:1200px){
+  /* Slick-Track auf Flex strecken */
+  #shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-track{
+    display:flex !important;
+    align-items:stretch !important;
+  }
+  /* Slide und seine inneren Wrapper auf volle Höhe */
+  #shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-slide{
+    height:auto !important;
+  }
+  #shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-slide > div{
+    height:100% !important; /* Slicks innerer DIV-Wrapper */
+  }
+
+  /* Falls noch nicht initialisiert (Preload/Fallback) */
+  #shopify-section-{{ section.id }} .products-grid.row{
+    align-items:stretch; /* Bootstrap-Row strecken */
+  }
+  #shopify-section-{{ section.id }} .collection-carousel:not(.slick-initialized) .block{
+    display:flex;
+  }
+
+  /* Kartenkörper über volle Höhe aufbauen (breite Klassendeckung) */
+  #shopify-section-{{ section.id }} .collection-carousel .block{ height:100%; }
+  #shopify-section-{{ section.id }} .collection-carousel .block > *{
+    display:flex; flex-direction:column; height:100%;
+  }
+  #shopify-section-{{ section.id }} .collection-carousel .item-product,
+  #shopify-section-{{ section.id }} .collection-carousel .product-item,
+  #shopify-section-{{ section.id }} .collection-carousel .product-card,
+  #shopify-section-{{ section.id }} .collection-carousel .card-product{
+    display:flex; flex-direction:column; height:100%;
+  }
+
+  /* Bildbereich ratio-stabil (anpassen, falls andere Ratio) */
+  #shopify-section-{{ section.id }} .collection-carousel .product-image,
+  #shopify-section-{{ section.id }} .collection-carousel .product__image,
+  #shopify-section-{{ section.id }} .collection-carousel .thumbnail{
+    aspect-ratio: 1 / 1;
+    width:100%;
+  }
+
+  /* Content füllt Resthöhe */
+  #shopify-section-{{ section.id }} .collection-carousel .product-info,
+  #shopify-section-{{ section.id }} .collection-carousel .product__info,
+  #shopify-section-{{ section.id }} .collection-carousel .card-body{
+    display:flex; flex-direction:column; gap:.5rem; flex:1 1 auto;
+  }
+
+  /* Titel clampen (2 Zeilen) – funktioniert auch wenn er verlinkt ist */
+  #shopify-section-{{ section.id }} .collection-carousel .product-title,
+  #shopify-section-{{ section.id }} .collection-carousel a.product-title,
+  #shopify-section-{{ section.id }} .collection-carousel .product__title,
+  #shopify-section-{{ section.id }} .collection-carousel .card-title{
+    display:-webkit-box;
+    -webkit-line-clamp:2; /* auf 3 erhöhen, wenn gewünscht */
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    line-height:1.3;
+    min-height: calc(1.3em * 2); /* bei 3 Zeilen -> *3 */
+  }
+
+  /* Preis/Badges/CTA an Kartenende */
+  #shopify-section-{{ section.id }} .collection-carousel .product-bottom,
+  #shopify-section-{{ section.id }} .collection-carousel .product-meta,
+  #shopify-section-{{ section.id }} .collection-carousel .price-area,
+  #shopify-section-{{ section.id }} .collection-carousel .card-footer{
+    margin-top:auto;
+  }
+}
+
+/* === Gerundete Ecken für Produktbilder beim Hover === */
+#shopify-section-{{ section.id }} .collection-carousel .thumbnail-container,
+#shopify-section-{{ section.id }} .collection-carousel .product-top {
+  border-radius: var(--product-corner-radius, 10px);
+  overflow: hidden;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .thumbnail-container:hover,
+#shopify-section-{{ section.id }} .collection-carousel .product-top:hover {
+  border-radius: var(--product-corner-radius, 10px);
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .respone_image {
+  border-radius: var(--product-corner-radius, 10px);
+  overflow: hidden;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .respone_image {
+  border-radius: var(--product-corner-radius, 10px);
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .product__thumbnail,
+#shopify-section-{{ section.id }} .collection-carousel .product__thumbnail-second {
+  border-radius: var(--product-corner-radius, 10px);
+  transition: border-radius 0.3s ease;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .product__thumbnail,
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .product__thumbnail-second {
+  border-radius: var(--product-corner-radius, 10px);
+}
+
+/* === Gleich hohe Karten für alle Bildschirmgrößen === */
+#shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-track {
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-slide {
+  height: auto !important;
+  display: flex !important;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel.slick-initialized .slick-slide > div {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Fallback für nicht initialisierte Carousels */
+#shopify-section-{{ section.id }} .products-grid.row {
+  align-items: stretch;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel:not(.slick-initialized) .block {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Kartenkörper über volle Höhe */
+#shopify-section-{{ section.id }} .collection-carousel .block {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .block > * {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .item-product,
+#shopify-section-{{ section.id }} .collection-carousel .product-item,
+#shopify-section-{{ section.id }} .collection-carousel .product-card,
+#shopify-section-{{ section.id }} .collection-carousel .card-product {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+/* Inner-top Container - WICHTIG für gleich hohe Karten */
+#shopify-section-{{ section.id }} .collection-carousel .item-product .inner-top {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  flex: 1 1 auto;
+}
+
+/* Bildcontainer mit fester Ratio - WICHTIG */
+#shopify-section-{{ section.id }} .collection-carousel .thumbnail-container,
+#shopify-section-{{ section.id }} .collection-carousel .product-top {
+  flex: 0 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+/* Respone Image mit fester Ratio - stellt sicher, dass alle Bilder gleich hoch sind */
+#shopify-section-{{ section.id }} .collection-carousel .respone_image {
+  position: relative !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding-top: 100% !important; /* 1:1 Aspect Ratio - überschreibt inline styles */
+  height: 0 !important; /* Wichtig für padding-top Trick */
+}
+
+/* Alle Bilder innerhalb respone_image absolut positionieren - WICHTIG: Überschreibt inline styles */
+#shopify-section-{{ section.id }} .collection-carousel .respone_image img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  transform: scale(1) !important; /* Überschreibt scale(1.1) */
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Erstes Bild - Standard sichtbar */
+#shopify-section-{{ section.id }} .collection-carousel .product__thumbnail {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Erstes Bild beim Hover ausblenden */
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .product__thumbnail {
+  opacity: 0;
+}
+
+/* Zweites Bild - Standard versteckt, EXAKT gleiche Position und Größe wie erstes Bild */
+#shopify-section-{{ section.id }} .collection-carousel .product__thumbnail-second {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  opacity: 0 !important;
+  visibility: visible !important;
+  transform: none !important; /* Überschreibt translateX(-50%) */
+  margin: 0 auto !important; /* Überschreibt margin: 0 auto */
+  transition: opacity 0.3s ease !important;
+  z-index: 2;
+  filter: none !important; /* Überschreibt filter: alpha */
+  -ms-filter: none !important;
+  -webkit-opacity: 0 !important;
+  -moz-opacity: 0 !important;
+  -ms-opacity: 0 !important;
+  -o-opacity: 0 !important;
+}
+
+/* Zweites Bild beim Hover einblenden */
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .product__thumbnail-second {
+  opacity: 1 !important;
+  -webkit-opacity: 1 !important;
+  -moz-opacity: 1 !important;
+  -ms-opacity: 1 !important;
+  -o-opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Product Info füllt Resthöhe */
+#shopify-section-{{ section.id }} .collection-carousel .product__info {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  gap: 0.5rem;
+  min-height: 0; /* Wichtig für Flexbox - verhindert Überlauf */
+}
+
+/* Produktnamen auf 2 Zeilen begrenzen */
+#shopify-section-{{ section.id }} .collection-carousel .product__title,
+#shopify-section-{{ section.id }} .collection-carousel .product__title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+  min-height: calc(1.3em * 2);
+  text-overflow: ellipsis;
+}
+
+/* Preis-Bereich am Ende */
+#shopify-section-{{ section.id }} .collection-carousel .price-box {
+  margin-top: auto;
+}
+
+/* Warenkorb-Button beim Hover ausblenden */
+#shopify-section-{{ section.id }} .collection-carousel .button--top {
+  display: none !important;
+}
+
+#shopify-section-{{ section.id }} .collection-carousel .item-product:hover .button--top {
+  display: none !important;
+}
+
+/* Auch alle Buttons innerhalb button--top ausblenden */
+#shopify-section-{{ section.id }} .collection-carousel .add-to-cart-btn,
+#shopify-section-{{ section.id }} .collection-carousel .btn-quick-add {
+  display: none !important;
+}
+{% endstyle %}
+<script>
+(function(){
+  var $s = document.getElementById('shopify-section-{{ section.id }}');
+  if(!$s) return;
+
+  function $$(sel, ctx){ return Array.prototype.slice.call((ctx||document).querySelectorAll(sel)); }
+
+  function equalize(){
+    var root = $s;
+    var slides = $$('.collection-carousel.slick-initialized .slick-slide.slick-active', root);
+    if(!slides.length){
+      slides = $$('.collection-carousel .block', root); // Fallback vor Init
+    }
+
+    // reset
+    $$('.product-title, .product__title, .card-title', root).forEach(function(t){
+      t.style.minHeight = '';
+    });
+
+    var maxTitle = 0;
+    slides.forEach(function(slide){
+      var title = slide.querySelector('.product-title, .product__title, .card-title');
+      if(title){
+        var h = title.getBoundingClientRect().height;
+        if(h > maxTitle) maxTitle = h;
+      }
+    });
+
+    if(maxTitle){
+      $$('.product-title, .product__title, .card-title', root).forEach(function(t){
+        t.style.minHeight = maxTitle + 'px';
+      });
+    }
+  }
+
+  // Slick-Events (nutzt jQuery, falls vorhanden)
+  if (window.jQuery){
+    var $ = window.jQuery;
+    var $carousel = $('#shopify-section-{{ section.id }} .collection-carousel');
+    $carousel.on('init reInit setPosition afterChange', function(){ setTimeout(equalize, 0); });
+    // falls bereits initialisiert:
+    if($carousel.hasClass('slick-initialized')) setTimeout(equalize, 0);
+  }
+
+  // Tab-Wechsel (Bootstrap) + Klick-Fallback
+  $$('#shopify-section-{{ section.id }} [data-product-tabTop]').forEach(function(el){
+    el.addEventListener('shown.bs.tab', function(){ setTimeout(equalize, 50); });
+    el.addEventListener('click', function(){ setTimeout(equalize, 120); });
+  });
+
+  window.addEventListener('load', function(){ setTimeout(equalize, 80); });
+  window.addEventListener('resize', function(){ setTimeout(equalize, 80); });
+})();
+</script>

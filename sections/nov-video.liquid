@@ -1,0 +1,623 @@
+{% assign sst = section.settings %}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .youtube {
+    border-radius: {{ sst.radius }}px;
+    overflow: hidden;
+    transform: translateZ(0);
+  }
+  #shopify-section-{{ section.id }} .youtube::before {
+    background: rgba(0, 0, 0, {{ sst.image_overlay_opacity }}%);
+  }
+  {%- if sst.img_cover != blank -%}
+    #shopify-section-{{ section.id }} .bg-video__cover {
+      top:  0;
+      left: 0;
+      background: url("{{ sst.img_cover | image_url: width: 1920 }}") center;
+      background-size: cover;
+    }
+  {%- endif -%}
+
+  {% if sst.enable_mh %}
+    #shopify-section-{{ section.id }} video, #shopify-section-{{ section.id }} .img-cover {
+      height: 100% !important;
+    }
+    #shopify-section-{{ section.id }} .item {
+      height: {{ sst.mh }}px !important;
+    }
+    @media(min-width: 768px) {
+      #shopify-section-{{ section.id }} .item {
+        height: {{ sst.mh_md }}px !important;
+      }
+    }
+    @media(min-width: 1200px) {
+      #shopify-section-{{ section.id }} .item {
+        height: {{ sst.mh_xl }}px !important;
+      }
+    }
+    @media(min-width: 1441px) {
+      #shopify-section-{{ section.id }} .item {
+        height: {{ sst.mh_xxl }}px !important;
+      }
+    }
+  {% endif %}
+
+  {% if sst.video_parallax %}
+    #shopify-section-{{ section.id }} .item {
+      clip-path: content-box;
+    }
+    #shopify-section-{{ section.id }} video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 120% !important;
+    }
+  {% endif %}
+
+  {% for block in section.blocks %}
+    {% assign bst = block.settings %}
+    #shopify-section-{{ section.id }} .block-{{ forloop.index }}.text {
+      color: {{ bst.t_c }};
+      font-size: {{ bst.t_s | divided_by: 10.0 }}rem;
+      line-height: {{ bst.t_lh }};
+      letter-spacing: {{ bst.t_lt }}px;
+      text-transform: {{ bst.t_tt }};
+      max-width: {{ bst.t_m }}px;
+      margin: auto;
+      margin-bottom: {{ bst.distance_bottom }}px;
+    }
+    @media(max-width: 767px) {
+      #shopify-section-{{ section.id }} .block-{{ forloop.index }}.text {
+        font-size: clamp(10px, {{ bst.t_s | divided_by: 10.0 | times: 0.8 }}rem, 2.8rem);
+      }
+    }
+    {%- if block.type == 'btn' -%}
+      #shopify-section-{{ section.id }} .block-{{ forloop.index }}.btn {
+        color: {{ bst.c_btn }};
+        background-color: {{ bst.b_btn }};
+        margin-bottom: {{ bst.distance_bottom }}px;
+      }
+      #shopify-section-{{ section.id }} .block-{{ forloop.index }}.btn:hover {
+        color: {{ bst.c_btn_h }} !important;
+        background-color: {{ bst.b_btn_h }} !important;
+      }
+    {%- endif -%}
+  {% endfor %}
+{% endstyle %}
+<div class="distance{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}">
+  <div class="{{ sst.container }}">
+    {% if sst.img_left != blank %}
+      <div class="row spacing-20">
+        <div class="col-lg-3 col-md-4 mb-sm-20">
+          <div class="block-image overflow_hidden position-relative" style="border-radius: {{ sst.radius }}px;">
+            {% render 'nov-aspect-image', image: sst.img_left %}
+            {% if sst.img_left_title != blank or sst.img_left_desc != blank %}
+              <div class="block-image-text position-absolute left-bottom" style="color: {{ sst.img_left_color }}">
+                {% if sst.img_left_title != blank %}
+                  <div class="block-img-title font-700">{{ sst.img_left_title }}</div>
+                {% endif %}
+                {% if sst.img_left_desc != blank %}
+                  <div class="block-img-desc{% if sst.img_left_title != blank %} mt-15{% endif %}">{{ sst.img_left_desc }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if sst.img_left_btn %}
+              <a href="{{ sst.img_left_link }}" class="btn-arrow btn position-absolute right-top color-{{ sst.img_left_btn_color }}">
+                {% render 'icon-arrow-long-right' %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-9 col-md-8">
+    {% endif %}
+
+    <div class="item youtube position-relative d-flex color-{{ sst.btn_play_color }}">
+      {% if sst.video != blank %}
+        {{ sst.video | video_tag: image_size: '1100x', autoplay: sst.autoplay, loop: true, controls: sst.controls, muted: sst.muted, data-id: section.id, data-alt: shop.name, style: "width: 100%;max-width: 100%;height: auto;object-fit: cover;" }}
+        {% if sst.img_cover != blank %}
+            <div class="bg-video__cover position-absolute w-100 h-100" data-id="{{ section.id }}"></div>
+        {% endif %}
+      {% endif %}
+      {% if sst.img_cover != blank and sst.show_video_popup and sst.video == blank %}
+        
+      <img data-src="{{ sst.img_cover | image_url: width: 1920 }}" class="lazyload w-100 img-fluid" alt="{{ sst.img_cover.alt }}" width="1920" height="1080">
+      {% endif %}
+      <div class="block-text text-center position-absolute" data-id="{{ section.id }}">
+        {% for block in section.blocks %}
+          {% assign bst = block.settings %}
+          {% if block.type == 'text' %}
+            <div class="{{ bst.t_ff }} {{ bst.t_fw }} block-{{ forloop.index }} text">{{ bst.text }}</div>
+          {% endif %}
+          {% if block.type == 'btn' %}
+            <a href="{{ bst.btn_link }}" class="btn {{ bst.btn_type }} {{ bst.btn_size }} block-{{ forloop.index }}">
+              <span>{{ bst.btn }}</span>
+              <i class="rbb-icon-direction-55"></i>
+            </a>
+          {% endif %}
+        {% endfor %}
+        {% if sst.video != blank or sst.show_video_popup %}
+          <div class="block-icon__play d-flex justify-content-center">
+            {% if sst.video != blank %}
+              {% if sst.img_cover != blank or sst.autoplay == false %}
+                <div class="btn-video__play" data-id="{{ section.id }}">
+                  {% render 'icon-caret-right' %}
+                </div>
+              {% endif %}
+            {% endif %}
+            {% if sst.show_video_popup %}
+              <div class="icon_play" data-toggle="modal" data-target="#ModalVideo" data-src="{% if sst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ sst.video_url.id }}?rel=0&showinfo=0&vq=720{% endif %}{% if sst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ sst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}">
+                {% render 'icon-caret-right' %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      {% if sst.video == blank and sst.show_video_popup == false %}
+        {{ 'hero-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}
+        <div class="block-text text-center position-absolute">
+          <div class="block-icon__play d-flex justify-content-center">
+            <div class="btn-video__play" data-id="{{ section.id }}">
+              {% render 'icon-caret-right' %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if sst.img_left != blank %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Video",
+    "class": "section-video",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Video Default"
+      },
+      {
+        "type": "video",
+        "id": "video",
+        "label": "Video"
+      },
+      {
+        "type": "checkbox",
+        "id": "video_parallax",
+        "label": "Enable video parallax"
+      },
+      {
+        "type": "header",
+        "content": "Video Popup"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_video_popup",
+        "label": "Enable video popup",
+        "default": false
+      },
+      {
+        "type": "video_url",
+        "id": "video_url",
+        "label": "Video popup",
+        "accept": ["youtube", "vimeo"],
+        "info": "Only For Youtube And Vimeo"
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "color_scheme",
+        "id": "btn_play_color",
+        "label": "Color button play",
+        "default": "background-1"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_cover",
+        "label": "Background cover"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Autoplay",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "muted",
+        "label": "Muted",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "controls",
+        "label": "Controls",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Height video"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_mh",
+        "label": "Enable height",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "mh_xxl",
+        "label": "Extra large laptop",
+        "default": 600,
+        "info": "Breakpoint 1441px"
+      },
+      {
+        "type": "number",
+        "id": "mh_xl",
+        "label": "Large laptop",
+        "default": 400,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "mh_md",
+        "label": "Tablet",
+        "default": 400,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "mh",
+        "label": "Mobile",
+        "default": 400
+      },
+      {
+        "type": "range",
+        "id": "image_overlay_opacity",
+        "label": "Image overlay opacity",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Image left"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_left",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "img_left_title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "img_left_desc",
+        "label": "Description"
+      },
+      {
+        "type": "color",
+        "id": "img_left_color",
+        "label": "Color",
+        "default": "#666"
+      },
+      {
+        "type": "checkbox",
+        "id": "img_left_btn",
+        "label": "Show button"
+      },
+      {
+        "type": "url",
+        "id": "img_left_link",
+        "label": "Link"
+      },
+      {
+        "type": "color_scheme",
+        "id": "img_left_btn_color",
+        "label": "Button color",
+        "default": "background-1"
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius section",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Vinova Text</p>"
+          },
+          {
+            "type": "range",
+            "id": "t_s",
+            "min": 11,
+            "max": 50,
+            "step": 1,
+            "label": "Text size",
+            "default": 13
+          },
+          {
+            "type": "range",
+            "id": "t_s_md",
+            "min": 11,
+            "max": 50,
+            "step": 1,
+            "label": "Text size tablet",
+            "default": 13,
+            "info": "Breakpoint 991px ↓"
+          },
+          {
+            "type": "color",
+            "id": "t_c",
+            "label": "Text color",
+            "default": "#222222"
+          },
+          {
+            "type": "radio",
+            "id": "t_ff",
+            "label": "Font family",
+            "default": "f_df",
+            "options": [
+              {"value": "f_df","label": "Body font"},
+              {"value": "f_pr","label": "Heading font"}
+            ]
+          },
+          {
+            "type": "select",
+            "id": "t_fw",
+            "label": "Text font weight",
+            "default": "font-400",
+            "options": [
+              {"value": "font-300","label": "Light"},
+              {"value": "font-400","label": "Regular"},
+              {"value": "font-500","label": "Medium"},
+              {"value": "font-600","label": "SemiBold"},
+              {"value": "font-700","label": "Bold"},
+              {"value": "font-800","label": "ExtraBold"},
+              {"value": "font-900","label": "Black"}
+            ]
+          },
+          {
+            "type": "select",
+            "id": "t_tt",
+            "label": "Text transform",
+            "default": "none",
+            "options": [
+              { "value": "capitalize", "label": "Capitalize" },
+              { "value": "uppercase", "label": "Uppercase" },
+              { "value": "none", "label": "None" }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "t_lh",
+            "label": "Text line height",
+            "default": "1.5"
+          },
+          {
+            "type": "text",
+            "id": "t_lt",
+            "label": "Text letter spacing",
+            "default": "0"
+          },
+          {
+            "type": "number",
+            "id": "t_m",
+            "label": "Text max with (px)",
+            "default": 1320
+          },
+          {
+            "type": "number",
+            "id": "distance_bottom",
+            "label": "Bottom spacing section (px)",
+            "default": 5
+          }
+        ]
+      },
+      {
+        "type": "btn",
+        "name": "Button",
+        "settings": [
+          {
+            "type": "text",
+            "id": "btn",
+            "label": "Button",
+            "default": "Read more"
+          },
+          {
+            "type": "url",
+            "id": "btn_link",
+            "label": "Button link"
+          },
+          {
+            "type": "select",
+            "id": "btn_type",
+            "label": "Button type",
+            "default": "btn-primary",
+            "options": [
+              { "value": "btn-primary", "label": "Primary" },
+              { "value": "btn-secondary", "label": "Secondary" }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "btn_size",
+            "label": "Button size",
+            "default": "btn-normal",
+            "options": [
+              { "value": "btn-normal", "label": "Normal" },
+              { "value": "btn-medium", "label": "Medium" },
+              { "value": "btn-large", "label": "Large" }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "c_btn",
+            "label": "Button color",
+            "default": "#ffffff"
+          },
+          {
+            "type": "color",
+            "id": "b_btn",
+            "label": "Button background color",
+            "default": "#222222"
+          },
+          {
+            "type": "color",
+            "id": "c_btn_h",
+            "label": "Button color hover",
+            "default": "#ffffff"
+          },
+          {
+            "type": "color",
+            "id": "b_btn_h",
+            "label": "Button background color hover",
+            "default": "#222222"
+          },
+          {
+            "type": "number",
+            "id": "distance_bottom",
+            "label": "Bottom spacing section (px)",
+            "default": 5
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Video",
+        "category": "Video"
+      }
+    ]
+  }
+{% endschema %}

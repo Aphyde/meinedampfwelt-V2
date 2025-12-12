@@ -1,0 +1,32 @@
+<div class="modal-wrap" id="popup-verification">
+  <div class="nov-dialog nov-dialog-centered">
+    <div class="nov-content">
+      {% if settings.logo_verification != blank %}
+        {%- assign widhtimage = settings.logo_verification.width -%}
+        <div
+          class="text-center mb-50"
+          style=" max-width: {{ settings.max_width_logo |  append: 'px' }}; margin: auto;"
+        >
+          {{
+            settings.logo_verification
+            | image_url: width: widhtimage
+            | image_tag: loading: 'lazy', class: 'img-fluid', alt: 'logo_age'
+          }}
+        </div>
+      {% endif %}
+      <div class="nov-body text-center">
+        <div class="inner">
+          <div class="title">{{ 'general.popup_verification.title' | t }}</div>
+          <div class="sub mb-30">{{ 'general.popup_verification.description_html' | t }}</div>
+          <div class="text mb-40">{{ 'general.popup_verification.notify' | t }}</div>
+          <div class="btn_submit d-flex justify-content-center">
+            <a href="https://www.google.com" class="btn btn_not_age">
+              <span>{{- 'general.popup_verification.age_not_yes' | t -}}</span>
+            </a>
+            <button class="btn btn_age"><span>{{ 'general.popup_verification.age_yes' | t }}</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,399 @@
+{%- assign sst = section.settings -%}
+{% style %}
+  {%- assign bg_image = sst.background_image -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    {% if sst.background_color != blank %}
+      background-color: {{ sst.background_color }};
+    {% endif %}  
+    {% if bg_image.src != blank %}
+      background-image: url("{{ bg_image | image_url: width: 1920 }}");
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% if sst.bg_text != blank %}
+    #shopify-section-{{ section.id }} .block_text {
+      background-color: {{ sst.bg_text }};
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .nov-sh-image-2 {
+    border-radius: {{ sst.corner_radius }}px;
+  }
+{% endstyle %}
+<div class="distance  color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}">
+  <div class="{{ sst.container }}">
+    {% render 'heading-section' %}
+    <div class="row spacing-0">
+      {% for block in section.blocks %}
+        {%- assign bst = block.settings -%}
+        {% if block.type == 'text' %}
+          <div class="block_text col-lg-6 d-flex align-items-center justify-content-center {{ bst.text-alignment }}{% if bst.class != blank %} {{ bst.class }}{% endif %}">
+            <div class="block_content">
+              {% if bst.image != blank %}
+              <img class="mb-20 d-inline-block img-fluid" src="{{ bst.image | image_url: width: 120 }}" alt="image" width="120" height="120">
+              {% endif %}
+              {% if bst.title != blank or bst.subtitle != blank %}
+              <div class="title_section mb-25 {{ bst.text-alignment }}">
+                {% if bst.title != blank %}
+                  <span class="title font-700" style="color: {{ bst.color }};">{{ bst.title }}</span>
+                {% endif %}
+                {% if bst.subtitle != blank %}
+                  <div class="sub_title mt-25" style="color: {{ bst.color_d }};">{{ bst.subtitle }}</div>
+                {% endif %}
+              </div>
+              {% endif %}
+              {% if bst.price != blank or bst.text_btn != blank %}
+                <div class="d-inline-flex align-items-center mt-25">
+                  {% if bst.price != blank %}
+                    <div class="price font-600" style="--color: {{ bst.color_price }}">{{ bst.price }}</div>
+                  {% endif %}
+                  {% if bst.text_btn != blank %}
+                    <a href="{{ bst.btn }}" class="btn">
+                      <span>{{ bst.text_btn }}</span>
+                      <i class="rbb-icon-direction-55 position-relative"></i>
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        {% if block.type == 'video' %}
+          <div class="block_video position-relative col-lg-6{% if bst.class != blank %} {{ bst.class }}{% endif %}">
+            <div class="nov-sh-image-2">
+              {% if bst.img_cover != blank %}
+                <img class="img-cover lazyload w-100 h-100" data-src="{{ bst.img_cover | image_url: width: 1920 }}" alt="img video" width="1920" height="1080">
+                <div class="icon_play position-absolute d-flex center-center" data-toggle="modal" data-target="#ModalVideo" data-src="{% if bst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ bst.video_url.id }}?rel=0&showinfo=0&vq=720{% endif %}{% if bst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ bst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}">
+                    {% render 'icon-caret-right' %}
+                </div>
+              {% elsif bst.video_url.type != blank %}
+                <div class="embed-responsive embed-responsive-16by9">
+                  <iframe class="embed-responsive-item" src="{% if bst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ bst.video_url.id }}?rel=0&showinfo=0&vq=4000{% endif %}{% if bst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ bst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}" allowfullscreen></iframe>
+                </div>
+              {% else %}
+                {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                <div class="icon_play position-absolute d-flex" data-toggle="modal" data-target="#ModalVideo" data-src="{% if bst.video_url.type == "youtube"  %}https://www.youtube.com/embed/{{ bst.video_url.id }}?rel=0&showinfo=0&vq=720{% endif %}{% if bst.video_url.type == "vimeo" %}//player.vimeo.com/video/{{ bst.video_url.id }}?byline=0&portrait=0&badge=0{% endif %}">
+                  {% render 'icon-caret-right' %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Video Width Text",
+    "class": "section-video-text",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Video Width Text</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "label": "Corner radius",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "bg_text",
+        "label": "Background colors block text"
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "select",
+            "id": "text-alignment",
+            "label": "Text Alignment",
+            "default": "text-center",
+            "options": [
+              {
+                "value": "text-left",
+                "label": "Left"
+              },
+              {
+                "value": "text-center",
+                "label": "Center"
+              },
+              {
+                "value": "text-right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Title color",
+            "default": "#222222"
+          },
+          {
+            "type": "richtext",
+            "id": "subtitle",
+            "label": "Description",
+            "default": "<p>Nullam semper convallis diam non efficitur. Quisque consequat auctor ex. Mauris efficitur mi risus, nec rutrum ante ultricies eu</p>"
+          },
+          {
+            "type": "color",
+            "id": "color_d",
+            "label": "Description color",
+            "default": "#444444"
+          },
+          {
+            "type": "text",
+            "id": "price",
+            "label": "Price"
+          },
+          {
+            "type": "color_background",
+            "id": "color_price",
+            "label": "Price color gradient"
+          },
+          {
+            "type": "text",
+            "id": "text_btn",
+            "label": "Button text",
+            "default": "Shop now"
+          },
+          {
+            "type": "url",
+            "id": "btn",
+            "label": "Button link"
+          },
+          {
+            "type": "text",
+            "id": "class",
+            "label": "Class"
+          }
+        ]
+      },
+      {
+        "type": "video",
+        "name": "Video",
+        "settings": [
+          {
+            "type": "video_url",
+            "id": "video_url",
+            "label": "Video link",
+            "accept": ["youtube", "vimeo"],
+            "info": "Only For Youtube And Vimeo"
+          },
+          {
+            "type": "image_picker",
+            "id": "img_cover",
+            "label": "Image cover"
+          },
+          {
+            "type": "text",
+            "id": "class",
+            "label": "Class"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Video With Text",
+        "category": "Video",
+        "blocks": [
+          {
+            "type": "video"
+          },
+          {
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

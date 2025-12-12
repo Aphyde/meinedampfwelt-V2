@@ -1,0 +1,406 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} center;
+      background-size: cover;
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} input,
+  #shopify-section-{{ section.id }} select,
+  #shopify-section-{{ section.id }} textarea {
+    background-color: {{ sst.bg_form_input }};
+    border: 1px solid {{ sst.bd_form_input }};
+  }
+  {% if sst.show_bg_form %}
+    #shopify-section-{{ section.id }} .form-content {
+
+      background-color: {{ sst.bg_form }};
+    }
+  {% endif %}
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% if sst.bg_bottom != blank %}
+    #shopify-section-{{ section.id }} .distance:after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 41px;
+      background: url("{{ sst.bg_bottom | image_url: width: 1350 }}") bottom center;
+      background-repeat: repeat-x;
+      background-size: contain;
+    }
+  {% endif %}
+{% endstyle %}
+<div class="{% if sst.bg_size == 'full' %}distance {% endif %}color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}distance {% endif %}container-inner">
+      {% if sst.img_left != blank %}
+        <div class="img-left position-absolute{% if sst.img_left_animate %} animate{% endif %}">
+          <img data-src="{{ sst.img_left | image_url: width: 1920 }}" class="lazyload img-fluid" alt="{{ sst.img_left.alt }}" width="1920" height="{{ 1920 | divided_by: sst.img_left.aspect_ratio }}">
+        </div>
+      {% endif %}
+      <div class="row align-items-center">
+        <div class="col-lg-5{% if sst.animate == true %} wow fadeInLeft animated{% endif %}">
+          <div class="block-info">
+            {% if sst.title != blank or sst.subtitle != blank %}
+              <div class="title_section mb-30">
+                {% if sst.title != blank %}
+                  <span class="title" style="color: {{ sst.heading_color }};">{{ sst.title }}</span>
+                {% endif %}
+                {% if sst.subtitle != blank %}
+                  <span class="subtitle mt-25 d-block">{{ sst.subtitle }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if sst.phone != blank %}
+              <div class="item-contact d-flex align-items-center phone">
+                  <i class="rbb-icon-phone-2"></i>
+                  <span class="phone font-700">{{ sst.phone }}</span>
+              </div>
+            {% endif %}
+            {% if sst.email != blank %}
+              <div class="item-contact d-flex align-items-center mt-15">
+                <i class="rbb-icon-email-10"></i>
+                <span>{{ sst.email }}</span>
+              </div>
+            {% endif %}
+            {% if sst.open != blank %}
+              <div class="item-contact d-flex align-items-center mt-15">
+                <i class="rbb-icon-time-2"></i>
+                <span>{{ sst.open }}</span>
+              </div>
+            {% endif %}
+            {% if sst.show_social %}
+              <div class="mt-35">
+                {% render 'nov-social' %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-7 mt-md-40{% if sst.animate == true %} wow fadeInRight animated{% endif %}">
+          <div class="form-content{% if sst.show_bg_form %} show-bg-form pt-md-40 pb-md-40{% endif %}">
+            {% render 'heading-section', sub_position: sst.subheading_position, class: 'mb-30' %}
+            {% form 'contact', id: section.id %}
+              {% if form.posted_successfully? %}
+                <p class="note form-success">
+                  {{ 'page.contact.form.post_success' | t }}
+                </p>
+              {% endif %}
+              {{ form.errors | default_errors }}
+              <div class="row spacing-10">
+                <div class="col-md-6">
+                  <input type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" class="mb-10 rounded-pill {% if form.errors contains 'name' %}input--error{% endif %}" placeholder="{{ 'page.contact.form.name' | t }}" required>
+                </div>
+                <div class="col-md-6">
+                  <input type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" class="mb-10 rounded-pill {% if form.errors contains 'email' %}input--error{% endif %}" placeholder="{{ 'page.contact.form.email' | t }}" required>
+                </div>
+                <div class="col-md-6">
+                  <input type="tel" name="contact[phone]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" class="mb-10 rounded-pill {% if form.errors contains 'phone' %}input--error{% endif %}" placeholder="{{ 'page.contact.form.phone' | t }}">
+                </div>
+                <div class="col-md-6">
+                  {% if section.blocks.size > 0 %}
+                    <select id="services" name="contact[services]" class="mb-10 rounded-pill" required>
+                      <option disabled hidden selected value="">Wähle dein Thema</option>
+                      {% for block in section.blocks %}
+                        {% if block.type == 'services' %}
+                          <option value="{{ block.settings.title }}">{{ block.settings.title }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                  {% endif %}
+                </div>
+              </div>
+              <textarea rows="12" cols="50" class="mb-20" name="contact[body]" placeholder="{{ 'page.contact.form.message' | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+              <button class="btn {{ sst.btn_type }} {{ sst.btn_size }}" type="submit">
+                <span>{{ 'contact.form.submit' | t }}</span>
+              </button>
+            {% endform %}
+          </div>
+          {% for block in section.blocks %}
+            {% if block.type == '@app' %}
+              {% render block %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Contact Form",
+    "class": "section-contact-form",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Contact Form</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type":  "header",
+        "content": "Block Info"
+      },
+      {
+        "type": "richtext",
+        "id": "title",
+        "label": "Title",
+        "default": "<h2>Lorem ipsum</h2>"
+      },
+      {
+        "type": "richtext",
+        "id": "subtitle",
+        "label": "Sub title",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt </p>"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "phone",
+        "label": "Contact phone",
+        "default": "0123 456 789"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "email",
+        "label": "Contact email",
+        "default": "demo@gmail.com"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "open",
+        "label": "Contact open",
+        "default": "Monday till Friday 10 to 6 EST"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show social",
+        "default": true
+      },
+      {
+        "type":  "header",
+        "content": "Form Contact"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_bg_form",
+        "label": "Show background form",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "bg_form",
+        "label": "Background form",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "bg_form_input",
+        "label": "Background input",
+        "default": "#E8E8E8"
+      },
+      {
+        "type": "color",
+        "id": "bd_form_input",
+        "label": "Border color input",
+        "default": "#2b2b2b"
+      },
+      {
+        "type": "select",
+        "id": "btn_type",
+        "label": "Button submit type",
+        "default": "btn-primary",
+        "options": [
+          { "value": "btn-primary", "label": "Primary" },
+          { "value": "btn-secondary", "label": "Secondary" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "btn_size",
+        "label": "Button submit size",
+        "default": "btn-normal",
+        "options": [
+          { "value": "btn-normal", "label": "Normal" },
+          { "value": "btn-medium", "label": "Medium" },
+          { "value": "btn-large", "label": "Large" }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_bottom",
+        "label": "Background bottom",
+        "info": "1350 x 41px recommend"
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "full", "label": "Full width" }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Image Left"
+      },
+      {
+        "type": "image_picker",
+        "id": "img_left",
+        "label": "Image left",
+        "info": "Breakpoint 1800px"
+      },
+      {
+        "type": "checkbox",
+        "id": "img_left_animate",
+        "label": "Image left animate",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "services",
+        "name": "Services",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Services"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Contact Form"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,695 @@
+{%- assign sst = section.settings -%}
+{%- assign collection = collections[sst.collection] -%}
+{%- assign product_limit = sst.limit -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} center;
+      background-size: cover;
+    {% endif %}
+  }
+  {% if sst.bg_pattern != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      background: url("{{ sst.bg_pattern | image_url: width: 1920 }}");
+      background-size: contain;
+      background-repeat: no-repeat;
+      aspect-ratio: 1 / {{ 1 | divided_by: sst.bg_pattern.aspect_ratio }};
+      animation: ImgAnimate 4s linear infinite;
+      {{ sst.bg_pattern_position }}
+    }
+  {% endif %}
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  {% if sst.show_pagination_progress %}
+    #shopify-section-{{ section.id }} .swiper-scrollbar {
+      background: {{ sst.pagination_progress_bg }} !important;
+    }
+    #shopify-section-{{ section.id }} .swiper-scrollbar-drag {
+      background: {{ sst.progress_bg }} !important;
+    }
+  {% endif %}
+  {% if sst.show_nav %}
+    #shopify-section-{{ section.id }} .nav-arrow {
+      --slider-arrow-color: {{ sst.arrow_color }};
+      --slider-arrow-bg: {{ sst.arrow_bg }};
+      --slider-arrow-border: {{ sst.arrow_border }};
+    }
+  {% endif %}
+  {% if sst.banner != blank %}
+    #shopify-section-{{ section.id }} .block-banner {
+      border-radius: {{ sst.corner_banner }}px;
+    }
+  {% endif %}
+  {% if sst.enable_custom_style %}
+    #shopify-section-{{ section.id }} {
+      --product-color-border: {{ sst.product_border_color }};
+      --product-color-background: {{ sst.product_background_color }};
+      --product-color-type: {{ sst.product_type_color }};
+      --product-color-title: {{ sst.product_title_color }};
+      --product-color-title-hover: {{ sst.product_title_color_hover }};
+      --product-color-price: {{ sst.product_price_color }};
+      --product-color-reduced-price: {{ sst.product_price_reduced_color }};
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .add-to-cart-btn,
+  #shopify-section-{{ section.id }} .btn-quick-add,
+  #shopify-section-{{ section.id }} .product__popup-swatch {
+    display: none !important;
+  }
+{% endstyle %}
+<div class="distance position-relative color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}" data-section-id="{{ section.id }}" data-section-type="nov-swiper">
+  <div class="{{ sst.container }}">
+    {% if sst.banner == blank %}
+      {% render 'heading-section', sub_position: sst.subheading_position %}
+    {% endif %}
+
+    {% if sst.banner != blank %}
+      <div class="row spacing-{{ sst.spacing }} align-items-center {% if sst.banner_position == 'right' %} flex-md-row-reverse{% endif %}">
+        <div class="col-lg-6 col-md-7 mb-sm-15">
+          <div class="block-banner position-relative overflow_hidden">
+            {% render 'nov-aspect-image', image: sst.banner %}
+            {% render 'heading-section', sub_position: sst.subheading_position %}
+            {% if sst.show_nav %}
+              <div class="slider-nav d-flex align-items-center justify-content-center justify-content-lg-start mt-30">
+                <div class="nav-arrow nav-prev pointer"></div>
+                <div class="nav-arrow nav-next pointer"></div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-5">
+    {% endif %}
+
+    {% comment %} product slider {% endcomment %}
+    <div class="{% if sst.type == 'grid' %}grid--view-items{% else %}list--view-items{% endif %} nov-swiper-carousel swiper slider-shadow"
+      data-autoplay="false" 
+      data-autoplayTimeout="6000"
+      data-loop="false"
+      data-row="{{ sst.row_number }}"
+      data-row_mobile="{{ sst.row_mobile }}"
+      data-items_xxl="{{ sst.xxl }}"
+      data-items_xl="{{ sst.xl }}"
+      data-items_lg="{{ sst.lg }}"
+      data-items_md="{{ sst.md }}"
+      data-items_sm="{{ sst.sm }}"
+      data-items_xs="{{ sst.xs }}"
+      data-spacing="{{ sst.spacing }}">
+      <div class="swiper-wrapper">
+        {% for product in collection.products limit: product_limit %}
+          <div class="swiper-slide item">
+            {% if sst.type == 'grid' %}
+              {% render 'product-grid-item-style-1', product: product, section_id: section.id %}
+            {% else %}
+              {% render 'product-list-item-style-1', product: product, section_id: section.id %}
+            {% endif %}
+          </div>
+        {% else %}
+          {%- for i in (1..6) -%}
+            {%- capture current -%}{% cycle 1, 2, 3, 4 %}{%- endcapture -%}
+            <div class="swiper-slide sp-item mb-30">
+              {{ 'product-apparel-' | append: current | placeholder_svg_tag : 'placeholder-svg' }}
+            </div>
+          {%- endfor -%}
+        {% endfor %}
+      </div>
+      {% if sst.show_nav or sst.show_dots %}
+        <div class="d-flex align-items-center justify-content-center mt-60">
+          {% if sst.show_nav %}
+            <div class="nav-arrow nav-prev pointer"></div>
+          {% endif %}
+          {% if sst.show_dots %}
+            <div class="swiper-pagination"></div>
+          {% endif %}
+          {% if sst.show_nav %}
+            <div class="nav-arrow nav-next pointer"></div>
+          {% endif %}
+        </div>
+      {% endif %}
+      
+      {% if sst.show_pagination_progress %}
+      <div class="d-flex align-items-center mt-40">
+        <div class="swiper-scrollbar position-static"></div>
+      </div>
+      {% endif %}
+    </div>
+    {% comment %} end product slider {% endcomment %}
+
+    {% if sst.viewall %}
+      <div class="text-center">
+        <a href="{{ collection.url }}" class="btn mt-50 mt-sm-20">
+          <span>{{ 'sections.button.view_all_collection' | t }}</span>
+        </a>
+      </div>
+    {% endif %}
+
+    {% if sst.banner != blank %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Products Slider",
+    "class": "section-product-slider",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Product Slider</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "img_heading",
+        "label": "Image heading"
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Block Product"
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "select",
+        "id": "type",
+        "label": "Product type",
+        "default": "grid",
+        "options": [
+          { "value": "grid", "label": "Grid" },
+          { "value": "list", "label": "List"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Product Item Custom Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_custom_style",
+        "label": "Enable custom style"
+      },
+      {
+        "type": "color",
+        "id": "product_border_color",
+        "label": "Border color",
+        "default": "#d2d2d2",
+        "info": "In case the show border option is enabled"
+      },
+      {
+        "type": "color",
+        "id": "product_background_color",
+        "label": "Background color",
+        "default": "#d4d4d4",
+        "info": "In case the show background option is enabled"
+      },
+      {
+        "type": "color",
+        "id": "product_title_color",
+        "label": "Title color",
+        "default": "#222"
+      },
+      {
+        "type": "color",
+        "id": "product_title_color_hover",
+        "label": "Title color hover",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "product_type_color",
+        "label": "Type color",
+        "default": "#222",
+        "info": "In case the show type option is enabled"
+      },
+      {
+        "type": "color",
+        "id": "product_price_color",
+        "label": "Price color",
+        "default": "#222"
+      },
+      {
+        "type": "color",
+        "id": "product_price_reduced_color",
+        "label": "Reduced price color",
+        "default": "#222"
+      },
+      {
+        "type": "header",
+        "content": "Button View All"
+      },
+      {
+        "type": "checkbox",
+        "id": "viewall",
+        "label": "Show view all"
+      },
+      {
+        "type": "header",
+        "content": "Product Item Per Row"
+      },
+      {
+        "type": "range",
+        "id": "xxl",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Desktop",
+        "default": 4,
+        "info": "Breakpoint 1440px"
+      },
+      {
+        "type": "range",
+        "id": "xl",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Large laptop",
+        "default": 4,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "range",
+        "id": "lg",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Laptop",
+        "default": 4,
+        "info": "Breakpoint 992px"
+      },
+      {
+        "type": "range",
+        "id": "md",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Tablet",
+        "default": 3,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "range",
+        "id": "sm",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Large mobile",
+        "default": 2,
+        "info": "Breakpoint 576px"
+      },
+      {
+        "type": "range",
+        "id": "xs",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Mobile",
+        "default": 2,
+        "info": "Breakpoint"
+      },
+      {
+        "type": "header",
+        "content": "Slider Options"
+      },
+      {
+        "type": "range",
+        "id": "limit",
+        "min": 4,
+        "max": 30,
+        "step": 1,
+        "label": "Limit",
+        "default": 30,
+        "info": "Select number limit products"
+      },
+      {
+        "type": "range",
+        "id": "row_number",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Number row",
+        "default": 1
+      },
+      {
+        "type": "range",
+        "id": "row_mobile",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Number row mobile",
+        "default": 1
+      },
+      {
+        "type": "range",
+        "id": "spacing",
+        "min": 0,
+        "max": 70,
+        "step": 5,
+        "unit": "px",
+        "label": "Spacing",
+        "default": 30,
+        "info": "Spacing item"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_nav",
+        "label": "Show navigation",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_dots",
+        "label": "Show dots",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_pagination_progress",
+        "label": "Show pagination progress",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "pagination_progress_bg",
+        "label": "Background pagination progress",
+        "default": "#eaeaee"
+      },
+      {
+        "type": "color",
+        "id": "progress_bg",
+        "label": "Background progress",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "arrow_color",
+        "label": "Arrow color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "arrow_bg",
+        "label": "Arrow background",
+        "default": "#222"
+      },
+      {
+        "type": "color",
+        "id": "arrow_border",
+        "label": "Arrow border",
+        "default": "#222"
+      },
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "image_picker",
+        "id": "banner",
+        "label": "Banner"
+      },
+      {
+        "type": "range",
+        "id": "corner_banner",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "label": "Corner radius",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "banner_position",
+        "label": "Banner position",
+        "default": "left",
+        "options": [
+          {"value": "left", "label": "Left"},
+          {"value": "right", "label": "Right"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_pattern",
+        "label": "Background pattern"
+      },
+      {
+        "type": "html",
+        "id": "bg_pattern_position",
+        "label": "Pattern style",
+        "default": "width: 20%; left: 0; top: 20%",
+        "info": "Example: width: 20%; left: 0; top: 20%"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Products Slider"
+      }
+    ]
+  }
+{% endschema %}
+{% style %}
+/* — Gleich hohe Produktkarten im Slider (Desktop) — */
+@media (min-width:1200px){
+  /* 1) Slides dehnen */
+  #shopify-section-{{ section.id }} .swiper-wrapper{
+    align-items: stretch; /* lässt alle .swiper-slide gleich hoch werden */
+  }
+  #shopify-section-{{ section.id }} .swiper-slide{
+    height: auto; /* Höhe vom Inhalt bestimmen lassen */
+  }
+
+  /* 2) Karte über volle Höhe aufbauen (klassische Vinova-Klassen abgedeckt) */
+  #shopify-section-{{ section.id }} .swiper-slide .item-product,
+  #shopify-section-{{ section.id }} .swiper-slide .product-item,
+  #shopify-section-{{ section.id }} .swiper-slide .product-card,
+  #shopify-section-{{ section.id }} .swiper-slide .card-product{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+  }
+
+  /* 3) Bildbereich behält Ratio, staucht die Karte nicht */
+  #shopify-section-{{ section.id }} .product-image,
+  #shopify-section-{{ section.id }} .product__image,
+  #shopify-section-{{ section.id }} .thumbnail{
+    /* falls nicht schon vorhanden: */
+    aspect-ratio: 1 / 1;
+    width:100%;
+  }
+
+  /* 4) Content-Bereich füllt die Resthöhe */
+  #shopify-section-{{ section.id }} .product-info,
+  #shopify-section-{{ section.id }} .product__info,
+  #shopify-section-{{ section.id }} .card-body{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+    flex:1 1 auto; /* nimmt den verfügbaren Platz ein */
+  }
+
+  /* 5) Titel auf 2 Zeilen clampen + fixe Mindesthöhe -> vermeidet Sprünge */
+  #shopify-section-{{ section.id }} .product-title,
+  #shopify-section-{{ section.id }} .product__title,
+  #shopify-section-{{ section.id }} .card-title{
+    display:-webkit-box;
+    -webkit-line-clamp: 2; /* bei Bedarf auf 3 erhöhen */
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    line-height:1.3;
+    min-height: calc(1.3em * 2); /* passt zu line-clamp 2 */
+  }
+
+  /* 6) Preis/CTA immer unten ausrichten */
+  #shopify-section-{{ section.id }} .product-bottom,
+  #shopify-section-{{ section.id }} .product-meta,
+  #shopify-section-{{ section.id }} .price-area,
+  #shopify-section-{{ section.id }} .card-footer{
+    margin-top:auto; /* schiebt diesen Block an das Kartenende */
+  }
+}
+{% endstyle %}

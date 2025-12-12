@@ -1,0 +1,35 @@
+<div id="ProductPrice-{{ section.id }}" class="product-single__price price-st d-flex flex-wrap align-items-center {{ mb }}">
+  {% if current_variant.available %}
+    {% if current_variant.compare_at_price > current_variant.price %}
+      <s class="compare-at-price">{{ current_variant.compare_at_price | money }}</s>
+      <span class="product-price__price product-price__sale product-price__sale--single">
+        <span itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
+          {{ current_variant.price | money }}
+        </span>
+        {% if current_variant.unit_price_measurement %}
+          <span class="product-unit-price">
+            ({{ current_variant.unit_price | money }} / {{ current_variant.unit_price_measurement.reference_unit }})
+          </span>
+        {% endif %}
+      </span>
+      <span class="product-price__badge">-{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round: 4 }}%</span>
+    {% else %}
+      {% if current_variant.price == 0 %}
+        <span class="product-price__price">Kostenlos</span>
+      {% else %}
+        <span class="product-price__price">
+          <span itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
+            {{ current_variant.price | money }}
+          </span>
+          {% if current_variant.unit_price_measurement %}
+            <span class="product-unit-price">
+              ({{ current_variant.unit_price | money }} / {{ current_variant.unit_price_measurement.reference_unit }})
+            </span>
+          {% endif %}
+        </span>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <span class="product-price__unavailable">Nicht auf Lager</span>
+  {% endif %}
+</div>

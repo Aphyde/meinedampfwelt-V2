@@ -1,0 +1,355 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    border-radius: {{ sst.corner_radius }}px;
+    {% if sst.spacing_horizotal > 40 %}
+      padding-left: {{ sst.spacing_horizotal | times: 0.6 }}px;
+      padding-right: {{ sst.spacing_horizotal | times: 0.6 }}px;
+    {% else %}
+      padding-left: {{ sst.spacing_horizotal }}px;
+      padding-right: {{ sst.spacing_horizotal }}px;
+    {% endif %}
+  }
+  {% if sst.background_color != blank or bg_image != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      {% if sst.bg_position == 'top' %}
+        top: 0;
+      {% elsif sst.bg_position == 'center' %}
+        top: 50%;
+        transform: translateY(-50%);
+      {% else %}
+        bottom: 0;
+      {% endif %}
+      left: 0;
+      width: 100%;
+      height: {{ sst.height_background_mobile }}%;
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} no-repeat {{ sst.bg_img_position }} center;
+      background-size: cover;
+      border-radius: {{ sst.corner_radius }}px;
+    }
+  {% endif %}
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      {% if sst.spacing_horizotal > 40 %}
+        padding-left: {{ sst.spacing_horizotal }}px;
+        padding-right: {{ sst.spacing_horizotal }}px;
+      {% endif %}
+    }
+    {% if sst.background_color != blank or bg_image != blank %}
+      #shopify-section-{{ section.id }} .distance:before {
+        height: {{ sst.height_background }}%;
+      }
+    {% endif %}
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  @media(min-width: 2000px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xxxl }}px;
+      padding-bottom: {{ sst.distance_bottom_xxxl }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="distance position-relative color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="container-inner position-relative overflow_hidden">
+      {% render 'heading-section', sub_position: sst.subheading_position, class: 'position-relative mb-30' %}
+      {% form 'customer', id: 'section-contact' %}
+        {{ form.errors | default_errors }}
+        {% if form.posted_successfully? %}
+        <p class="form--success text-center">{{ 'general.newsletter_form.confirmation' | t }}</p>
+        {% else %}
+        <div class="input-group">
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="email"
+          name="contact[email]"
+          class="form-control input"
+          value="{% if customer %}{{ customer.email }}{% endif %}"
+          placeholder="{{ 'general.newsletter_form.email_newsletter' | t }}"
+          required
+          >
+          <button type="submit" class="newsletter__submit btn {{ sst.btn_type }}" name="commit" title="{{ 'general.newsletter_form.submit' | t }}">
+            <span>{{ 'general.newsletter_form.submit' | t }}</span>
+            <i class="rbb-icon-direction-55"></i>
+          </button>
+        </div>
+        {% endif %}
+      {% endform %}
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Newsletter",
+    "class": "section-newsletter",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Newsletter</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "btn_type",
+        "label": "Button type",
+        "default": "btn-primary",
+        "options": [
+          { "value": "btn-primary", "label": "Primary" },
+          { "value": "btn-secondary", "label": "Secondary" }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "range",
+        "id": "height_background",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%"
+      },
+      {
+        "type": "range",
+        "id": "height_background_mobile",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background mobile",
+        "default": 100,
+        "unit": "%"
+      },
+      {
+        "type": "select",
+        "id": "bg_position",
+        "label": "Background position",
+        "default": "top",
+        "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "bottom", "label": "Bottom" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "auto",
+        "options": [
+          { "value": "auto", "label": "Auto" },
+          { "value": "cover", "label": "Cover"},
+          { "value": "contain", "label": "Contain"}
+        ]
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "label": "Corner radius",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Horizontal (px)"
+      },
+      {
+        "type": "range",
+        "id": "spacing_horizotal",
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "label": "Spacing",
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [{
+      "name": "Vinova Newsletter"
+    }]
+  }
+{% endschema %}

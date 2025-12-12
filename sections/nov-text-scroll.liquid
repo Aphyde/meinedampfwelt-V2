@@ -1,0 +1,298 @@
+{%- assign sst = section.settings -%}
+{% style %}
+  {%- assign bg_image = sst.background_image -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    {% if sst.background_color != blank %}
+      background-color: rgba({{ sst.background_color | color_to_rgb | remove: 'rgb(' | remove: 'rgba(' | remove: ')' | remove: ', 0.0' }}, {{ sst.bg_opacity }}%);
+    {% endif %}
+    {% if bg_image.src != blank %}
+      background-image: url("{{ bg_image | image_url: width: 1920 }}");
+      background-position: center;
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .block-scroll {
+    animation-duration: {{ sst.time }}s;
+  }
+  #shopify-section-{{ section.id }} .block-scroll__item {
+    color: var(--color-text);
+    font-size: {{ sst.t_s | divided_by: 10.0 }}rem;
+    line-height: {{ sst.t_lh }};
+    letter-spacing: {{ sst.t_lt }}px;
+    text-transform: {{ sst.t_tt }};
+  }
+  #shopify-section-{{ section.id }} .block-scroll__item:after {
+    background-color: var(--color-title);
+  }
+  @media(max-width: 991px) {
+    #shopify-section-{{ section.id }} .block-scroll__item {
+      font-size: {{ sst.t_s_md | divided_by: 10.0 }}rem;
+    }
+  }
+{% endstyle %}
+<div class="distance color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp animated{% endif %}">
+  <div class="{{ sst.container }}">
+    {% if section.blocks.size > 0 %}
+      <div class="nov-text-scroll overflow_hidden d-flex">
+        <div class="block-scroll d-flex">
+          {% for block in section.blocks %}
+            {% assign bst = block.settings %}
+            <div class="block-scroll__item {{ sst.t_fw }} d-flex align-items-center justify-content-center">
+              {% if block.type == 'item' %}
+                {% if bst.icon !=blank %}<i class="{{ bst.icon }}"></i>{% endif %}{{ bst.t }}
+              {% endif %}
+              {% if block.type == '@app' %}
+                {% render block %}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="block-scroll d-flex">
+          {% for block in section.blocks %}
+            {% assign bst = block.settings %}
+            <div class="block-scroll__item {{ sst.t_fw }} d-flex align-items-center justify-content-center">
+              {% if block.type == 'item' %}
+                {% if bst.icon !=blank %}<i class="{{ bst.icon }}"></i>{% endif %}{{ bst.t }}
+              {% endif %}
+              {% if block.type == '@app' %}
+                {% render block %}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Text Scroll",
+    "settings": [
+      {
+        "type": "range",
+        "id": "time",
+        "min": 5,
+        "max": 60,
+        "step": 1,
+        "unit": "s",
+        "label": "Slide run time",
+        "default": 10
+      },
+      {
+        "type":  "header",
+        "content": "Style Item"
+      },
+      {
+        "type": "range",
+        "id": "t_s",
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "label": "Text size",
+        "default": 13
+      },
+      {
+        "type": "range",
+        "id": "t_s_md",
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "label": "Text size tablet",
+        "default": 13,
+        "info": "Breakpoint 991px ↓"
+      },
+      {
+        "type": "select",
+        "id": "t_fw",
+        "label": "Text font weight",
+        "default": "font-400",
+        "options": [
+          {"value": "font-300","label": "Light"},
+          {"value": "font-400","label": "Regular"},
+          {"value": "font-500","label": "Medium"},
+          {"value": "font-600","label": "SemiBold"},
+          {"value": "font-700","label": "Bold"},
+          {"value": "font-800","label": "ExtraBold"},
+          {"value": "font-900","label": "Black"}
+        ]
+      },
+      {
+        "type": "select",
+        "id": "t_tt",
+        "label": "Text transform",
+        "default": "none",
+        "options": [
+          { "value": "capitalize", "label": "Capitalize" },
+          { "value": "uppercase", "label": "Uppercase" },
+          { "value": "none", "label": "None" }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "t_lh",
+        "label": "Text line height",
+        "default": "1.5"
+      },
+      {
+        "type": "text",
+        "id": "t_lt",
+        "label": "Text letter spacing",
+        "default": "0"
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          {"value": "container", "label": "Container"},
+          {"value": "container-fluid", "label": "Container fluid"},
+          {"value": "container-full", "label": "Container full width"}
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "range",
+        "id": "bg_opacity",
+        "min": 10,
+        "max": 100,
+        "step": 10,
+        "label": "Background opacity",
+        "default": 100
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Item",
+        "settings": [
+          {
+            "type": "text",
+            "id": "icon",
+            "label": "Icon",
+            "default": "zmdi zmdi-flash",
+            "info": "[Get the icon here](https:\/\/zavoloklom.github.io\/material-design-iconic-font\/icons.html)"
+          },
+          {
+            "type": "richtext",
+            "id": "t",
+            "label": "Item text",
+            "default": "<p>New Offers on the COVID-19. This Weekend only to Get 50% Flate</p>"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Text Scroll",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

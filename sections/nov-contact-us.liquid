@@ -1,0 +1,357 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    padding-left: clamp(0px, {{ sst.px}}px, 15px);
+    padding-right: clamp(0px, {{ sst.px}}px, 15px);
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} center;
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+      padding-left: {{ sst.px}}px;
+      padding-right: {{ sst.px}}px;
+    }
+  }
+  @media(min-width: 992px) {
+    {% if sst.bg_pattern != blank %}
+      #shopify-section-{{ section.id }} .distance:before {
+        content: "";
+        position: absolute;
+        background: url("{{ sst.bg_pattern | image_url: width: 1920 }}");
+        background-size: contain;
+        background-repeat: no-repeat;
+        aspect-ratio: 1 / {{ 1 | divided_by: sst.bg_pattern.aspect_ratio }};
+        {{ sst.bg_pattern_position }}
+      }
+    {% endif %}
+    {% if sst.bg_pattern2 != blank %}
+      #shopify-section-{{ section.id }} .distance:after {
+        content: "";
+        position: absolute;
+        background: url("{{ sst.bg_pattern2 | image_url: width: 1920 }}");
+        background-size: contain;
+        background-repeat: no-repeat;
+        aspect-ratio: 1 / {{ 1 | divided_by: sst.bg_pattern2.aspect_ratio }};
+        {{ sst.bg_pattern_position2 }}
+      }
+    {% endif %}
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .block-info {
+    --color-icons: {{ sst.color_icon }};
+    --color-title: {{ sst.heading_color }};
+  }
+{% endstyle %}
+<div class="{% if sst.bg_size == 'full' %}distance {% endif %}color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="{% if sst.bg_size == 'container' %}distance {% endif %}container-inner">
+      <div class="row align-items-center">
+        <div class="col-xl-3 col-lg-4 col-md-6 order-1 order-lg-0">
+          <div class="block-info">
+            {% if sst.title != blank %}
+              <span class="title{% if sst.animate %} wow fadeInLeft{% endif %}">{{ sst.title }}</span>
+            {% endif %}
+            {% if sst.address != blank %}
+              <div class="item-contact d-flex align-items-center mt-10{% if sst.animate %} wow fadeInLeft{% endif %}" data-wow-delay="0.2s">
+                <div class="icon-contact">
+                  <i class="rbb-icon-store-16"></i>
+                </div>
+                <span>{{ sst.address }}</span>
+              </div>
+            {% endif %}
+            {% if sst.email != blank %}
+              <div class="item-contact d-flex align-items-center mt-10{% if sst.animate %} wow fadeInLeft{% endif %}" data-wow-delay="0.4s">
+                <div class="icon-contact">
+                  <i class="rbb-icon-email-4"></i>
+                </div>
+                <span>{{ sst.email }}</span>
+              </div>
+            {% endif %}
+            {% if sst.phone != blank %}
+              <div class="item-contact d-flex align-items-center mt-10{% if sst.animate %} wow fadeInLeft{% endif %}" data-wow-delay="0.6s">
+                <div class="icon-contact">
+                  <i class="rbb-icon-phone-4"></i>
+                </div>
+                <a href="tell:{{ sst.phone }}">{{ sst.phone }}</a>
+              </div>
+            {% endif %}
+            {% if sst.open != blank %}
+              {% if sst.title2 != blank %}
+                <span class="title d-block mt-40">{{ sst.title2 }}</span>
+              {% endif %}
+              {% if sst.open != blank %}
+                <div class="item-contact d-flex align-items-center mt-15{% if sst.animate %} wow fadeInLeft{% endif %}" data-wow-delay="0.8s">
+                  <span>{{ sst.open }}</span>
+                </div>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-4 mb-md-40 order-0 order-lg-1{% if sst.animate %} wow fadeInUp{% endif %}">
+          <div class="block-image text-center">
+            {% if sst.img != blank %}
+              <img data-src="{{ sst.img | image_url: width: 1920 }}" class="lazyload img-fluid" alt="{{ sst.img.alt }}" width="1920" height="{{ 1920 | divided_by: sst.img.aspect_ratio }}">
+            {% else %}
+              {{ 'blog-apparel-1' | placeholder_svg_tag : 'placeholder-svg' }}
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-4 col-md-6 order-2 mt-sm-50 text-center text-md-right{% if sst.animate %} wow fadeInRight{% endif %}">
+          <div class="block-right">
+            <div class="map-section position-relative">
+              <div class="map-section__container" style="height: {{ sst.height }}px">
+                <iframe src="{{ sst.iframe_map }}" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for block in section.blocks %}
+        {% if block.type == '@app' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Contact Us",
+    "class": "section-contact-us",
+    "settings": [
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "color",
+        "id": "color_icon",
+        "label": "Color icon",
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "img",
+        "label": "Image"
+      },
+      {
+        "type":  "header",
+        "content": "Block Info"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "title",
+        "label": "Title",
+        "default": "Lorem ipsum"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "address",
+        "label": "Address",
+        "default": "PO Box 1622 RS Bamboo Street West"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "email",
+        "label": "Contact email",
+        "default": "demo@gmail.com"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "phone",
+        "label": "Contact phone",
+        "default": "0123 456 789"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "title2",
+        "label": "Title 2",
+        "default": "Adipiscing elit"
+      },
+      {
+        "type": "richtext",
+        "id": "open",
+        "label": "Open hour",
+        "default": "<p>Monday till Friday 10 to 6 EST</p>"
+      },
+      {
+        "type": "header",
+        "content": "Block Right"
+      },
+      {
+        "type": "text",
+        "id": "iframe_map",
+        "label": "Google Maps Iframe",
+        "info": "You’ll need to embed the code on google map",
+        "default": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d23095.519254450588!2d-79.38263233337402!3d43.64941859273796!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x935ab2eb9fd5fb31!2sFirst%20Canadian%20Place!5e0!3m2!1sen!2s!4v1659598435154!5m2!1sen!2s"
+      },
+      {
+        "type": "range",
+        "id": "height",
+        "min": 300,
+        "max": 700,
+        "step": 10,
+        "label": "Height map",
+        "default": 500
+      },
+      {
+        "type":  "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "bg_size",
+        "label": "Background size",
+        "default": "full",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "full", "label": "Full width" }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_pattern",
+        "label": "Background pattern 1"
+      },
+      {
+        "type": "text",
+        "id": "bg_pattern_position",
+        "label": "Pattern 1 style",
+        "default": "width: 20%; left: 0; top: 20%",
+        "info": "Example: width: 20%; left: 0; top: 20%"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_pattern2",
+        "label": "Background pattern 2"
+      },
+      {
+        "type": "text",
+        "id": "bg_pattern_position2",
+        "label": "Pattern 2 style",
+        "default": "width: 20%; left: 0; top: 20%",
+        "info": "Example: width: 20%; left: 0; top: 20%"
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "number",
+        "id": "px",
+        "label": "Horizontally spacing section (px)",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Contact Us"
+      }
+    ]
+  }
+{% endschema %}

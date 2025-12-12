@@ -1,0 +1,361 @@
+{% comment %}
+  Glossary – AI styled (Meine Dampfwelt CI)
+  Groups: A | B | C | D | EF | GHIJKLM | N | O | P | QR | S | TU | VWXYZ
+{% endcomment %}
+
+<section id="glossary-{{ section.id }}" class="glossary-ai mdw">
+  <div class="ga__container">
+    {% if section.settings.intro != blank %}
+      <p class="ga__intro">{{ section.settings.intro }}</p>
+    {% endif %}
+
+    <!-- Tabs -->
+    <nav class="ga__tabs" aria-label="Alphabetische Navigation">
+      <ul class="ga__tablist" role="tablist">
+        {%- assign all_groups = "A|B|C|D|EF|GHIJKLM|N|O|P|QR|S|TU|VWXYZ" | split: "|" -%}
+        {%- for g in all_groups -%}
+
+          {%- assign has_content = false -%}
+          {%- for b in section.blocks -%}
+            {%- if b.settings.group == g -%}
+              {%- assign has_content = true -%}{%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          <li class="ga__tab-item{% if section.settings.default_group == g %} is-active{% endif %}{% unless has_content %} is-empty{% endunless %}"
+              role="tab"
+              data-group="{{ g }}">
+            <button type="button" class="ga__tab-btn" {% unless has_content %}disabled{% endunless %}>
+              {%- case g -%}
+                {%- when 'EF' -%}E&nbsp;F
+                {%- when 'QR' -%}Q&nbsp;R
+                {%- when 'TU' -%}T&nbsp;U
+                {%- when 'VWXYZ' -%}V&nbsp;W&nbsp;X&nbsp;Y&nbsp;Z
+                {%- when 'GHIJKLM' -%}G&nbsp;H&nbsp;I&nbsp;J&nbsp;K&nbsp;L&nbsp;M
+                {%- else -%}{{ g }}
+              {%- endcase -%}
+            </button>
+            <span class="ga__active-indicator" aria-hidden="true"></span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <!-- Panels -->
+    <div class="ga__groups">
+      {%- for g in all_groups -%}
+        <div class="ga__group{% if section.settings.default_group == g %} is-visible{% endif %}" data-group="{{ g }}" role="tabpanel">
+          {%- assign group_blocks = section.blocks | where: "settings.group", g -%}
+
+          {%- for block in group_blocks -%}
+            <article class="ga__entry" {{ block.shopify_attributes }}>
+              <h3 class="ga__term">{{ block.settings.term }}</h3>
+              {% if block.settings.desc != blank %}
+                <div class="ga__desc rte">{{ block.settings.desc }}</div>
+              {% endif %}
+              {% if block.settings.desc_2 != blank %}
+                <div class="ga__desc rte">{{ block.settings.desc_2 }}</div>
+              {% endif %}
+            </article>
+            {% unless forloop.last %}<hr class="ga__divider">{% endunless %}
+          {%- endfor -%}
+
+          {%- if group_blocks.size == 0 -%}
+            <div class="ga__empty">
+              <div class="ga__empty-inner">
+                <span class="ga__pulse" aria-hidden="true"></span>
+                <p>{{ section.settings.empty_text | default: "Für diese Gruppe sind noch keine Begriffe hinterlegt." }}</p>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <style>
+    :root{
+      /* CI Farben – anpassbar im Editor */
+      --ga-accent-start: {{ section.settings.accent_start }};  /* limette */
+      --ga-accent-end:   {{ section.settings.accent_end }};    /* limette ➜ hell */
+      --ga-glow:         {{ section.settings.glow }};          /* Glow-Basis */
+      --ga-border:       {{ section.settings.border }};        /* Divider */
+      --ga-text:         {{ section.settings.text }};          /* Grundtext (nahe #0A283A auf hell) */
+      --ga-muted:        {{ section.settings.muted }};         /* Sekundärtext */
+      --ga-max:          {{ section.settings.max_width }}px;
+      --ga-panel:        {{ section.settings.panel_bg }};      /* Panel-Fill */
+      --ga-surface:      {{ section.settings.surface_bg }};    /* Seitengrund */
+    }
+
+    .glossary-ai.mdw{
+      color:var(--ga-text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+      background:
+        radial-gradient(1200px 400px at 10% -10%, color-mix(in srgb, var(--ga-accent-start) 10%, transparent), transparent 60%),
+        radial-gradient(900px 300px at 90% 0%, color-mix(in srgb, var(--ga-accent-end) 10%, transparent), transparent 60%),
+        var(--ga-surface);
+    }
+    .ga__container{ max-width:var(--ga-max); margin:0 auto; padding: clamp(10px, 2.2vw, 18px); }
+    .ga__intro{ margin:0 0 16px; color:var(--ga-muted); line-height:1.65; font-size:15.5px; }
+
+    /* Tabs – Glass + Glow in CI */
+    .ga__tabs{ position:relative; margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--ga-border); }
+    .ga__tablist{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap: clamp(14px, 2.1vw, 24px); align-items:flex-end; }
+    .ga__tab-item{ position:relative; line-height:1; display:flex; align-items:center; }
+    .ga__tab-item.is-empty .ga__tab-btn{ opacity:.35; cursor:not-allowed; filter: grayscale(.4); }
+
+    .ga__tab-btn{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.12));
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      border:1px solid rgba(10,40,58,.08); /* CI Dunkelblau soft */
+      border-radius:10px;
+      padding:6px 10px;
+      font-weight:800; letter-spacing:.04em; color:var(--ga-text);
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    }
+    .ga__tab-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--ga-glow) 38%, transparent);
+    }
+    .ga__tab-item.is-active .ga__tab-btn{
+      color:#0A283A; /* CI Dunkelblau */
+      box-shadow: 0 16px 34px -18px color-mix(in srgb, var(--ga-glow) 48%, transparent);
+    }
+    .ga__active-indicator{
+      position:absolute; left:6px; right:6px; height:6px; bottom:-12px; border-radius:3px;
+      background: linear-gradient(90deg, var(--ga-accent-start), var(--ga-accent-end));
+      opacity:0; transform: translateY(6px); transition: all .25s ease;
+      filter: drop-shadow(0 2px 10px color-mix(in srgb, var(--ga-glow) 42%, transparent));
+    }
+    .ga__tab-item.is-active .ga__active-indicator{ opacity:1; transform: translateY(0); }
+
+    /* Panels / Entries */
+    .ga__groups{ padding-top:10px; }
+    .ga__group{ display:none; }
+    .ga__group.is-visible{ display:block; }
+    .ga__entry{
+      padding: clamp(8px, .9vw, 14px) clamp(6px, .6vw, 10px);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.28)) padding-box,
+        linear-gradient(90deg, rgba(255,255,255,0), rgba(10,40,58,.08), rgba(255,255,255,0)) border-box;
+      border:1px solid rgba(10,40,58,.08);
+    }
+    .ga__term{ margin:0 0 8px; font-size: clamp(18px, 2.2vw, 21px); font-weight:900; letter-spacing:.2px; color:#0A283A; }
+    .ga__desc{ margin:0 0 16px; color:var(--ga-muted); line-height:1.75; font-size:16px; }
+    .ga__divider{
+      border:0; height:1px; margin: 16px 0 18px;
+      background: linear-gradient(90deg, rgba(10,40,58,.08), rgba(10,40,58,.03) 45%, rgba(10,40,58,.08));
+    }
+
+    /* Empty state */
+    .ga__empty{ display:flex; align-items:center; padding:18px 6px; color:var(--ga-muted); }
+    .ga__empty-inner{ display:flex; align-items:center; gap:10px; }
+    .ga__pulse{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(closest-side, var(--ga-accent-start), var(--ga-accent-end));
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ga-glow) 40%, transparent);
+      animation: gaPulse 1.4s infinite;
+    }
+    @keyframes gaPulse{
+      0%{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--ga-glow) 40%, transparent); transform: scale(1); }
+      70%{ box-shadow: 0 0 0 10px transparent; transform: scale(1.08); }
+      100%{ box-shadow: 0 0 0 0 transparent; transform: scale(1); }
+    }
+
+    /* Optional dunkler Panel-Streifen */
+    {% if section.settings.dark_panel %}
+    .glossary-ai.mdw .ga__tabs{
+      background:
+        linear-gradient(180deg, color-mix(in srgb, #0A283A 6%, transparent), transparent);
+    }
+    {% endif %}
+
+    /* Responsive */
+    @media (max-width: 720px){
+      .ga__tablist{ gap: 14px; }
+      .ga__tab-btn{ font-weight:800; font-size:14.5px; padding:5px 9px; }
+      .ga__intro{ font-size:14.5px; }
+      .ga__desc{ font-size:15.5px; }
+    }
+  </style>
+
+  <script>
+    (() => {
+      const root = document.getElementById('glossary-{{ section.id }}');
+      if(!root) return;
+      const tabs = root.querySelectorAll('.ga__tab-item');
+      const groups = root.querySelectorAll('.ga__group');
+
+      function show(group){
+        groups.forEach(el => el.classList.toggle('is-visible', el.dataset.group === group));
+        tabs.forEach(el => el.classList.toggle('is-active', el.dataset.group === group));
+      }
+
+      tabs.forEach(tab=>{
+        const btn = tab.querySelector('.ga__tab-btn');
+        if(btn && !btn.disabled){ btn.addEventListener('click', () => show(tab.dataset.group)); }
+      });
+
+      show('{{ section.settings.default_group }}');
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Glossar",
+  "tag": "section",
+  "class": "section--glossary-ai",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Einleitung",
+      "default": "Du verstehst nicht alle Begriffe, die Dampfer so verwenden? Wir erklären dir hier kurz was Vaper (= Dampfer) meinen, wenn sie folgende Begriffe erwähnen:"
+    },
+    {
+      "type": "checkbox",
+      "id": "dark_panel",
+      "label": "Dezenter dunkler Panel-Streifen aktivieren",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "default_group",
+      "label": "Standard-Reiter beim Laden",
+      "default": "A",
+      "options": [
+        { "value": "A", "label": "A" },
+        { "value": "B", "label": "B" },
+        { "value": "C", "label": "C" },
+        { "value": "D", "label": "D" },
+        { "value": "EF", "label": "E F" },
+        { "value": "GHIJKLM", "label": "G H I J K L M" },
+        { "value": "N", "label": "N" },
+        { "value": "O", "label": "O" },
+        { "value": "P", "label": "P" },
+        { "value": "QR", "label": "Q R" },
+        { "value": "S", "label": "S" },
+        { "value": "TU", "label": "T U" },
+        { "value": "VWXYZ", "label": "V W X Y Z" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Hinweistext (leere Gruppe)",
+      "default": "Für diese Gruppe sind noch keine Begriffe hinterlegt."
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximale Breite (px)",
+      "min": 720, "max": 1440, "step": 10,
+      "default": 1080
+    },
+    { "type": "header", "content": "CI-Farben" },
+    {
+      "type": "color",
+      "id": "accent_start",
+      "label": "Akzent-Verlauf – Start (CI Grün)",
+      "default": "#BBD91C"
+    },
+    {
+      "type": "color",
+      "id": "accent_end",
+      "label": "Akzent-Verlauf – Ende (helleres CI Grün)",
+      "default": "#D5F24A"
+    },
+    {
+      "type": "color",
+      "id": "glow",
+      "label": "Glow-Farbe (Basis)",
+      "default": "#BBD91C"
+    },
+    {
+      "type": "color",
+      "id": "border",
+      "label": "Rahmen-/Divider-Farbe",
+      "default": "#E5ECF1"
+    },
+    {
+      "type": "color",
+      "id": "text",
+      "label": "Textfarbe (auf hell)",
+      "default": "#0A283A"
+    },
+    {
+      "type": "color",
+      "id": "muted",
+      "label": "Muted Text",
+      "default": "#5C7384"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Panel-Hintergrund",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "surface_bg",
+      "label": "Seiten-Hintergrund",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "entry",
+      "name": "Begriff",
+      "settings": [
+        {
+          "type": "select",
+          "id": "group",
+          "label": "Buchstaben-Gruppe",
+          "default": "A",
+          "options": [
+            { "value": "A", "label": "A" },
+            { "value": "B", "label": "B" },
+            { "value": "C", "label": "C" },
+            { "value": "D", "label": "D" },
+            { "value": "EF", "label": "E F" },
+            { "value": "GHIJKLM", "label": "G H I J K L M" },
+            { "value": "N", "label": "N" },
+            { "value": "O", "label": "O" },
+            { "value": "P", "label": "P" },
+            { "value": "QR", "label": "Q R" },
+            { "value": "S", "label": "S" },
+            { "value": "TU", "label": "T U" },
+            { "value": "VWXYZ", "label": "V W X Y Z" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "term",
+          "label": "Begriff (Titel)",
+          "default": "Airflow = Luftzufuhr"
+        },
+        {
+          "type": "richtext",
+          "id": "desc",
+          "label": "Beschreibung",
+          "default": "<p>Dies ist die Luftöffnung unterhalb oder oberhalb des Tanks.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "desc_2",
+          "label": "Weitere Beschreibung (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Glossar",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

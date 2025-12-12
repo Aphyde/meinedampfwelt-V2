@@ -1,0 +1,284 @@
+{% assign sst = section.settings %}
+{% style %}
+  {%- assign bg_image = sst.background_image -%}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+    {% if sst.background_color != blank or bg_image != blank %}
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} no-repeat center;
+      background-size: cover;
+    {% endif %}
+  }
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+  #shopify-section-{{ section.id }} .gallery-image__item {
+    border-radius: {{ sst.bd_radius }}px;
+  }
+{% endstyle %}
+<div class="distance{% if sst.class_section != blank %} {{ sst.class_section }}{% endif %}{% if sst.animate %} wow fadeInUp animated{% endif %}">
+  <div class="{{ sst.container }}">
+    <div class="row align-items-center">
+      <div class="col-lg-5 mb-md-50 text-center text-md-left">
+        <div class="title_section mb-0">
+          {% if sst.show_star %}
+            <div class="star position-relative mb-15" style="color: {{ sst.color_star }}"></div>
+          {% endif %}
+          {% if sst.heading != blank %}
+            <span class="title" style="color: {{ sst.heading_c }};">{{ sst.heading }}</span>
+          {% endif %}
+          {% if sst.subheading != blank %}
+            <span class="sub_title d-block mt-5" style="color: {{ sst.subheading_c }};">{{ sst.subheading }}</span>
+          {% endif %}
+        </div>
+        {% if sst.phone_number != blank %}
+          <div class="block-phone-number d-flex align-items-center justify-content-center justify-content-md-start mt-25">
+            <div class="icon-phone">
+              {% render 'nov-aspect-image', image: sst.phone_icon %}
+            </div>
+            <div class="phone-number">
+              <div class="title">{{ 'sections.text_three_image.contact_us' | t }}</div>
+              <div class="number font-700">{{ sst.phone_number }}</div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-lg-7">
+        <div class="row spacing-50 spacing-lg-30">
+          {% for i in (1..3) %}
+            {%- assign img_id = 'img' | append: i -%}
+            <div class="col-sm-4{% if i != 2 %} mt-50 mt-lg-30 mt-xs-0{% endif %}{% if i != 3 %} mb-xs-10{% endif %}">
+              <div class="gallery-image__item {% if sst.style_img_1 %}nov-sh-image-1{% endif %}{% if sst.style_img_2 %}nov-sh-image-2{% endif %}">
+                {% if sst[img_id] != blank %}
+                  {% render 'nov-aspect-image', image: sst[img_id] %}
+                {% else %}
+                  {{ 'blog-apparel-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div><!-- End container -->
+</div>
+{% schema %}
+  {
+    "name": "Text With Three Image ",
+    "class": "section-text-three-image",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_star",
+        "label": "Show star",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "color_star",
+        "label": "Star color",
+        "default": "#000"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Text Image</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_c",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_c",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      
+      {
+        "type": "header",
+        "content": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "img1",
+        "label": "Image 1",
+        "info": "250 x 400 recommend"
+      },
+      {
+        "type": "image_picker",
+        "id": "img2",
+        "label": "Image 2",
+        "info": "250 x 400 recommend"
+      },
+      {
+        "type": "image_picker",
+        "id": "img3",
+        "label": "Image 3",
+        "info": "250 x 400 recommend"
+      },
+      {
+        "type": "header",
+        "content": "Phone"
+      },
+      {
+        "type": "image_picker",
+        "id": "phone_icon",
+        "label": "Phone icon",
+        "info": "46 x 46px recommend"
+      },
+      {
+        "type": "text",
+        "id": "phone_number",
+        "label": "Phone number",
+        "default": "084-2525-6868"
+      },
+      {
+        "type": "header",
+        "content": "Item Image Style"
+      },
+      {
+        "type": "range",
+        "id": "bd_radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius image",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Style Hover Image"
+      },
+      {
+        "type": "checkbox",
+        "id": "style_img_1",
+        "label": "Style hover image 1"
+      },
+      {
+        "type": "checkbox",
+        "id": "style_img_2",
+        "label": "Style hover image 2",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Section Style"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default":   true
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class_section",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Text Three Image"
+      }
+    ]
+  }
+{% endschema %}

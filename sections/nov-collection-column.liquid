@@ -1,0 +1,540 @@
+{%- assign sst = section.settings -%}
+{%- assign bg_image = sst.background_image -%}
+{% style %}
+  #shopify-section-{{ section.id }} .distance {
+    padding-top: {{ sst.distance_top_xs }}px;
+    padding-bottom: {{ sst.distance_bottom_xs }}px;
+  }
+  {% if sst.background_color != blank or bg_image != blank %}
+    #shopify-section-{{ section.id }} .distance:before {
+      content: "";
+      position: absolute;
+      {% if sst.bg_position == 'top' %}
+        top: 0;
+      {% elsif sst.bg_position == 'center' %}
+        top: 50%;
+        transform: translateY(-50%);
+      {% else %}
+        bottom: 0;
+      {% endif %}
+      left: 0;
+      width: 100%;
+      height: {{ sst.height_background }}%;
+      background: {{ sst.background_color }}{% if bg_image != blank %} url("{{ bg_image | image_url: width: 1920 }}"){% endif %} no-repeat {{ sst.bg_img_position }} center;
+      background-size: cover;
+    }
+  {% endif %}
+  @media(min-width: 768px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_md }}px;
+      padding-bottom: {{ sst.distance_bottom_md }}px;
+    }
+  }
+  @media(min-width: 1200px) {
+    #shopify-section-{{ section.id }} .distance {
+      padding-top: {{ sst.distance_top_xl }}px;
+      padding-bottom: {{ sst.distance_bottom_xl }}px;
+    }
+  }
+{% endstyle %}
+{% if sst.xl == 5 %}
+  {%- assign xl = 'col-xl-cus-5' -%}
+{% else %}
+  {%- assign xl = 12 | divided_by: sst.xl | prepend: 'col-xl-' -%}
+{% endif %}
+{% if sst.lg == 5 %}
+  {%- assign lg = 'col-lg-cus-5' -%}
+{% else %}
+  {%- assign lg = 12 | divided_by: sst.lg | prepend: 'col-lg-' -%}
+{% endif %}
+{% if sst.md == 5 %}
+  {%- assign md = 'col-md-cus-5' -%}
+{% else %}
+  {%- assign md = 12 | divided_by: sst.md | prepend: 'col-md-' -%}
+{% endif %}
+{% if sst.sm == 5 %}
+  {%- assign sm = 'col-sm-cus-5' -%}
+{% else %}
+  {%- assign sm = 12 | divided_by: sst.sm | prepend: 'col-sm-' -%}
+{% endif %}
+{% if sst.xs == 5 %}
+  {%- assign xs = 'col-xs-cus-5' -%}
+{% else %}
+  {%- assign xs = 12 | divided_by: sst.xs | prepend: 'col-' -%}
+{% endif %}
+<div class="distance position-relative color-{{ sst.color_section }}{% if sst.class != blank %} {{ sst.class }}{% endif %}{% if sst.animate %} wow fadeInUp animated{% endif %}">
+  <div class="{{ sst.container }}">
+    {% render 'heading-section', sub_position: sst.subheading_position %}
+    <div class="row spacing-{{ sst.spacing }}{% if sst.show_border %} show-border{% endif %}" style="--color-border: {{ sst.border_color }};">
+      {% for block in section.blocks %}
+        {% assign bst = block.settings %}
+          {% if block.type == 'collection' %}
+            <div class="item {{ xl }} {{ lg }} {{ md }} {{ sm }} {{ xs }}">
+              <div class="item-content text-center h-100 position-relative">
+                <div class="block-image nov-sh-image-2">
+                  {% if bst.img %}
+                    {%- render 'nov-aspect-image', image: bst.img, aspect: sst.aspect -%}
+                  {% else %}
+                    {%- capture current -%}{% cycle 1, 2, 3, 4 %}{%- endcapture -%}
+                    {{ 'collection-apparel-' | append: current | placeholder_svg_tag : 'placeholder-svg' }}
+                  {% endif %}
+                </div>
+                <div class="block-link pt-25 pb-25 position-relative">
+                  {% if bst.title != blank %}
+                    <div class="block-title font-700 f_pr mb-15">{{ bst.title }}</div>
+                  {% endif %}
+                  <div class="link-list">
+                    {% for i in (1..6) %}
+                      {% assign label_id = 'label' | append: i %}
+                      {% assign link_id = 'link' | append: i %}
+                      {% if bst[label_id] != blank %}
+                        <div class="item-link">
+                          <a href="{{ bst[link_id] }}">{{ bst[label_id] }}</a>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  {% if bst.label_shopmore != blank %}
+                    <div class="item-shopmore mt-30">
+                      <a href="{{ bst.link_shopmore }}">{{ bst.label_shopmore }}</a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          {% if block.type == '@app' %}
+            <div class="item col-12">
+              {% render block %}
+            </div>
+          {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Vinova Collection Column",
+    "class": "section-collection-column",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Heading",
+        "default": "<p>Vinova Collection Column</p>"
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading color",
+        "default": "#222222"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub heading",
+        "default": "<p>Subtitle from happy customers</p>"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Sub heading color",
+        "default": "#666666"
+      },
+      {
+        "type": "richtext",
+        "id": "descheading",
+        "label": "Description",
+        "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+      },
+      {
+        "type": "color",
+        "id": "descheading_color",
+        "label": "Description color",
+        "default": "#666666"
+      },
+      {
+        "type": "select",
+        "id": "subheading_position",
+        "label": "Sub heading position",
+        "default": "bottom",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "heading_alignment",
+        "label": "Heading alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type":  "header",
+        "content": "Column per row"
+      },
+      {
+        "type": "range",
+        "id": "xl",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Large laptop",
+        "default": 4,
+        "info": "Breakpoint 1200px ↑"
+      },
+      {
+        "type": "range",
+        "id": "lg",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Laptop",
+        "default": 4,
+        "info": "Breakpoint 992px ↑"
+      },
+      {
+        "type": "range",
+        "id": "md",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Tablet",
+        "default": 3,
+        "info": "Breakpoint 768px ↑"
+      },
+      {
+        "type": "range",
+        "id": "sm",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Large mobile",
+        "default": 2,
+        "info": "Breakpoint 576px ↑"
+      },
+      {
+        "type": "range",
+        "id": "xs",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "label": "Mobile",
+        "default": 2,
+        "info": "Breakpoint 575px ↓"
+      },
+      {
+        "type": "range",
+        "id": "spacing",
+        "min": 0,
+        "max": 30,
+        "step": 5,
+        "label": "Spacing",
+        "default": 30,
+        "info": "Spacing item"
+      },
+      {
+        "type":  "header",
+        "content": "Style item"
+      },
+      {
+        "type": "select",
+        "id": "aspect",
+        "label": "Item aspect ratio",
+        "default": "34",
+        "options": [
+          {"value": "auto", "label": "auto"},
+          {"value": "11", "label": "1/1"},
+          {"value": "34", "label": "3/4"},
+          {"value": "43", "label": "4/3"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_border",
+        "label": "Show border",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "border_color",
+        "label": "Border color",
+        "default": "#f5f5f5"
+      },
+      {
+        "type":  "header",
+        "content": "Design option"
+      },
+      {
+        "type": "checkbox",
+        "id": "animate",
+        "label": "Show animated",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Container",
+        "default": "container",
+        "options": [
+          { "value": "container", "label": "Container" },
+          { "value": "container-fluid", "label": "Container fluid" },
+          { "value": "container-full", "label": "Container full width" }
+        ]
+      },
+      {
+        "type": "color_scheme",
+        "id": "color_section",
+        "label": "Color section",
+        "default": "background-1"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background colors"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "range",
+        "id": "height_background",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Height background",
+        "default": 100,
+        "unit": "%"
+      },
+      {
+        "type": "select",
+        "id": "bg_position",
+        "label": "Background position",
+        "default": "top",
+        "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "bottom", "label": "Bottom" }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "class",
+        "label": "Class"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Top (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_top_xs",
+        "label": "Mobile",
+        "default": 30
+      },
+      {
+        "type": "header",
+        "content": "Spacing Bottom (px)"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xl",
+        "label": "Large laptop",
+        "default": 30,
+        "info": "Breakpoint 1200px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_md",
+        "label": "Tablet",
+        "default": 30,
+        "info": "Breakpoint 768px"
+      },
+      {
+        "type": "number",
+        "id": "distance_bottom_xs",
+        "label": "Mobile",
+        "default": 30
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Item",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Lorem ipsum"
+          },
+          {
+            "type": "header",
+            "content": "Link 1"
+          },
+          {
+            "type": "text",
+            "id": "label1",
+            "label": "Label",
+            "default": "Lorem ipsum dolor"
+          },
+          {
+            "type": "url",
+            "id": "link1",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Link 2"
+          },
+          {
+            "type": "text",
+            "id": "label2",
+            "label": "Label",
+            "default": "Lorem ipsum dolor"
+          },
+          {
+            "type": "url",
+            "id": "link2",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Link 3"
+          },
+          {
+            "type": "text",
+            "id": "label3",
+            "label": "Label"
+          },
+          {
+            "type": "url",
+            "id": "link3",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Link 4"
+          },
+          {
+            "type": "text",
+            "id": "label4",
+            "label": "Label"
+          },
+          {
+            "type": "url",
+            "id": "link4",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Link 5"
+          },
+          {
+            "type": "text",
+            "id": "label5",
+            "label": "Label"
+          },
+          {
+            "type": "url",
+            "id": "link5",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Link 6"
+          },
+          {
+            "type": "text",
+            "id": "label6",
+            "label": "Label"
+          },
+          {
+            "type": "url",
+            "id": "link6",
+            "label": "Link"
+          },
+          {
+            "type": "header",
+            "content": "Shop More"
+          },
+          {
+            "type": "text",
+            "id": "label_shopmore",
+            "label": "Label",
+            "default": "Shop More"
+          },
+          {
+            "type": "url",
+            "id": "link_shopmore",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Vinova Collection Column",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

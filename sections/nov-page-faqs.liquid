@@ -1,0 +1,256 @@
+{%- assign sst = section.settings -%}
+{% style %}
+  #shopify-section-{{ section.id }} .nov-slick-carousel .item-content { background-color: {{ sst.bg_item }}; }
+  #shopify-section-{{ section.id }} .nov-slick-carousel .item-content:hover { background-color: {{ sst.bg_item_h }}; }
+  #shopify-section-{{ section.id }} .name_link { color: {{ sst.color_link }}; }
+  /* RTE inside FAQ answers */
+  #shopify-section-{{ section.id }} .item-content.rte a {
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  #shopify-section-{{ section.id }} .faq-image { display:block; max-width:100%; height:auto; border-radius:8px; }
+  #shopify-section-{{ section.id }} .faq-figure { margin: 10px 0 16px; }
+  #shopify-section-{{ section.id }} .faq-figure figcaption { font-size: .9em; opacity:.8; margin-top:6px; }
+{% endstyle %}
+
+{% render 'nov-breadcrumb', class_br: 'breadcrumb_inner' %}
+
+<div class="color-{{ sst.color_section }}" data-section-id="{{ section.id }}" data-section-type="nov-slick">
+  <div class="container">
+    {% if page.content.size > 0 %}
+      <div class="rte">{{ page.content }}</div>
+    {% endif %}
+
+    <div class="nov-slick-carousel row mb-60"
+      data-autoplay="false" 
+      data-autoplaytimeout="6000"
+      data-loop="true"
+      data-dots="false"
+      data-nav="{{ sst.nav }}"
+      data-items_xxl="{{ sst.xl }}"
+      data-items="{{ sst.xl }}"
+      data-items_lg="{{ sst.lg }}" 
+      data-items_md="{{ sst.md }}" 
+      data-items_sm="{{ sst.sm }}"
+      data-items_xs="{{ sst.xs }}">
+      {%- for i in (1..5) -%}
+        {%- assign image_id = 'image' | append: i -%}
+        {%- assign link_id  = 'link'  | append: i -%}
+        {%- assign text_id  = 'text'  | append: i -%}
+        {% if sst[image_id] != blank %}
+          <div class="col">
+            <div class="item-content text-center">
+              {% if sst[link_id] != blank %}
+                <a href="{{ sst[link_id] }}" class="item-content--block d-block w-100">
+              {% else %}
+                <div class="item-content--block d-block pt-20 pb-15">
+              {% endif %}
+                <div class="b_img">
+                  <img src="{{ sst[image_id] | image_url: width: 140 }}" alt="{{ sst[image_id].alt | default: 'image' }}" width="140" height="140" class="img-fluid">
+                </div>
+                {% if sst[text_id] != blank %}
+                  <div class="name_link font-700">{{ sst[text_id] }}</div>
+                {% endif %}
+              {% if sst[link_id] != blank %}</a>{% else %}</div>{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+
+    {% if sst.title != blank or sst.text_content != blank %}
+      <div class="faqText">
+        <div class="block_text">
+          {% if sst.title != blank %}
+            <div class="title font-700">{{ sst.title }}</div>
+          {% endif %}
+          {% if sst.text_content != blank %}
+            <div class="block_content rte">
+              {{ sst.text_content }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="faqWrapper">
+      {% if section.blocks.size > 0 %}
+        <div id="Accordion" role="tablist">
+          {% for block in section.blocks %}
+            {% if block.type == 'faq' %}
+              {%- assign bst = block.settings -%}
+              <div class="faqs-main {{ bst.class }}{% if forloop.first %} active{% endif %}">
+                <div class="panel-group">
+                  <div class="panel-header collapsed"
+                       {% if forloop.first %} aria-expanded="true"{% endif %}
+                       data-toggle="collapse"
+                       href="#Item-{{ section.id }}-{{ forloop.index }}"
+                       aria-controls="Item-{{ section.id }}-{{ forloop.index }}">
+                    {{ bst.item_title }}
+                  </div>
+                  <div class="panel-body">
+                    <div id="Item-{{ section.id }}-{{ forloop.index }}" data-parent="#Accordion" class="collapse{% if forloop.first %} show{% endif %}">
+                      {%- comment -%} Optionales Bild oben {%- endcomment -%}
+                      {% if bst.image != blank and bst.image_position == 'top' %}
+                        <figure class="faq-figure">
+                          {% if bst.image_link != blank %}<a href="{{ bst.image_link }}">{% endif %}
+                            <img class="faq-image" src="{{ bst.image | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst.image.alt | default: bst.image_alt }}">
+                          {% if bst.image_link != blank %}</a>{% endif %}
+                          {% if bst.image_caption != blank %}<figcaption>{{ bst.image_caption }}</figcaption>{% endif %}
+                        </figure>
+                      {% endif %}
+
+                      <div class="item-content rte" style="color: {{ bst.color_content }}; font-size: {{ bst.fz_content }};">
+                        {{ bst.item_content }}
+                      </div>
+
+                      {%- comment -%} Optionales Bild unten {%- endcomment -%}
+                      {% if bst.image != blank and bst.image_position == 'bottom' %}
+                        <figure class="faq-figure">
+                          {% if bst.image_link != blank %}<a href="{{ bst.image_link }}">{% endif %}
+                            <img class="faq-image" src="{{ bst.image | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst.image.alt | default: bst.image_alt }}">
+                          {% if bst.image_link != blank %}</a>{% endif %}
+                          {% if bst.image_caption != blank %}<figcaption>{{ bst.image_caption }}</figcaption>{% endif %}
+                        </figure>
+                      {% endif %}
+
+                      {%- comment -%} Zusätzliche Bilder 2 & 3 (optional) {%- endcomment -%}
+                      {% for extra in (2..3) %}
+                        {% assign img_key = 'image' | append: extra %}
+                        {% assign cap_key = 'image' | append: extra | append: '_caption' %}
+                        {% assign alt_key = 'image' | append: extra | append: '_alt' %}
+                        {% assign link_key = 'image' | append: extra | append: '_link' %}
+                        {% if bst[img_key] != blank %}
+                          <figure class="faq-figure">
+                            {% if bst[link_key] != blank %}<a href="{{ bst[link_key] }}">{% endif %}
+                              <img class="faq-image" src="{{ bst[img_key] | image_url: width: bst.image_width | default: 1200 }}" alt="{{ bst[alt_key] }}">
+                            {% if bst[link_key] != blank %}</a>{% endif %}
+                            {% if bst[cap_key] != blank %}<figcaption>{{ bst[cap_key] }}</figcaption>{% endif %}
+                          </figure>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if sst.eb_contact %}
+      <div class="faqContact text-center">
+        {% if sst.title_answer != blank or sst.text_content != blank %}
+          <div class="block_text {{ sst.class }}">
+            {% if sst.sub_answer != blank %}
+              <div class="sub_answer font-700">{{ sst.sub_answer }}</div>
+            {% endif %}
+            {% if sst.title_answer != blank %}
+              <div class="title_answer text-uppercase font-800">{{ sst.title_answer }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if sst.text_button %}
+          <button class="btn btn-large" type="button" data-toggle="modal" data-target="#popup_contact_faq">
+            {{ sst.text_button }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% if block.type == '@app' %}
+        {% render block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Vinova page FAQs",
+  "class": "page-inner page-faqs",
+  "settings": [
+    { "type": "header", "content": "Block List Collection" },
+    { "type": "range", "id": "xl", "min": 1, "max": 5, "step": 1, "label": "Large Laptop", "default": 3, "info": "Breakpoint 1200px ↑" },
+    { "type": "range", "id": "lg", "min": 1, "max": 5, "step": 1, "label": "Laptop", "default": 3, "info": "Breakpoint 992px ↑" },
+    { "type": "range", "id": "md", "min": 1, "max": 5, "step": 1, "label": "Tablet", "default": 2, "info": "Breakpoint 768px ↑" },
+    { "type": "range", "id": "sm", "min": 1, "max": 5, "step": 1, "label": "Large mobile", "default": 1, "info": "Breakpoint 576px ↑" },
+    { "type": "range", "id": "xs", "min": 1, "max": 5, "step": 1, "label": "Mobile", "default": 1 },
+
+    { "type": "image_picker", "id": "image1", "label": "Image 1" },
+    { "type": "text", "id": "text1", "label": "Name Link 1", "default": "Delivery Policy" },
+    { "type": "url", "id": "link1", "label": "Link 1" },
+
+    { "type": "image_picker", "id": "image2", "label": "Image 2" },
+    { "type": "text", "id": "text2", "label": "Name Link 2", "default": "Delivery Policy" },
+    { "type": "url", "id": "link2", "label": "Link 2" },
+
+    { "type": "image_picker", "id": "image3", "label": "Image 3" },
+    { "type": "text", "id": "text3", "label": "Name Link 3", "default": "Delivery Policy" },
+    { "type": "url", "id": "link3", "label": "Link 3" },
+
+    { "type": "image_picker", "id": "image4", "label": "Image 4" },
+    { "type": "text", "id": "text4", "label": "Name Link 4", "default": "Delivery Policy" },
+    { "type": "url", "id": "link4", "label": "Link 4" },
+
+    { "type": "image_picker", "id": "image5", "label": "Image 5" },
+    { "type": "text", "id": "text5", "label": "Name Link 5", "default": "Delivery Policy" },
+    { "type": "url", "id": "link5", "label": "Link 5" },
+
+    { "type": "header", "content": "Style" },
+    { "type": "color", "id": "color_link", "label": "Label colors", "default": "#666666" },
+    { "type": "color", "id": "bg_item", "label": "Background item", "default": "#f0f0f0" },
+    { "type": "color", "id": "bg_item_h", "label": "Background hover item", "default": "#e2e2e2" },
+
+    { "type": "header", "content": "Block Faq" },
+    { "type": "text", "id": "title", "label": "Title" },
+    { "type": "liquid", "id": "text_content", "label": "Content (HTML/Liquid erlaubt)" }
+,
+
+    { "type": "header", "content": "Contact" },
+    { "type": "checkbox", "id": "eb_contact", "label": "Show Contact", "default": true },
+    { "type": "text", "id": "title_answer", "label": "Title", "default": "We're Here to Help!" },
+    { "type": "text", "id": "sub_answer", "label": "Sub Title", "default": "Can't find the answer you are looking for?" },
+    { "type": "text", "id": "text_button", "label": "Text Button", "default": "Contact us now" }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQs Item",
+      "settings": [
+        { "type": "text", "id": "item_title", "label": "Item title" },
+        { "type": "color", "id": "color_title", "label": "Color Title", "default": "#232630" },
+        { "type": "text", "id": "fz_title", "label": "Font Title", "default": "16px" },
+
+        { "type": "liquid", "id": "item_content", "label": "Item Content (HTML/Liquid erlaubt)" }
+,
+
+        { "type": "color", "id": "color_content", "label": "Color Content", "default": "#232630" },
+        { "type": "text", "id": "fz_content", "label": "Font Content", "default": "14px" },
+        { "type": "text", "id": "class", "label": "Class" },
+
+        { "type": "header", "content": "FAQ Image (optional)" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "url", "id": "image_link", "label": "Image link (optional)" },
+        { "type": "select", "id": "image_position", "label": "Image position", "default": "top",
+          "options": [ { "value": "top", "label": "Above content" }, { "value": "bottom", "label": "Below content" } ] },
+        { "type": "text", "id": "image_width", "label": "Image width (px)", "default": "1200" },
+
+        { "type": "header", "content": "Additional Images" },
+        { "type": "image_picker", "id": "image2", "label": "Image 2" },
+        { "type": "text", "id": "image2_alt", "label": "Image 2 alt" },
+        { "type": "text", "id": "image2_caption", "label": "Image 2 caption" },
+        { "type": "url", "id": "image2_link", "label": "Image 2 link" },
+
+        { "type": "image_picker", "id": "image3", "label": "Image 3" },
+        { "type": "text", "id": "image3_alt", "label": "Image 3 alt" },
+        { "type": "text", "id": "image3_caption", "label": "Image 3 caption" },
+        { "type": "url", "id": "image3_link", "label": "Image 3 link" }
+      ]
+    },
+    { "type": "@app" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,202 @@
+/**
+  New CSS since 13.03.2025
+**/
+.identityCardImage {
+  width:90%;  
+}
+
+#verifySuccessAccount {
+  margin-top:12px;
+  background: #12c99b;
+  color: yellow;
+  border-radius:10px;
+  padding:12px;
+  text-align: center;
+  display:none;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#verifyErrorAccount {
+  margin-top:12px;
+  background: #ede1fd;
+  color: mediumvioletred;
+  border-radius:10px;
+  padding:12px;
+  text-align: center;
+  display:none;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.fraspyContainerAccount {
+  padding: 0px 10px 0px 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 14px;
+}
+
+.fraspyTitleAccount {
+  color: #abca20;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.fraspyDescriptionAccount {
+  color: #333333;
+  font-size: 1.4rem !important;
+}
+
+.fraspyCountryField {
+  width: 95% !important;
+  margin-right: 1% !important;
+}
+
+.fraspyZipcodeField {
+  width: 95% !important;
+  margin-right: 1% !important;
+}
+
+.fraspyZipcodeField, .fraspyCityField, .fraspyCountryField {
+  margin-top: auto !important;
+}
+
+.fraspyBirthdayField {
+  width: 100% !important;
+}
+
+.fraspyCityField {
+  width: 100% !important;
+}
+
+.fraspyCancelButtonAccount {
+  display:inline;
+  width:49%;
+  background-color:red;
+  color:white;
+  border:0px;
+  padding: 12px;
+  font-size: 1.5rem;
+}
+
+.fraspySubmitButtonAccount {
+  vertical-align: top;
+  background-color:green;
+  color: white;
+  width:49%;
+  border:0px;
+  padding: 12px;
+  font-size: 1.5rem;
+}
+
+#ageverify {
+  margin:0px !important;  
+  margin-top:16px !important;
+}
+
+#modal-content-first {
+    left: 1%;
+    margin: 50px 0 0 0px;
+    position: absolute;
+    width: 98%;
+    top: 5%;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 12px;
+    background: #ede1fd;
+    border-radius: 10px;
+	font-size: 14px;
+    border: 20px #efefef solid;
+    z-index: 10001;
+    overflow: auto;
+    display: none;
+}
+
+/* Add to the login.liquid because we need flex containering */
+.account-page-login--fraspy {
+  display: flex;
+  flex-direction: column;
+  margin-top:0px;
+}
+
+.account-input--fraspy {
+  display: flex;
+  flex-direction: row;
+  margin: 0px !important;
+}
+
+/* Add to the login.liquid for boxing */
+.account-page-content--fraspy--left,
+.account-page-content--fraspy--right {
+  max-width: 98% !important;
+  width: 98% !important;
+}
+
+.account-page-content--fraspy--register-page {
+  max-width: 40% !important;
+  width: 40% !important;
+}
+
+@media only screen and (min-device-width: 768px) {
+ 
+    /* Add to the login.liquid because we need flex containering */
+    .account-page-login--fraspy {
+      display: flex;
+      flex-direction: row;
+      margin-top:0px;
+    }
+  
+    /* Add to the login.liquid for boxing */
+    .account-page-content--fraspy--left {
+      max-width: 30% !important;
+      width: 30% !important;
+      margin-right: 25px !important;
+    }
+  
+    .account-page-content--fraspy--right {
+      max-width: 30% !important;
+      width: 30% !important;
+      margin-left: 25px !important;
+    }
+
+    #modal-content-first {
+        left: 50%;
+        top: 1%;
+        margin: 50px 0 0 -280px;
+        padding: 20px;
+        width: 560px;
+    }
+
+    #verifySuccessAccount {
+      width: 100%;
+    }
+  
+    #verifyErrorAccount {
+      width: 100%;
+    }
+}
+
+/* Add to the snippets/fraspy.liquid  */
+.fraspySelectAndDateField {
+  padding-bottom:3px;  
+}
+
+/**
+  Old CSS since 13.03.2025
+**/
+
+#create_customer, #customer_login {
+    /* margin-top:0px !important; */
+}
+
+#create_customer, #customer_login {
+    /* margin-top:0px !important; */
+}
+
+
+
+
+
